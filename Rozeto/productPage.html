@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <link rel="shortcut icon" href="images/favicon.png" type="">
+
+  <title> Feane </title>
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
+  <!--owl slider stylesheet -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <!-- nice select  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+  <!-- font awesome style -->
+  <link href="css/font-awesome.min.css" rel="stylesheet" />
+
+  <!-- Custom styles for this template -->
+  <link href="css/style.css" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="css/responsive.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+      body {
+          font-family: 'Poppins', sans-serif;
+          background-color: #fff;
+      }
+      .product {
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          background-color: #fff;
+          border-radius: 8px;
+          overflow: hidden;
+          padding: 20px;
+      }
+      .carousel-item img {
+          object-fit: cover;
+          height: 400px; /* Set the height for carousel image */
+      }
+      .carousel-container {
+          width: 100%;
+          margin: 0 auto;
+      }
+      .details h2, .details h3, .details h4, .details p {
+          color: #011627;
+      }
+      .details h4 {
+          color: #f72585;
+      }
+      .submit {
+          background-color: #0077b6;
+          color: #fff;
+          font-weight: 500;
+          border: none;
+          border-radius: 30px;
+          box-shadow: 0 10px 10px rgba(85, 63, 240, 0.25);
+          cursor: pointer;
+          transition: .4s;
+      }
+      .submit:hover {
+          background-color: #00b4d8;
+      }
+      .color-option {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          cursor: pointer;
+          display: inline-block;
+          margin-right: 10px;
+          border: 2px solid transparent;
+      }
+
+      /* Responsive Breakpoints */
+      @media (min-width: 992px) {
+          .carousel-container {
+              max-width: 700px; /* Larger width on laptop screens */
+          }
+      }
+  </style>
+</head>
+
+<body class="sub_page">
+
+  <div class="hero_area">
+    <div class="bg-box">
+      <img src="images/hero-bg.jpg" alt="">
+    </div>
+    <!-- header section strats -->
+    <header class="header_section">
+      <div class="container">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+          <a class="navbar-brand" href="index.html">
+            <span>
+              Rozeto
+            </span>
+          </a>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class=""> </span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav  mx-auto ">
+              <li class="nav-item">
+                <a class="nav-link" href="index.html">Home </a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="menu.html">Catogory<span class="sr-only">(current)</span> </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="about.html">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="book.html">Contact</a>
+              </li>
+            </ul>
+            <div class="user_option">
+              <a href="" class="user_link">
+                <i class="fa fa-user" aria-hidden="true"></i>
+              </a>
+              <a class="cart_link" href="#">
+                <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
+                  <g>
+                    <g>
+                      <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
+                   c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
+                    </g>
+                  </g>
+                  <g>
+                    <g>
+                      <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
+                   C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
+                   c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
+                   C457.728,97.71,450.56,86.958,439.296,84.91z" />
+                    </g>
+                  </g>
+                  <g>
+                    <g>
+                      <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
+                   c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
+                    </g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                  <g>
+                  </g>
+                </svg>
+              </a>
+              <form class="form-inline">
+                <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
+                  <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+              </form>
+              <a href="" class="order_online">
+                Order Online
+              </a>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <!-- end header section -->
+  </div>
+
+  <!-- Cart section -->
+
+
+  <div class="container py-5" style="margin-top: 3rem;margin-bottom: 6rem;">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8 product p-0"> <!-- Increased width here -->
+            <div class="row g-0">
+                <!-- Image Carousel -->
+                <div class="col-12 col-md-6">
+                    <div id="carouselExample" class="carousel slide carousel-container" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="https://imgs.search.brave.com/nbJayiPlmj24pjae1pDyUtOqckZvaL1T6qSImvXjFC0/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9i/aWctc2FuZHdpY2gt/aGFtYnVyZ2VyLWJ1/cmdlci13aXRoLWJl/ZWYtcmVkLW9uaW9u/LXRvbWF0by1mcmll/ZC1iYWNvbl8yODI5/LTUzOTguanBnP3Nl/bXQ9YWlzX2h5YnJp/ZA" class="d-block w-100" alt="Product Image 2">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://imgs.search.brave.com/OiW2fiMT2ZsCksqUjc-z9w9n0UKMOOWnNpcnZ-x6B70/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMudW5zcGxhc2gu/Y29tL3Bob3RvLTE1/MzQ3OTA1NjY4NTUt/NGNiNzg4ZDM4OWVj/P2ZtPWpwZyZxPTYw/Jnc9MzAwMCZpeGxp/Yj1yYi00LjAuMyZp/eGlkPU0zd3hNakEz/ZkRCOE1IeHpaV0Z5/WTJoOE1UaDhmR0ox/Y21kbGNueGxibnd3/Zkh3d2ZIeDhNQT09" class="d-block w-100" alt="Product Image 1">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://imgs.search.brave.com/JITDY0s_AowXz2UiBqxSZGEbZY4pZ6vjPB--1gMqbSw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMTE3/NDY0ODgyNC9waG90/by9iaWctY2hlZXNl/LWJ1cmdlci13aXRo/LWZyaWVzLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz0wekRV/UkppZ3ZQcTZ0cWpG/cVV4ajJGNWJKRlN5/R0VfNkFKUGJUVnZu/MHBJPQ" class="d-block w-100" alt="Product Image 3">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product Details -->
+                <div class="col-12 col-md-6 p-3">
+                    <div class="details">
+                        <h3>Cheesy Chicken Patty Burger</h3>
+                        <h3>$150.00</h3>
+                        <h4>35% OFF</h4>
+                        <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam autem, non quod quo tenetur corrupti.</p> -->
+                    </div>
+
+                    <!-- Size Selector -->
+                    <div class="sizes mb-2">
+                        <h5>Size:</h5>
+                        <div class="d-flex">
+                            <div class="form-check me-2">
+                                <input class="form-check-input" type="radio" name="size" id="sizeS">
+                                <label class="form-check-label" for="sizeS">S</label>
+                            </div>
+                            <div class="form-check me-2">
+                                <input class="form-check-input" type="radio" name="size" id="sizeM">
+                                <label class="form-check-label" for="sizeM">M</label>
+                            </div>
+                            <div class="form-check me-2">
+                                <input class="form-check-input" type="radio" name="size" id="sizeL">
+                                <label class="form-check-label" for="sizeL">L</label>
+                            </div>
+                            <div class="form-check me-2">
+                                <input class="form-check-input" type="radio" name="size" id="sizeXL">
+                                <label class="form-check-label" for="sizeXL">XL</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="size" id="sizeXXL">
+                                <label class="form-check-label" for="sizeXXL">XXL</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Color Selector -->
+                    <!-- <div class="colors mb-2">
+                        <h5>Color:</h5>
+                        <div class="d-flex">
+                            <span class="color-option" style="background-color: #d90429;"></span>
+                            <span class="color-option" style="background-color: #38b000;"></span>
+                            <span class="color-option" style="background-color: #0081a7;"></span>
+                            <span class="color-option" style="background-color: #ffd100;"></span>
+                        </div>
+                    </div> -->
+
+                    <!-- Quantity Selector with Add/Minus Buttons -->
+                    <div class="quantity mb-3">
+                        <h5>Quantity:</h5>
+                        <div class="d-flex align-items-center">
+                            <button id="minusBtn" class="btn btn-outline-primary">-</button>
+                            <input type="text" style="margin-left: 13px;margin-right: 13px;" id="quantity" class="form-control w-25 text-center" value="1" readonly>
+                            <button id="plusBtn" class="btn btn-outline-primary">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Buy Button -->
+                    <div class="text-center">
+                        <button class="submit btn w-100">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // JavaScript to handle quantity changes
+    document.getElementById('plusBtn').addEventListener('click', function() {
+        let quantity = document.getElementById('quantity');
+        quantity.value = parseInt(quantity.value) + 1;
+    });
+
+    document.getElementById('minusBtn').addEventListener('click', function() {
+        let quantity = document.getElementById('quantity');
+        if (parseInt(quantity.value) > 1) {
+            quantity.value = parseInt(quantity.value) - 1;
+        }
+    });
+</script>
+
+  <!-- Cart Section -->
+   
+  <!-- footer section -->
+  <footer class="footer_section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 footer-col">
+          <div class="footer_contact">
+            <h4>
+              Contact Us
+            </h4>
+            <div class="contact_link_box">
+              <a href="">
+                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                <span>
+                  Calicut, Kerala
+                </span>
+              </a>
+              <a href="">
+                <i class="fa fa-phone" aria-hidden="true"></i>
+                <span>
+                  Call +01 1234567890
+                </span>
+              </a>
+              <a href="">
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+                <span>
+                  rozeto@gmail.com
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 footer-col">
+          <div class="footer_detail">
+            <a href="" class="footer-logo">
+              Rozeto
+            </a>
+            <p>
+              Best Burgers are Made From Here
+            </p>
+            <div class="footer_social">
+              <a href="">
+                <i class="fa fa-facebook" aria-hidden="true"></i>
+              </a>
+              <a href="">
+                <i class="fa fa-twitter" aria-hidden="true"></i>
+              </a>
+              <a href="">
+                <i class="fa fa-linkedin" aria-hidden="true"></i>
+              </a>
+              <a href="">
+                <i class="fa fa-instagram" aria-hidden="true"></i>
+              </a>
+              <a href="">
+                <i class="fa fa-pinterest" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 footer-col">
+          <h4>
+            Opening Hours
+          </h4>
+          <p>
+            Everyday
+          </p>
+          <p>
+            10.00 Am -10.00 Pm
+          </p>
+        </div>
+      </div>
+      <div class="footer-info">
+        <p>
+          &copy; <span id="displayYear"></span> All Rights Reserved By
+          <a href="https://html.design/">Rozeto</a><br><br>
+        </p>
+      </div>
+    </div>
+  </footer>
+  <!-- footer section -->
+
+  <!-- jQery -->
+  <script src="js/jquery-3.4.1.min.js"></script>
+  <!-- popper js -->
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <!-- bootstrap js -->
+  <script src="js/bootstrap.js"></script>
+  <!-- owl slider -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+  </script>
+  <!-- isotope js -->
+  <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
+  <!-- nice select -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
+  <!-- custom js -->
+  <script src="js/custom.js"></script>
+  <!-- Google Map -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
+  </script>
+  <!-- End Google Map -->
+
+</body>
+
+</html>
+
+
