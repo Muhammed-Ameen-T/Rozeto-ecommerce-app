@@ -1,0 +1,17 @@
+{
+  "name": "rozeto",
+  "version": "1.0.0",
+  "description": "Best Burgers Made Here",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon"
+  },
+  "author": "Ameen",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1",
+    "nodemon": "^3.1.7"
+  }
+}
