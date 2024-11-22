@@ -11,8 +11,12 @@
   "author": "Ameen",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
     "express": "^4.21.1",
-    "mongoose": "^8.8.1",
+    "mongodb": "^6.10.0",
+    "mongoose": "^8.8.2",
+    "nodemailer": "^6.9.16",
     "nodemon": "^3.1.7",
     "path": "^0.12.7"
   }

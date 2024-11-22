@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sign Up</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/images/icons/burger-favicon.png"/>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="/vendor/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" type="text/css" href="/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!-- Main CSS -->
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+<body style="background-color: #666666;">
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100">
+                <form class="login100-form validate-form" id="signupForm" method="POST" action="/signup">
+                    <span class="login100-form-title p-b-43 mb-3">
+                        Sign Up to continue
+                    </span>
+
+                    <!-- Name Field -->
+                    <div class="wrap-input100 validate-input">
+                        <input class="input100" type="text" name="name" id="name" placeholder="Name">
+                        <span class="focus-input100"></span>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="wrap-input100 validate-input">
+                        <input class="input100" type="email" name="email" id="email" placeholder="Email">
+                        <span class="focus-input100"></span>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="wrap-input100 validate-input">
+                        <input class="input100" type="password" name="password" id="password" placeholder="Password">
+                        <span class="focus-input100"></span>
+                    </div>
+
+                    <!-- Confirm Password Field -->
+                    <div class="wrap-input100 validate-input">
+                        <input class="input100" type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password">
+                        <span class="focus-input100"></span>
+                    </div>			
+
+                    <div class="container-login100-form-btn pt-2">
+                        <button type="button" class="login100-form-btn" id="signupButton" >
+                            Sign Up
+                        </button>
+                    </div>
+
+                    <div class="text-center p-t-46 p-b-20">
+                        <span class="txt2">
+                            Already have an Account? <a href="/loadLogin" style="color:#6675df; font-size: large; font-weight: bold;">Login</a>
+                        </span>
+                    </div>
+
+					<div class="text-center p-t-46 p-b-20">
+						<span class="txt2">
+							or sign up using
+						</span>
+					</div>
+
+					<div class="login100-form-social d-flex justify-content-center align-items-center">
+						<a href="#" class="login100-form-social-item bg1 m-2 d-flex justify-content-center align-items-center" style="width: 40px; height: 40px; border-radius: 50%; background-color: #3b5998; color: white; font-size: 20px;">
+							<i class="fa fa-facebook-f" aria-hidden="true"></i>
+						</a>
+					
+						<a href="#" class="login100-form-social-item bg2 m-2 d-flex justify-content-center align-items-center" style="width: 40px; height: 40px; border-radius: 50%; background-color: #1da1f2; color: white; font-size: 20px;">
+							<i class="fa fa-google" aria-hidden="true"></i>
+						</a>
+					</div>
+                </form>
+				<div class="login100-more" style="background-image: url('images/bg-login.jpg');">
+            </div>
+        </div>
+    </div>
+
+    <!-- Dependencies -->
+    <script src="/vendor/jquery/jquery-3.2.1.min.js"></script>
+    <script src="/vendor/bootstrap/js/popper.js"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script>
+        document.getElementById("signupButton").addEventListener("click", function () {
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            // const phone = document.getElementById("phone").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const confirmPassword = document.getElementById("confirmPassword").value.trim();
+
+            // Function to display a single error
+            function showError(message) {
+                Toastify({
+                    text: message,
+                    duration: 3000,
+                    gravity: "bottom",
+                    position: "right",
+					close:true,
+                    backgroundColor: "#FF6347",
+                }).showToast();
+            }
+
+            // Validation
+            if (name.length < 2) {
+                showError("Name must be at least 2 characters long.");
+                return;
+            }
+
+            if (!/\S+@\S+\.\S+/.test(email)) {
+                showError("Enter a valid email address.");
+                return;
+            }
+
+            // if (!/^\+?[\d\s-()]{10,15}$/.test(phone)) {
+            //     showError("Enter a valid phone number.");
+            //     return;
+            // }
+
+            if (password.length < 8) {
+                showError("Password must be at least 8 characters long.");
+                return;
+            }
+
+            if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(password)) {
+                showError("Password must contain uppercase, lowercase, number, and special character.");
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showError("Passwords do not match.");
+                return;
+            }
+
+            // If all validations pass
+            Toastify({
+                text: "Sign Up Successful!",
+                duration: 3000,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "#32CD32",
+            }).showToast();
+
+            // Submit form
+            document.getElementById("signupForm").submit();
+        });
+    </script>
+</body>
+</html>

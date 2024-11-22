@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .error-template {
+            padding: 40px 15px;
+            text-align: center;
+        }
+        .error-actions {
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        .error-404 {
+            font-size: 160px;
+            font-weight: bold;
+            color: #dc3545;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .error-details {
+            font-size: 24px;
+            color: #6c757d;
+            margin: 20px 0;
+        }
+        .back-home {
+            font-size: 18px;
+            padding: 12px 30px;
+            transition: all 0.3s ease;
+        }
+        .back-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .container {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="error-template">
+                    <h1 class="error-404">404</h1>
+                    <h2 class="error-details mb-3">Oops! Page Not Found</h2>
+                    <div class="error-details">
+                        Sorry, the page you requested could not be found.
+                    </div>
+                    <div class="error-actions">
+                        <a href="/" class="btn btn-primary btn-lg back-home">
+                            <i class="bi bi-house-fill me-2"></i>Back to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
