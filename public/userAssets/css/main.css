@@ -222,9 +222,11 @@ iframe {
   display: -ms-flexbox;
   display: flex;
   flex-wrap: wrap;
-  align-items: stretch;
-  flex-direction: row-reverse;
-
+  /* align-items: stretch; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid black;
 }
 
 /*==================================================================
@@ -289,7 +291,7 @@ iframe {
   width: 100%;
   height: 80px;
   position: relative;
-  border: 1px solid #e6e6e6;
+  border: 1px solid #484646;
   border-radius: 10px;
   margin-bottom: 10px;
 }
@@ -617,4 +619,25 @@ input.input100 {
 .login100-form-social-item:hover {
   background: #333333;
   color: #fff;
+}
+
+
+/* Spinner styling */
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+/* Spinner animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

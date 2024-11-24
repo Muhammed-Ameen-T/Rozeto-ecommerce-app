@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Sign Up</title>
+    <title>Rozeto</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/images/icons/burger-favicon.png"/>
+    <link rel="shortcut icon" href="images/about-img.png" type="" />
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="/vendor/bootstrap/css/bootstrap.min.css">
     <!-- Font Awesome -->
@@ -16,10 +16,11 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 <body style="background-color: #666666;">
+    <%- include("../../views/partials/user/header.ejs") %>
     <div class="limiter">
         <div class="container-login100">
             <div class="wrap-login100">
-                <form class="login100-form validate-form" id="loignForm" method="POST" action="/login">
+                <form class="login100-form validate-form my-4" id="loignForm" style="border: 1px solid rgb(80, 78, 78);border-radius: 15px;" method="POST" action="/login">
                     <span class="login100-form-title p-b-43 mb-3">
                         login to continue
                     </span>
@@ -42,15 +43,15 @@
                         <span class="focus-input100"></span>
                     </div>		
 
-                    <div class="container-login100-form-btn pt-2">
+                    <div class="container-login100-form-btn pt-2 mt-4">
                         <button type="button" class="login100-form-btn mb-3" id="loginButton" >
                             Login
                         </button>
                     </div>
 
-                    <div class="text-center p-t-46 p-b-20">
+                    <div class="text-center p-t-46 p-b-20 mt-3">
                         <span class="txt2 mb-4">
-                            Do not have an Account? <a href="/loadSignup" style="color:#6675df; font-size: large; font-weight: bold;">Register</a>
+                            Do not have an Account? <a href="/signup" style="color:#6675df; font-size: large; font-weight: bold;text-decoration:none ;">Register</a>
                         </span>
                     </div>
 
@@ -60,21 +61,17 @@
 						</span>
 					</div>
 
-					<div class="login100-form-social d-flex justify-content-center align-items-center">
-						<a href="#" class="login100-form-social-item bg1 m-2 d-flex justify-content-center align-items-center" style="width: 40px; height: 40px; border-radius: 50%; background-color: #3b5998; color: white; font-size: 20px;">
-							<i class="fa fa-facebook-f" aria-hidden="true"></i>
-						</a>
-					
-						<a href="#" class="login100-form-social-item bg2 m-2 d-flex justify-content-center align-items-center" style="width: 40px; height: 40px; border-radius: 50%; background-color: #1da1f2; color: white; font-size: 20px;">
+					<div class="login100-form-social d-flex justify-content-center align-items-center">					
+						<a href="#" class="login100-form-social-item bg2 m-2 d-flex justify-content-center align-items-center mt-4" style="width: 40px; height: 40px; border-radius: 50%; background-color: #6675df; color: white; font-size: 20px;text-decoration:none ;">
 							<i class="fa fa-google" aria-hidden="true"></i>
 						</a>
 					</div>
                 </form>
-				<div class="login100-more" style="background-image: url('images/bg-login.jpg');">
+				<!-- <div class="login100-more" style="background-image: url('images/bg-login.jpg');"> -->
             </div>
         </div>
     </div>
-
+    <%-include("../../views/partials/user/footer.ejs")%>
     <!-- Dependencies -->
     <script src="/vendor/jquery/jquery-3.2.1.min.js"></script>
     <script src="/vendor/bootstrap/js/popper.js"></script>
@@ -100,6 +97,11 @@
             }
 
             // Validation
+            if ( !email || !password) {
+                showError('All fields are required. Please fill in all the fields.');
+                return; 
+            }
+
             if (!/\S+@\S+\.\S+/.test(email)) {
                 showError("Enter a valid email address.");
                 return;
