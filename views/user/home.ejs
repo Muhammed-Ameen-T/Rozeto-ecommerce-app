@@ -12,7 +12,11 @@
             <div class="row">
               <div class="col-md-7 col-lg-6">
                 <div class="detail-box">
-                  <h1>Fast Food Restaurant</h1>
+                  <h1><% if (user) { %>
+                  Hello, <strong><%= user.name %></strong>
+                  <% } else { %>
+                  Rozeto Ecommerce App<% } %></h1>
+                  
                   <p>
                     Doloremque, itaque aperiam facilis rerum, commodi,
                     temporibus sapiente ad mollitia laborum quam quisquam esse

@@ -2,6 +2,7 @@
 import express from 'express';
 import path from 'path';
 import userRouter from './routes/userRouter.js';
+import adminRouter from './routes/adminRouter.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import env from 'dotenv';
@@ -11,6 +12,8 @@ import nocache from 'nocache'
 // Modules Importing
 import connectDB from './config/db.js'
 import { nextTick } from 'process';
+import passport from './config/passport.js';
+import { handle404, handleErrors } from './middlewares/errorMiddleware.js'; // Import middleware
 
 // External Eminities
 env.config();
@@ -23,7 +26,7 @@ app.set('views', [path.resolve(__dirname, 'views/user'),path.resolve(__dirname, 
 
 // parse incoming request bodies.
 app.use(express.json())
-app.use(express.urlencoded({extended:true}))
+app.use(express.urlencoded({extended:true})) 
 // Session management middleware
 app.use(session({
     secret:process.env.SESSION_SECRET,
@@ -35,6 +38,11 @@ app.use(session({
         maxAge:72*60*60*1000
     }
 }))
+
+// passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
 // cache Control Middleware
 app.use((req, res, next) => {
     res.set('Cache-Control', 'no-store'); 
@@ -42,36 +50,27 @@ app.use((req, res, next) => {
 });
 
 // Serving Static Files (Middlewares)
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public','userAssets')));
 app.use(express.static(path.join(__dirname, 'public','adminAssets')));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'public')));
+
+// Serve Staic Files To the Specific Routes
 app.use('/admin', express.static(path.join(__dirname, 'admin')));
 app.use('/user', express.static(path.join(__dirname, 'user')));
+
+// State The Routes
 app.use('/',userRouter)
+app.use('/admin',adminRouter)
+
+// Cache Control Middleware
+app.use(nocache());
 
 
+// Catch-All Middleware for 404 Errors
+app.use(handle404);
 
-// Catch-all for undefined routes
-app.use((req, res, next) => {
-    const error = new Error('Page Not Found');
-    error.status = 404;
-    next(error); 
-});
-
-// Error-handling middleware
-app.use((error, req, res, next) => {
-    const status = error.status || 500;
-    res.status(status);
-
-    // Render a custom error page for 404 or other errors
-    if (status === 404) {
-        res.render('pagenotfound', { errorMessage: error.message });
-    } else {
-        console.log('Something went wrong on the server!');
-    }
-});
-
+// Global Error Handling Middleware
+app.use(handleErrors);
 
 // DataBase Connection (MONGO DB)
 connectDB()
@@ -82,3 +81,4 @@ let PORT = process.env.PORT_NUMBER
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
 });
+

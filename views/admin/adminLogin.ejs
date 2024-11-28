@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+	
+<!-- Mirrored from www.bootstrapget.com/demos/themeforest/unipro-admin-template/demos/04-design-red/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 19 Nov 2024 07:09:58 GMT -->
+<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- Meta -->
+		<meta name="description" content="UniPro App">
+		<meta name="author" content="ParkerThemes">
+		<link rel="shortcut icon" href="/adminAssets/img/fav.png" />
+
+		<!-- Title -->
+		<title>Rozeto Admin Login</title>
+
+
+		<!-- *************
+			************ Common Css Files *************
+		************ -->
+		<!-- Bootstrap css -->
+		<link rel="stylesheet" href="/adminAssets/css/bootstrap.min.css">
+		
+		<!-- Main css -->
+		<link rel="stylesheet" href="/adminAssets/css/main.css">
+
+
+		<!-- *************
+			************ Vendor Css Files *************
+		************ -->
+		<style>
+			.error-message {
+				color: red;
+				margin-bottom: 15px;
+				padding: 10px;
+				background-color: #ffeeee;
+				border: 1px solid #ff0000;
+				border-radius: 5px;
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body class="authentication">
+
+		
+		<!-- Loading wrapper end -->
+
+		<!-- *************
+			************ Login container start *************
+		************* -->
+		<div class="login-container">
+
+			<div class="container-fluid h-100">
+			
+			<!-- Row start -->
+			<div class="row g-0 h-100">
+				<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+					<div class="login-about">
+						<div class="slogan">
+							<span>Rozeto</span>
+							<span>Admin</span>
+							<span>Login.</span>
+						</div>
+						<div class="about-desc">
+							Rozeto Indias Fastest food delivery app Admin Control Panel.
+						</div>
+
+					</div>
+				</div>
+				<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+					<div class="login-wrapper">
+						<form action="/admin/login" method="post" id="loginForm">
+							<div class="login-screen">
+								<div class="login-body">
+									<h6>Welcome back,<br>Please login to your account.</h6>
+									<div class="field-wrapper">
+										<input type="email" name="email" id="email" autofocus>
+										<div class="field-placeholder">Email ID</div>
+									</div>
+									<div class="field-wrapper mb-3">
+										<input type="password" id="pasword" name="password">
+										<div class="field-placeholder">Password</div>
+									</div>
+									<!-- <div id="errorContainer" style="display: none; color: red;"></div> -->
+									<% if (locals.message) { %>
+										<div class="error-message">
+											<%= message %>
+										</div>
+									<% } %>
+									<div class="actions">
+										<button type="submit" class="btn btn-primary">Login</button>
+									</div>
+								</div>
+								
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<!-- Row end -->
+
+		
+			</div>
+		</div>
+		<!-- *************
+			************ Login container end *************
+		************* -->
+
+
+
+
+<script>
+	// document.getElementById('loginForm').addEventListener('submit', async (e) => {
+	// 	e.preventDefault();
+		
+	// 	const email = document.getElementById('email').value;
+	// 	const password = document.getElementById('password').value;
+		
+	// 	try {
+	// 		if(!email||!password){
+	// 			displayError('All Fields are Required')
+	// 		}
+	
+	// 		const response = await fetch('/admin/login', {
+	// 			method: 'POST',
+	// 			headers: {
+	// 				'Content-Type': 'application/json'
+	// 			},
+	// 			body: JSON.stringify({ email, password })
+	// 		});
+			
+	// 		const data = await response.json();
+			
+	// 		if (data.success) {
+	// 			window.location.href = data.redirectUrl;
+	// 		} else {
+	// 			displayError(data.message);
+	// 		}
+	// 	} catch (error) {
+	// 		displayError('An unexpected error occurred. Please try again later.');
+	// 	}
+	// });
+
+	// function displayError(message) {
+	// 	const errorContainer = document.getElementById('errorContainer');
+	// 	errorContainer.innerHTML = message;
+	// 	errorContainer.style.display = 'block';
+	// }
+
+</script>
+
+
+
+
+
+
+
+
+
+		
+
+		<!-- *************
+			************ Required JavaScript Files *************
+		************* -->
+		<!-- Required jQuery first, then Bootstrap Bundle JS -->
+		<script src="js/jquery.min.js"></script>
+		<script src="js/bootstrap.bundle.min.js"></script>
+		<script src="js/modernizr.js"></script>
+		<script src="js/moment.js"></script>
+		
+		<!-- *************
+			************ Vendor Js Files *************
+		************* -->
+
+		<!-- Main Js Required -->
+		<!-- <script src="js/main.js"></script> -->
+
+	</body>
+
+<!-- Mirrored from www.bootstrapget.com/demos/themeforest/unipro-admin-template/demos/04-design-red/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 19 Nov 2024 07:09:59 GMT -->
+</html>

@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+	
+<!-- Mirrored from www.bootstrapget.com/demos/themeforest/unipro-admin-template/demos/04-design-red/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 19 Nov 2024 07:08:27 GMT -->
+<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- Meta -->
+		<meta name="description" content="Responsive Bootstrap4 Dashboard Template">
+		<meta name="author" content="ParkerThemes">
+		<link rel="shortcut icon" href="/img/fav.png">
+ 
+		<!-- Title -->
+		<title>Rozeto Admin</title>
+
+
+		<!-- *************
+			************ Common Css Files *************
+		************ -->
+		<!-- Bootstrap css -->
+		<link rel="stylesheet" href="/adminAssets/css/bootstrap.min.css">
+		
+		<!-- Icomoon Font Icons css -->
+		<link rel="stylesheet" href="/adminAssets/fonts/style.css">
+
+		<!-- Main css -->
+		<link rel="stylesheet" href="/adminAssets/css/main.css">
+		<link rel="stylesheet" href="https://unpkg.com/sweetalert/dist/sweetalert.css">
+		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+		
+
+		<!-- *************
+			************ Vendor Css Files *************
+		************ -->
+
+		<!-- Mega Menu -->
+		<link rel="stylesheet" href="/adminAssets/vendor/megamenu/css/megamenu.css">
+
+		<!-- Search Filter JS -->
+		<link rel="stylesheet" href="/adminAssets/vendor/search-filter/search-filter.css">
+		<link rel="stylesheet" href="/adminAssets/vendor/search-filter/custom-search-filter.css">
+		
+	</head>
+	<body>
+
+		<!-- Loading wrapper start -->
+		<!-- <div id="loading-wrapper">
+			<div class="spinner-border"></div>
+			Loading...
+		</div> -->
+		<!-- Loading wrapper end -->
+
+		<!-- Page wrapper start -->
+		<div class="page-wrapper">
+			
+			<!-- Sidebar wrapper start -->
+			<nav class="sidebar-wrapper">
+
+				<!-- Sidebar content start -->
+				<div class="sidebar-tabs">
+
+					<!-- Tabs nav start -->
+					<div class="nav" role="tablist" aria-orientation="vertical">
+						<a href="#" class="logo">
+							<img src="/img/logo.svg" alt="Uni Pro Admin">
+						</a>
+						<a class="nav-link " id="home-tab" href="/admin" role="tab" onclick="handleNavLinkClick(event)" aria-controls="tab-home" aria-selected="false">
+							<i class="icon-home2"></i>
+							<span class="nav-link-text">Dashboards</span>
+						</a>
+						<a class="nav-link" id="product-tab" href="/admin/product-table" onclick="handleNavLinkClick(event)"	role="tab" aria-controls="tab-product" aria-selected="false">
+							<i class="icon-box"></i>
+							<span class="nav-link-text">Product Management</span>
+						</a>
+						<a class="nav-link" id="pages-tab" href="/admin/user-table" onclick="handleNavLinkClick(event)" role="tab" aria-controls="tab-pages" aria-selected="false">
+							<i class="icon-user1"></i>
+							<span class="nav-link-text">User Management</span>
+						</a>
+						<a class="nav-link" id="forms-tab" href="/admin/cat-table" onclick="handleNavLinkClick(event)" role="tab" aria-controls="tab-forms" aria-selected="false">
+							<i class="icon-layers2"></i>
+							<span class="nav-link-text">Catogory Management</span>
+						</a>
+						<a class="nav-link" id="components-tab" href="#tab-components" onclick="handleNavLinkClick(event)" role="tab" aria-controls="tab-components" aria-selected="false">
+							<i class="icon-archive1"></i>
+							<span class="nav-link-text">Order Management</span>
+						</a>
+						<a class="nav-link" id="graphs-tab" href="#tab-graphs" onclick="handleNavLinkClick(event)" role="tab" aria-controls="tab-graphs" aria-selected="false">
+							<i class="icon-credit-card"></i>
+							<span class="nav-link-text">Coupon Management</span>
+						</a>
+						<a class="nav-link" id="authentication-tab" href="#tab-authentication" onclick="handleNavLinkClick(event)" role="tab" aria-controls="tab-authentication" aria-selected="false">
+							<i class="icon-pie-chart1"></i>
+							<span class="nav-link-text">Offer Management</span>
+						</a>
+						<!-- <a class="nav-link settings" id="settings-tab" data-bs-toggle="tab" href="#tab-settings" role="tab" aria-controls="tab-authentication" aria-selected="false">
+							<i class="icon-settings1"></i>
+							<span class="nav-link-text">Settings</span>
+						</a> -->
+					</div>
+					<!-- Tabs nav end -->
+
+					<!-- Tabs content start -->
+					
+					<!-- Tabs content end -->
+
+				</div>
+				<!-- Sidebar content end -->
+				
+			</nav>
+			<!-- Sidebar wrapper end -->
+            <div class="main-container">
+
+				<!-- Page header starts -->
+				<div class="page-header">
+					
+					<!-- Row start -->
+					<div class="row gutters">
+						<div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-9 mt-3">
+
+							<!-- Search container start -->
+							<h2 class="text-danger">Rozeto Admin Dashboard</h2>
+							<!-- Search container end -->
+
+							
+						</div>
+						<div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-3">
+							<!-- Header actions start -->
+							<ul class="header-actions">
+								<li class="dropdown">
+									<a href="#" id="userSettings" class="user-settings" data-toggle="dropdown" aria-haspopup="true">
+										<span class="avatar">
+											<img src="/img/user.svg" alt="User Avatar">
+											<span class="status busy"></span>
+										</span>
+									</a>
+									<div class="dropdown-menu dropdown-menu-end md" aria-labelledby="userSettings">
+										<div class="header-profile-actions" >
+											<a href="/admin/product-table"><i class="icon-user1"></i>Profile</a>
+											<a href="/admin/logout"><i class="icon-log-out1"></i>Logout</a>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<!-- Header actions end -->
+
+						</div>
+					</div>
+					<!-- Row end -->					
+
+				</div>
+				<style>
+					.nav-link {
+						transition: background-color 0.3s ease, color 0.3s ease;
+						display: flex;
+						align-items: center;
+						padding: 10px;
+						text-decoration: none;
+						color: inherit;
+					}
+					.nav-link.active-yellow {
+						background-color: rgba(255, 0, 0, 0.166) !important;
+						color: rgb(0, 81, 255) !important;
+					}
+					.nav-link i, .nav-link-text {
+						pointer-events: none;
+					}
+				</style>
+				
+				<script>
+					function handleNavLinkClick(event) {
+						event.preventDefault(); // Prevent immediate navigation
+				
+						// Remove active-yellow class from all nav links
+						document.querySelectorAll('.nav-link').forEach(link => {
+							link.classList.remove('active-yellow');
+						});
+				
+						// Add active-yellow class to the clicked link
+						const clickedLink = event.currentTarget;
+						clickedLink.classList.add('active-yellow');
+				
+						// Navigate to the link after a short delay to show color change
+						setTimeout(() => {
+							window.location.href = clickedLink.getAttribute('href');
+						}, 200);
+					}
+				
+					// Highlight the currently active page on page load
+					document.addEventListener('DOMContentLoaded', () => {
+						const currentPath = window.location.pathname;
+						const navLinks = document.querySelectorAll('.nav-link');
+						
+						navLinks.forEach(link => {
+							const href = link.getAttribute('href');
+							
+							// Check if current path matches or is a subset of the link's href
+							if (currentPath === href || 
+								(href !== '#' && currentPath.includes(href))) {
+								// Remove previous active states
+								navLinks.forEach(l => l.classList.remove('active-yellow'));
+								
+								// Add active state to matching link
+								link.classList.add('active-yellow');
+							}
+						});
+					});
+				</script>

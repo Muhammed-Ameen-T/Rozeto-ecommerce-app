@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Rozeto</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="images/about-img.png" type="" />
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="/vendor/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" type="text/css" href="/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!-- Main CSS -->
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+<body style="background-color: #666666;">
+    <%- include("../../views/partials/user/header.ejs") %>
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100">
+                <form class="login100-form validate-form my-4" id="loginForm" style="border: 1px solid rgb(80, 78, 78);border-radius: 15px;">
+                    <span class="login100-form-title p-b-43 mb-3">login to continue</span>
+
+                    <!-- Email Field -->
+                    <div class="wrap-input100 validate-input">
+                        <input class="input100" type="email" name="email" id="email" placeholder="Email">
+                        <span class="focus-input100"></span>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="wrap-input100 validate-input">
+                        <input class="input100" type="password" name="password" id="password" placeholder="Password">
+                        <span class="focus-input100"></span>
+                    </div>		
+
+                    <div class="container-login100-form-btn pt-2 mt-4">
+                        <button type="submit" class="login100-form-btn mb-3" id="loginButton">Login</button>
+                    </div>
+
+                    <div class="text-center p-t-46 p-b-20 mt-3">
+                        <span class="txt2 mb-4">
+                            Do not have an Account? <a href="/signup" style="color:#6675df; font-size: large; font-weight: bold;text-decoration:none ;">Register</a>
+                        </span>
+                    </div>
+
+                    <div class="text-center p-t-46 p-b-20">
+                        <span class="txt2 mb-3">or Login using</span>
+                    </div>
+
+                    <div class="login100-form-social d-flex justify-content-center align-items-center">					
+                        <a href="/auth/google" class="login100-form-social-item bg2 m-2 d-flex justify-content-center align-items-center mt-4" style="width: 40px; height: 40px; border-radius: 50%; background-color: #6675df; color: white; font-size: 20px;text-decoration:none ;">
+                            <i class="fa fa-google" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <%-include("../../views/partials/user/footer.ejs")%>
+    <!-- Dependencies -->
+    <script src="/vendor/jquery/jquery-3.2.1.min.js"></script>
+    <script src="/vendor/bootstrap/js/popper.js"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", async function (e) {
+            e.preventDefault(); // Prevent default form submission
+
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            // Function to display alerts
+            function showAlert(message, type = "error") {
+                const colors = {
+                    success: "#28a745",
+                    error: "#FF6347",
+                    warning: "#ffc107",
+                };
+
+                Toastify({
+                    text: message,
+                    duration: 3000,
+                    gravity: "bottom",
+                    position: "right",
+                    close: true,
+                    backgroundColor: colors[type],
+                }).showToast();
+            }
+
+            // Validation
+            if (!email || !password) {
+                showAlert("All fields are required. Please fill in all fields.", "error");
+                return;
+            }
+
+            if (!/\S+@\S+\.\S+/.test(email)) {
+                showAlert("Enter a valid email address.","error");
+                return;
+            }
+
+            if (password.length < 8) {
+                showAlert("Password must be at least 8 characters long.","error");
+                return;
+            }
+
+            // Disable button during AJAX call
+            const loginButton = document.getElementById("loginButton");
+            loginButton.disabled = true;
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password }),
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    showAlert(data.message || "Login failed. Please try again.");
+                    return;
+                }
+
+                // Success alert
+                showAlert(data.message || "Login successful!", "success");
+
+                // Redirect to the homepage
+                setTimeout(() => {
+                    window.location.href = "/";
+                }, 2000);
+            } catch (error) {
+                console.error(error);
+                showAlert("An unexpected error occurred. Please try again later.");
+            } finally {
+                loginButton.disabled = false; // Re-enable button after the request
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+        }
+
+        .error-container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            transform: scale(0.9);
+            opacity: 0;
+            animation: fadeInScale 0.6s forwards;
+        }
+
+        @keyframes fadeInScale {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .error-icon {
+            font-size: 100px;
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .error-title {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .error-message {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .error-btn {
+            display: inline-block;
+            background-color: #4a90e2;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .error-btn:hover {
+            background-color: #357abd;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.2);
+        }
+
+        .error-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: all 0.5s ease;
+        }
+
+        .error-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 600px) {
+            .error-container {
+                padding: 20px;
+            }
+
+            .error-icon {
+                font-size: 70px;
+            }
+
+            .error-title {
+                font-size: 2rem;
+            }
+
+            .error-message {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Different Error Types */
+        .error-404 { background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); }
+        .error-500 { background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%); }
+        .error-network { background: linear-gradient(135deg, #20bf6b 0%, #4cd3e2 100%); }
+    </style>
+</head>
+<body>
+    <div class="error-container" id="errorContainer">
+        <div class="error-icon">🚫</div>
+        <h1 class="error-title">Oops! Something went wrong</h1>
+        <p class="error-message">
+            We're sorry, but the page you are looking for cannot be found or has encountered an error. 
+            Please check the URL or try again later.
+        </p>
+        <button class="error-btn" id="backButton" href="/">Go Back Home</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const backButton = document.getElementById('backButton');
+            const errorContainer = document.getElementById('errorContainer');
+
+            // Dynamic Error Type Setter
+            function setErrorType(type) {
+                switch(type) {
+                    case '404':
+                        errorContainer.classList.add('error-404');
+                        document.querySelector('.error-icon').textContent = '🔍';
+                        document.querySelector('.error-title').textContent = 'Page Not Found';
+                        document.querySelector('.error-message').textContent = 'The page you are looking for might have been removed or is temporarily unavailable.';
+                        break;
+                    case '500':
+                        errorContainer.classList.add('error-500');
+                        document.querySelector('.error-icon').textContent = '⚠️';
+                        document.querySelector('.error-title').textContent = 'Internal Server Error';
+                        document.querySelector('.error-message').textContent = 'Our server encountered an unexpected error. Please try again later.';
+                        break;
+                    case 'network':
+                        errorContainer.classList.add('error-network');
+                        document.querySelector('.error-icon').textContent = '🌐';
+                        document.querySelector('.error-title').textContent = 'Network Error';
+                        document.querySelector('.error-message').textContent = 'Unable to connect to the server. Please check your internet connection.';
+                        break;
+                    default:
+                        // Default error type
+                }
+            }
+
+            // Back Button Functionality
+            backButton.addEventListener('click', () => {
+                // Option 1: Go back to previous page
+                // window.history.back();
+
+                // Option 2: Redirect to home page
+                window.location.href = '/';
+            });
+
+            // Optional: Set error type based on parameter or condition
+            // setErrorType('404');
+        });
+    </script>
+</body>
+</html>

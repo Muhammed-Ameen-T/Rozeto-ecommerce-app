@@ -53,7 +53,7 @@
                         <button type="button" class="login100-form-btn" id="signupButton">
                             Sign Up
                         </button>
-                        <div id="spinner" class="spinner" style="display: none;"></div>
+                        <div id="spinner" class="spinner mt-2" style="display: none;"></div>
                     </div>
 
                     <div class="text-center p-t-46 p-b-20">
@@ -69,7 +69,7 @@
                     </div>
 
                     <div class="login100-form-social d-flex justify-content-center align-items-center">
-                        <a href="#" class="login100-form-social-item bg2 m-2 d-flex justify-content-center align-items-center mt-3" style="width: 40px; height: 40px; border-radius: 50%; background-color: #6675df; color: white; font-size: 20px;text-decoration:none;">
+                        <a href="/auth/google" class="login100-form-social-item bg2 m-2 d-flex justify-content-center align-items-center mt-3" style="width: 40px; height: 40px; border-radius: 50%; background-color: #6675df; color: white; font-size: 20px;text-decoration:none;">
                             <i class="fa fa-google" aria-hidden="true"></i>
                         </a>
                     </div>
@@ -145,9 +145,8 @@
             spinner.style.display = "block";
             // Simulate a process with a timeout
             setTimeout(() => {
-                // Hide the spinner after 3 seconds
                 spinner.style.display = "none";
-            }, 6000); // 3000ms = 3 seconds
+            }, 6000);
             const response = await fetch('/signup', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

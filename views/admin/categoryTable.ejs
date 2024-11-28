@@ -1,0 +1,313 @@
+<%- include("../../views/partials/admin/header.ejs") %>
+				<!-- Content wrapper scroll start -->
+				<div class="content-wrapper-scroll">
+
+					<!-- Content wrapper start -->
+					<div class="content-wrapper">
+
+						<!-- Row start -->
+						<div class="row gutters">
+							<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+								<div class="card">
+									<div class="card-body">
+										<div class="d-flex" style="justify-content: space-between;">
+											<h3>Category Management</h3>
+											<!-- Search Form Start -->
+											<!-- <form method="GET" action="/admin/cat-table">
+											  <div class="input-group mb-3" style="width: 25rem;">
+												<input
+												  type="text"
+												  class="form-control"
+												  placeholder="Search by name or email"
+												  name="search"
+												  value="<%= search %>"
+												/>
+												<div class="input-group-append">
+												  <button class="btn btn-primary" type="submit">Search</button>
+												</div>
+											  </div>
+											</form> -->
+										  </div>
+										<div class="table-responsive">
+											<table id="copy-print-csv" class="table v-middle table-striped" style="font-size: 14px;">
+												<thead class="table-danger">
+													<tr>
+														<th>#</th>
+													  	<th>Banner</th>
+													  	<th>Name</th>
+														<th>Description</th>
+													  	<th>Added Date</th>													  
+													  	<th>Is Listed</th>
+													  	<th>Actions</th>
+													</tr>
+												</thead>
+												<tbody>
+													<%cat.reverse().forEach((category,index)=>{%>
+													<tr>
+													  <td><%= index + 1 %></td>
+													  <td>													  		
+														<img src="/images/f2.png" style="width: 3.2rem;" class="media-avatar" alt="Product">
+													  </td>
+													 
+													  <td><%=category.name%></td>				
+													  <td><%=category.description%></td>									  
+													  <td><%= new Date(category.createdAt).toLocaleDateString() %> </td>
+													  <td>
+														<% if (category.isListed) { %>
+														  	<span class="badge bg-success" style="height: 20px; width: 70px; font-size: 11px;">Listed</span>
+														<% } else { %>
+															<span class="badge bg-danger" style="height: 20px; width: 70px; font-size: 11px;">Unlisted</span>
+														<% } %>
+													  </td>
+													  <td>
+													  	<div class="actions">
+													  		<a href="#" data-toggle="tooltip" data-placement="top" title="Edit Category" data-original-title="Edit">
+													  			<i class="icon-edit1 text-info me-4" style="font-size: 20px;"></i>
+													  		</a>
+															<% if (category.isListed) { %>
+																<a href="/admin/blockCat?id=<%= category._id %>" data-toggle="tooltip" data-placement="top" title="Unlist the Category"data-original-title="Block">
+																	<i class="icon-slash text-danger" style="font-size: large"></i>
+																</a>
+															<% } else { %>
+																<a href="/admin/unblockCat?id=<%= category._id %>" data-toggle="tooltip" data-placement="top" title="List the Category"data-original-title="Block">
+																	<i class="icon-unlock text-success" style="font-size: large"></i>
+																</a>
+															<% } %>
+													  	</div>
+													  </td>
+													</tr>
+													<%})%>
+												</tbody>
+								    		</table>
+											<button onclick="dsAdd()" id="add-kk" type="submit" class="btn btn-info" href=""><a   style="color: white;">+&nbsp;Add New Category</a></button>
+											<nav aria-label="Page navigation example" style="float: right;">
+												<ul class="pagination">
+												  <% if (currentPage> 1) { %>
+													<li class="page-item">
+														<a class="page-link" href="?page=<%= currentPage - 1 %>"
+														>Previous</a
+														>
+													</li>
+													<% } %> <% for (let i=1; i <=totalPages; i++) { %>
+													<li
+														class="page-item <%= (i === currentPage) ? 'active' : '' %>"
+													>
+														<a class="page-link" href="?page=<%= i %>"> <%= i %> </a>
+													</li>
+													<% } %> <% if (currentPage < totalPages) { %>
+													<li class="page-item">
+														<a class="page-link" href="?page=<%= currentPage + 1 %>"
+														>Next</a
+														>
+													</li>
+												  <% } %>
+												</ul>
+											  </nav>
+										</div>
+										</div>
+									</div>
+								</div>
+								<div class="card" style="display: none;" id="add_card">
+									<div class="card-header">
+										<div class="card-title">Add New Category</div>
+									</div>
+									<div class="card-body">
+										<!-- Row start -->
+										<div class="row gutters">
+											<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+												<form action="/admin/addcat" method="post" onsubmit="handleForm(event)">
+														<div class="field-wrapper">
+															<input class="form-control" name="name" id="cat-name" type="text">
+															<div class="field-placeholder">Category Name <span class="text-danger">*</span></div>
+															<span id="name-error" class="error-message text-danger"></span>														
+														</div>
+													</div>
+													<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+														<div class="field-wrapper" style="width: 45rem;">
+															<input class="form-control" id="cat-des" name="description" type="text">
+															<div class="field-placeholder">Description<span class="text-danger">*</span></div>
+															<div id="description-error" class="error-message text-danger"></div>
+														</div>
+													</div>
+														<!-- Field wrapper end -->
+													</div>
+													<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+														<a href="/admin/cat-table">	
+															<button class="btn btn-light" type="button">Cancel</button>
+														</a>
+														<button type="submit" class="btn btn-primary">Submit</button>
+													</div>
+												</form>
+													<!-- <div id="dropzone">
+														<form action="/upload" method="POST" enctype="multipart/form-data"> 
+															<div class="form-group"> 
+																<label for="image">Choose an image<span class="text-danger">*</span></label> 
+																<input type="file" class="form-control-file" id="image" name="image" accept="image/*" onchange="previewImage(event)"> 
+															</div> 
+															<div class="form-group d-flex"> 
+																<img id="img-preview" class="img-preview mt-3" src="https://via.placeholder.com/200" alt="Image Preview"> 
+																<button type="submit" style="margin-top: 1rem;" class="btn btn-primary">Upload</button> 
+															</div> 
+													</div> -->
+											</div>
+											<!-- Row end -->
+										<!-- Row start -->
+										
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Row end -->
+						 
+					</div>
+				</div>
+
+
+				<script> 
+										// Function to display the add card
+					function dsAdd() {
+						document.getElementById('add_card').style.display = 'block';
+					}
+
+					// Function to preview the selected image
+					function previewImage(event) {
+						const file = event.target.files[0];
+						const reader = new FileReader();
+
+						reader.onload = function() {
+							const output = document.getElementById('img-preview');
+							output.src = reader.result;
+						};
+
+						// Validate file type and size
+						if (file) {
+							const fileType = file.type;
+							const fileSize = file.size;
+
+							const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+							if (!validTypes.includes(fileType)) {
+								alert('Invalid file type. Please upload an image.');
+								event.target.value = ''; // Clear the file input
+								return;
+							}
+
+							if (fileSize > 5 * 1024 * 1024) { // 5MB limit
+								alert('File is too large. Maximum size is 5MB.');
+								event.target.value = ''; // Clear the file input
+								return;
+							}
+
+							reader.readAsDataURL(file);
+						}
+					}
+
+					// Function to handle form submission
+					function handleForm(event) {
+						event.preventDefault();
+
+						if (!validateForm()) {
+							return;
+						}
+
+						const name = document.getElementById('cat-name').value.trim();
+						const description = document.getElementById('cat-des').value.trim();
+
+						axios.post('/admin/addcat', {
+							name,
+							description
+						})
+						.then(response => {
+							Swal.fire({
+								icon: 'success',
+								title: 'Success',
+								text: 'Category added successfully'
+							}).then(() => location.reload());
+						})
+						.catch(error => {
+							if (error.response) {
+								displayErrorMessages(error.response.data.error);
+							} else {
+								Swal.fire({
+									icon: 'error',
+									title: 'Error',
+									text: error.message
+								});
+							}
+						});
+					}
+
+					function displayErrorMessages(errorMessage) {
+						const errorMapping = {
+							'Category Already Exists': 'name-error',
+							'name': 'name-error',
+							'description': 'description-error'
+						};
+
+						clearErrorMessages();
+
+						if (errorMessage.includes('name')) {
+							displayErrorMessage(errorMapping['name'], errorMessage);
+						} else if (errorMessage.includes('description')) {
+							displayErrorMessage(errorMapping['description'], errorMessage);
+						} else {
+							Swal.fire({
+								icon: 'error',
+								title: 'Error',
+								text: errorMessage
+							});
+						}
+					}
+
+					function validateForm() {
+						clearErrorMessages();
+						const name = document.getElementById('cat-name').value.trim();
+						const description = document.getElementById('cat-des').value.trim();
+						let isValid = true;
+
+						if (name === "") {
+							displayErrorMessage('name-error', 'Category name is required');
+							isValid = false;
+						} else if (name.length < 2) {
+							displayErrorMessage('name-error', 'Category name must be at least 2 characters');
+							isValid = false;
+						} else if (!/^[a-zA-Z\s]+$/.test(name)) {
+							displayErrorMessage('name-error', 'Category name should only contain letters');
+							isValid = false;
+						}
+
+						if (description === "") {
+							displayErrorMessage('description-error', 'Category description is required');
+							isValid = false;
+						} else if (description.length < 10) {
+							displayErrorMessage('description-error', 'Description must be at least 10 characters');
+							isValid = false;
+						} else if (!/^[a-zA-Z\s]+$/.test(description)) {
+							displayErrorMessage('description-error', 'Description should only contain letters');
+							isValid = false;
+						}
+
+						return isValid;
+					}
+
+					function displayErrorMessage(elementId, message) {
+						const errorElement = document.getElementById(elementId);
+						if (errorElement) {
+							errorElement.innerText = message;
+							errorElement.style.display = 'block';
+						}
+					}
+
+					function clearErrorMessages() {
+						const errorElements = document.querySelectorAll('.error-message');
+						errorElements.forEach(element => {
+							element.innerText = "";
+							element.style.display = 'none';
+						});
+					}
+
+
+				</script>
+				<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+				<!-- Content wrapper scroll end -->
+				<%- include("../../views/partials/admin/footer.ejs") %>

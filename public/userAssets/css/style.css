@@ -1093,3 +1093,13 @@ a:focus {
 .modal.show .modal-dialog {
   transform: translate(0, 0);
 }
+
+
+/* Custom SweetAlert Font */
+.swal2-title {
+  font-family: 'Arial', 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; /* Change to your desired font */
+}
+
+.swal2-content {
+  font-family: 'Arial', sans-serif; /* Change to your desired font */
+}
