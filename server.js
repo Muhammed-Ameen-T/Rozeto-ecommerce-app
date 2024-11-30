@@ -53,10 +53,15 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public','userAssets')));
 app.use(express.static(path.join(__dirname, 'public','adminAssets')));
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads/categories')));
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads/products')));
+
+
 
 // Serve Staic Files To the Specific Routes
 app.use('/admin', express.static(path.join(__dirname, 'admin')));
 app.use('/user', express.static(path.join(__dirname, 'user')));
+// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // State The Routes
 app.use('/',userRouter)

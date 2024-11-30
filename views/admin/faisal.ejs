@@ -1,0 +1,143 @@
+<%- include("../../views/partials/admin/header") %>
+
+    <head>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css" />
+        <link rel="stylesheet" href="/admin-assets/css/productsCategory.css">
+    </head>
+
+    <body>
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Add Product</h2>
+                </div>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-body">
+                    <form method="post" action="/admin/addProduct" enctype="multipart/form-data"
+                        onsubmit="return handleFormSubmit(event)">
+                        <div class="row">
+
+                            <!-- Product Details -->
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Name</label>
+                                    <input type="text" name="productName" placeholder="Type here" 
+                                        class="form-control shadow" id="product_name" />
+                                    <div id="name-error" class="error-message"></div>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Description</label>
+                                    <textarea placeholder="Type here" name="description" class="form-control shadow"
+                                        id="descriptionId" rows="3"></textarea>
+                                    <div id="description-error" class="error-message"></div>
+                                </div>
+                                
+                                
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label class="form-label">Product Images</label>
+                                    <input type="file" name="productImages" class="form-control shadow"
+                                        id="productImages" />
+                                    <div id="images-error" class="error-message"></div>
+                                    <div id="imagePreview" class="d-flex flex-wrap mt-3"></div>
+                                    <div id="CroppieContainer"></div>
+                                    <br>
+                                    <button id="btnCrop" type="button" class="btn btn-primary mt-2">Crop Image</button>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Gender</label>
+                                    <select name="gender" class="form-select form-control shadow">
+                                        <option value="Men">Men</option>
+                                        <option value="Women">Women</option>
+                                        <option value="Unisex">Unisex</option>
+                                    </select>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Status</label>
+                                    <select name="status" class="form-select shadow form-control">
+                                        <option value="Available">Available</option>
+                                        <option value="Out of Stock">Out of Stock</option>
+                                        <option value="Discontinued">Discontinued</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Variations Section -->
+                            <div class="col-md-12">
+                                <div class="mb-4">
+                                    <label class="">Variations</label><hr>
+                                    <div id="variations-container">
+                                        <!-- Initial Variation Input -->
+                                        <div class="variation-item">
+                                            <div class="row ">
+                                                <div class="col-md-2 ms-5">
+                                                    <label class="form-label">Size</label>
+                                                    <select name="variations[0][size]"
+                                                        class="form-select shadow form-control">
+                                                        <option value="25ml">25ml</option>
+                                                        <option value="50ml">50ml</option>
+                                                        <option value="75ml">75ml</option>
+                                                        <option value="100ml">100ml</option>
+                                                        <option value="150ml">150ml</option>
+                                                    </select>
+                                                    <div id="variation-0-size-error" class="error-message"></div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label class="form-label">Quantity</label>
+                                                    <input type="number" name="variations[0][quantity]" 
+                                                        id="variation-0-quantity" placeholder="Type here"
+                                                        class="form-control shadow" />
+                                                    <div id="variation-0-quantity-error" class="error-message"></div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label class="form-label">Regular Price</label>
+                                                    <input type="number" name="variations[0][regularPrice]" 
+                                                        id="variation-0-regularPrice" placeholder="Type here"
+                                                        class="form-control shadow" />
+                                                    <div id="variation-0-regularPrice-error" class="error-message">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label class="form-label">Sale Price</label>
+                                                    <input type="number" name="variations[0][salePrice]" 
+                                                        id="variation-0-salePrice" placeholder="Type here"
+                                                        class="form-control shadow" />
+                                                    <div id="variation-0-salePrice-error" class="error-message"></div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <!-- /Initial Variation Input -->
+
+                                    </div>
+                                    <button type="button" id="add-variation-btn" class="btn btn-secondary mt-3">Add New
+                                        Variation</button>
+                                </div>
+                            </div>
+
+                            <div class="d-grid mt-4">
+                                <button class="btn btn-primary btn-lg" type="submit">Add Product</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+
+
+            <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
+            <script src="/adminAssets/js/addProduct.js"></script>
+
+
+            <%- include("../../views/partials/admin/footer") %>

@@ -1,0 +1,109 @@
+<%- include("../../views/partials/admin/header.ejs") %>				
+<!-- Content wrapper scroll start -->
+				<div class="content-wrapper-scroll">
+
+					<!-- Content wrapper start -->
+					<div class="content-wrapper">
+
+						<!-- Row start -->
+						<div class="row gutters">
+							<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+								<div class="card">
+									<div class="card-body">
+										<div class="d-flex" style="justify-content: space-between;">
+											<h3>Product Management</h3>
+											<!-- Search Form Start -->
+											<form method="GET" action="/admin/user-table">
+											  <div class="input-group mb-3" style="width: 25rem;">
+												<input
+												  type="text"
+												  class="form-control"
+												  placeholder="Search by name"
+												  name="search"
+												  value=""
+												/>
+												<div class="input-group-append">
+												  <button class="btn btn-primary" type="submit">Search</button>
+												</div>
+											  </div>
+											</form>
+										  </div>
+										<div class="table-responsive">
+											<table id="copy-print-csv" class="table v-middle table-striped" style="font-size: 14px;">
+												<thead class="table-danger">
+													<tr>
+														<th>#</th>
+													  	<th>Image</th>
+													  	<th>Name</th>
+														<th>Price</th>
+													  	<th>Added Date</th>													  
+													  	<th>Stock</th>
+													  	<th>Is Listed</th>
+													  	<th>Actions</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+													  <td>1</td>
+													  <td>													  		
+														<img src="/img/products/bag.jpg" style="width: 3.5rem;" class="media-avatar" alt="Product">
+													  </td>
+													 
+														<td>
+															<div class="media-box">
+																<div class="media-box-body">
+																	<a href="#" class="text-truncate">Leather Backpack</a>
+																	<p style="font-size: smaller;">ID: #FLM00987</p>
+																</div>
+															</div>
+														</td>									
+														<td><span>₹</span> 299</td>
+														<td>2020/09/18</td>
+														<td>65</td>
+
+													  <td>
+													  	<span class="badge bg-success" style="height: 20px; width: 70px; font-size: 11px;">Available</span>
+													  </td>
+													  <td>
+													  	<div class="actions">
+													  		<a href="#" data-toggle="tooltip" data-placement="top" title="Edit Category" data-original-title="Edit">
+													  			<i class="icon-edit1 text-info me-4" style="font-size: 20px;"></i>
+													  		</a>
+															<a
+															  href=""
+															  data-toggle="tooltip"
+															  data-placement="top"
+															  title="Block the Category"
+															  data-original-title="Block">
+															  <i class="icon-slash text-danger" style="font-size: large"></i>
+															</a>
+													  	</div>
+													  </td>
+													</tr>
+												</tbody>
+								    		</table>
+											<button id="add-kk" type="submit" class="btn btn-info"><a href="/admin/addProduct"  style="color: white;">+&nbsp;Add New Product</a></button>
+											<nav aria-label="Page navigation example" style="float: right;">
+												<ul class="pagination">
+													<li class="page-item">
+														<a class="page-link" href="">Previous</a>
+													</li>												
+													<li class="page-item">
+														<a class="page-link" href="">1</a>
+													</li>
+													<li class="page-item">
+														<a class="page-link" href="">Next</a>
+													</li>
+												</ul>
+											</nav>
+										</div>
+										</div>
+									</div>
+								</div>
+						<!-- Row end -->
+					</div>
+				</div>
+
+				</div>
+				<!-- Content wrapper scroll end -->
+				<%- include("../../views/partials/admin/footer.ejs") %>

@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 const {Schema} = mongoose;
 
-
 const productSchema = new mongoose.Schema({
     productName: {
         type: String,
@@ -16,27 +15,18 @@ const productSchema = new mongoose.Schema({
         ref: "Category",
         required: true,
     },
-    variations: [
-        {
-            size: {
-                type: String,
-                enum: ["S", "M", "L"],
-                required: true,
-            },
-            regularPrice: {
-                type: Number,
-                required: true,
-            },
-            salePrice: {
-                type: Number,
-                required: true,
-            },
-            quantity: {
-                type: Number,
-                required: true,
-            }
-        }
-    ],
+    regularPrice: {
+        type: Number,
+        required: false,
+    },
+    salePrice: {
+        type: Number,
+        required: false,
+    },
+    quantity: {
+        type: Number,
+        required: false,
+    },
     productImages: {
         type: [String],
         required: true,
@@ -84,3 +74,33 @@ const productSchema = new mongoose.Schema({
 
 const Product = mongoose.model('Product', productSchema);
 export default Product;
+
+
+
+
+
+
+
+
+
+// variations: [
+//     {
+//         size: {
+//             type: String,
+//             enum: ["25ml", "50ml", "75ml", "100ml", "150ml"],
+//             required: true,
+//         },
+//         regularPrice: {
+//             type: Number,
+//             required: true,
+//         },
+//         salePrice: {
+//             type: Number,
+//             required: true,
+//         },
+//         quantity: {
+//             type: Number,
+//             required: true,
+//         }
+//     }
+// ],

@@ -1,161 +1,123 @@
+<%- include("../../views/partials/admin/header") %>
 
-<%- include("../../views/partials/admin/header.ejs") %>
+    <head>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css" />
+        <link rel="stylesheet" href="/admin-assets/css/productsCategory.css">
+    </head>
 
-				<!-- Content wrapper scroll start -->
-				<div class="content-wrapper-scroll">
-					
-						<div class="row gutters">
-							<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="content-wrapper-scroll">
 
-								<!-- Card start -->
-								<div class="card">
-									<div class="card-header">
-										<div class="card-title">Form Layout</div>
-									</div>
-									<div class="card-body">
-										
-										<!-- Row start -->
-										<div class="row gutters">
-											<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-												
-												<!-- Field wrapper start -->
-												<div class="field-wrapper">
-													<input class="form-control" type="text">
-													<div class="field-placeholder">Name <span class="text-danger">*</span></div>
-													<div class="form-text">
-														Please enter your full name.
-													</div>
-												</div>
-												<!-- Field wrapper end -->
+			<div class="row gutters">
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Add Product</h2>
+                </div>
+            </div>
 
-											</div>
-											<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-												
-												<!-- Field wrapper start -->
-												<div class="field-wrapper">
-													<input class="form-control" type="email">
-													<div class="field-placeholder">Email <span class="text-danger">*</span></div>
-													<div class="form-text">
-														We'll never share your email with anyone.
-													</div>
-												</div>
-												<!-- Field wrapper end -->
+            <div class="card shadow">
+                <div class="card-body">
+                    <form method="post" action="/admin/addProduct" enctype="multipart/form-data"
+                        onsubmit="return handleFormSubmit(event)">
+                        <div class="row">
 
-											</div>
-											<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-												
-												<!-- Field wrapper start -->
-												<div class="field-wrapper">
-													<input class="form-control" type="text">
-													<div class="field-placeholder">Phone</div>
-													<div class="form-text">
-														Please enter your mobile number.
-													</div>
-												</div>
-												<!-- Field wrapper end -->
+                            <!-- Product Details -->
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Name</label>
+                                    <input type="text" name="productName" placeholder="Type here" 
+                                        class="form-control shadow" id="product_name" />
+                                    <div id="name-error" class="error-message"></div>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Description</label>
+                                    <textarea placeholder="Type here" name="description" class="form-control shadow"
+                                        id="descriptionId" rows="3"></textarea>
+                                    <div id="description-error" class="error-message"></div>
+                                </div>
+                               
+                                <div class="mb-4">
+                                    <label class="form-label">Category</label>
+                                    <select name="category" class="form-select shadow form-control">
+                                        <% categories.forEach(category=> { %>
+                                            <option value="<%= category._id %>">
+                                                <%= category.name %>
+                                            </option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                            </div>
 
-											</div>
-											<div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-12">
-												
-												<!-- Field wrapper start -->
-												<div class="field-wrapper">
-													<input class="form-control" type="text">
-													<div class="field-placeholder">Business Address</div>
-												</div>
-												<!-- Field wrapper end -->
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label class="form-label">Product Images</label>
+                                    <input type="file" name="productImages" class="form-control shadow"
+                                        id="productImages" />
+                                    <div id="images-error" class="error-message"></div>
+                                    <div id="imagePreview" class="d-flex flex-wrap mt-3"></div>
+                                    <div id="CroppieContainer"></div>
+                                    <br>
+                                    <button id="btnCrop" type="button" class="btn btn-primary mt-2">Crop Image</button>
+                                </div>
 
-											</div>
-											<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-												
-												<!-- Field wrapper start -->
-												<div class="field-wrapper">
-													<input class="form-control" type="text">
-													<div class="field-placeholder">Province/Territory</div>
-												</div>
-												<!-- Field wrapper end -->
+                            
+                                <div class="mb-4">
+                                    <label class="form-label">Status</label>
+                                    <select name="status" class="form-select shadow form-control">
+                                        <option value="Available">Available</option>
+                                        <option value="Out of Stock">Out of Stock</option>
+                                        <option value="Discontinued">Discontinued</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="row ">
+                                <div class="col-md-2">
+                                    <label class="form-label">Quantity</label>
+                                    <input type="number" name="quantity" 
+                                        id="variation-0-quantity" placeholder="Type here"
+                                        class="form-control shadow" />
+                                    <div id="quantity-error" class="error-message"></div>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Regular Price</label>
+                                    <input type="number" name="regularPrice" 
+                                        id="variation-0-regularPrice" placeholder="Type here"
+                                        class="form-control shadow" />
+                                    <div id="regularPrice-error" class="error-message">
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Sale Price</label>
+                                    <input type="number" name="salePrice" 
+                                        id="variation-0-salePrice" placeholder="Type here"
+                                        class="form-control shadow" />
+                                    <div id="salePrice-error" class="error-message"></div>
+                                </div>
 
-											</div>
-											<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-												
-												<!-- Field wrapper start -->
-												<div class="field-wrapper">
-													<input class="form-control" type="text">
-													<div class="field-placeholder">Postal Code</div>
-												</div>
-												<!-- Field wrapper end -->
+                            </div>
+                           
 
-											</div>
-											<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-												
-												<!-- Field wrapper start -->
-												<div class="field-wrapper">
-													<input class="form-control" type="text">
-													<div class="field-placeholder">Company Name</div>
-												</div>
-												<!-- Field wrapper end -->
-
-											</div>
-											<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-												
-												<!-- Field wrapper start -->
-												<div class="field-wrapper">
-													<input class="form-control" type="text">
-													<div class="field-placeholder">Industry Type</div>
-												</div>
-												<!-- Field wrapper end -->
-
-											</div>
-											<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-												
-												<!-- Field wrapper start -->
-												<div class="field-wrapper">
-													<textarea class="form-control" rows="2"></textarea>
-													<div class="field-placeholder">Message <span class="text-danger">*</span></div>
-													<div class="form-text">
-														Please enter a small description.
-													</div>
-												</div>
-												<!-- Field wrapper end -->
-
-											</div>
-											<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-												<button class="btn btn-primary">Submit</button>
-											</div>
-										</div>
-										<!-- Row end -->
-
-										<!-- Row start -->
-										<div class="row gutters">
-											<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-
-												<div id="dropzone">
-													<form action="https://www.bootstrapget.com/upload" class="dropzone needsclick dz-clickable" id="demo-upload">
-
-														<div class="dz-message needsclick">
-															<button type="button" class="dz-button">Drop files here or click to upload.</button><br>
-															<span class="note needsclick">(This is just a demo dropzone. Selected images are <strong>not</strong> actually uploaded.)</span>
-														</div>
-
-													</form>
-													<div class="mt-3">
-														<button class="btn btn-light" type="button">Cancel</button>
-														<button class="btn btn-primary" type="button">Upload</button>
-													</div>
-												</div>
+                            <div class="d-grid mt-4">
+                                <button class="btn btn-primary btn-lg" type="submit">Add Product</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
-											</div>
-										</div>
-										<!-- Row end -->
 
-									</div>
-								</div>
-								<!-- Card end -->
 
-							</div>
-						</div>
-						<!-- Row end -->
 
-					</div>
-					<!-- Content wrapper end -->
-					<%- include("../../views/partials/admin/footer.ejs") %>
+            <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
+            <script src="/adminAssets/js/addProduct.js"></script>
+
+
+            <%- include("../../views/partials/admin/footer") %>

@@ -1,9 +1,9 @@
 import express from 'express'
 const router = express.Router();
 import {adminDash,adminLogin,login,pageerror,logout,} from '../controller/adminController/adminController.js';
-import {productTable} from '../controller/adminController/productController.js';
+import {productInfo,toggleProductListing,getAddProduct,addProduct,getEditProduct,editProduct} from '../controller/adminController/productController.js';
 import {userTable,blockUser,unblockUser} from '../controller/adminController/userController.js';
-import {catTable,addCat,addcategory,blockCat,unblockCat} from '../controller/adminController/categoryController.js';
+import {catTable,getEditCategory,addcategory,blockCat,unblockCat,upload,EditCategory} from '../controller/adminController/categoryController.js';
 
 
 
@@ -22,7 +22,13 @@ router.get('/pageerror',pageerror)
 
 
 // Product Management Routes
-router.get('/product-table',productTable)
+router.get('/products',productInfo)
+router.get('/blockProduct',toggleProductListing)
+router.get('/unblockProduct',toggleProductListing)
+router.get('/addProduct',getAddProduct)
+router.post('/addProduct', addProduct)
+router.get('/editProduct/:id',getEditProduct)
+router.post('/editProduct/:id',editProduct)
 
 
 // User Management Routes
@@ -32,11 +38,11 @@ router.get('/unblockUser',unblockUser)
 
 // Category Management Routes
 router.get('/cat-table',adminAuth,catTable)
-router.get('/add-cat',addCat)
-router.post('/addcat',addcategory)
+router.get('/editcat',getEditCategory)
+router.put('/editcat/:id',upload.single('image'),EditCategory)
+router.post('/addcat',upload.single('image'),addcategory)
 router.get('/blockCat',blockCat)
 router.get('/unblockCat',unblockCat)
-
 
 
 export default router
