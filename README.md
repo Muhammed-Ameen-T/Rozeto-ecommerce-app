@@ -1,5 +1,5 @@
-# Rozeto E-Commerce App
-🌟 Rozeto Ecommerce App
+# Rozeto E-Commerce App 
+🍔 Rozeto Ecommerce App
 
 Overview
 Rozeto is a dynamic ecommerce platform tailored for food ordering. Customers can explore and purchase a wide variety of food items, while admins have full control over product and user management, ensuring a seamless and efficient experience.
