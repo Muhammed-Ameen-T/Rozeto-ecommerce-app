@@ -18,21 +18,33 @@ Rozeto is a dynamic ecommerce platform tailored for food ordering. Customers can
 
 📦 Order Tracking: Monitor your orders from placement to delivery.
 
+
 **Admin Side**
 
 📊 Dashboard: View key metrics and insights.
 
 🛠️ Product Management: Add, edit, or remove food items.
 
+🛠️ Category Management: Add, edit, or reomove food Categories.
+
+🎟️ Coupon Management: Add, delete, or Block Discount Coupons.
+
 👥 User Management: Block/unblock users and manage accounts.
 
 📋 Order Management: Oversee and update orders.
+
+🏷️ Offer Management: Creates Extra Offers on Products and Category.
+
+📈 Sales Report: Admin Can Oversee Detailed Sales Report and Export Into PDF/Excel Formats.
+
+
+
 
 🛠️ Tech Stack
 
 Frontend: HTML, CSS, Bootstrap, JavaScript
 
-Backend: Node.js, Express
+Backend: Node.js, Express.js
 
 Database: MongoDB
 
