@@ -19,6 +19,7 @@ Rozeto is a dynamic ecommerce platform tailored for food ordering. Customers can
 📦 Order Tracking: Monitor your orders from placement to delivery.
 
 **Admin Side**
+
 📊 Dashboard: View key metrics and insights.
 
 🛠️ Product Management: Add, edit, or remove food items.
