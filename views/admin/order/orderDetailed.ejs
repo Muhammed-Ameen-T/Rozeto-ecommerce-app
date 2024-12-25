@@ -1,0 +1,246 @@
+<%- include("../../views/partials/admin/header.ejs") %>
+
+    <style>
+        :root {
+            --primary-red: #dc3545;
+            --dark-red: #8b0000;
+            --light-red: #f8d7da;
+            --background-color: #f4f4f4;
+            --text-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--primary-red);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-top: 4px solid var(--primary-red);
+        }
+
+        .hedder {
+            font-weight: bold;
+            color: var(--dark-red);
+            /* border-bottom: 2px solid var(--primary-red); */
+            margin-bottom: 15px;
+        }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            background-color: var(--light-red);
+            color: var(--dark-red);
+        }
+
+        .table th, .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .status-badge {
+            background-color: var(--primary-red);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn-primary {
+            background-color: var(--dark-red);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .order-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper-scroll">
+
+        <!-- Content wrapper start -->
+        <div class="content-wrapper">
+    <div class="container">
+        <a href="javascript:history.back()" class="btn  d-flex align-items-center gap-2">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back</span>
+        </a>
+        
+        
+        <div class="header">
+            <h1>Order <%=order.orderId%></h1>
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="window.location.href='/downloadInvoice?orderId=<%= order._id %>'" >Print Invoice</button>
+            </div>
+        </div>
+
+        <div class="order-details">
+            <div>
+                <div class="card">
+                    <div class="hedder">Order Information</div>
+                    <div class="order-info">
+                        <p>Order Date: <%= new Date(order.createdAt).toLocaleString() %></p>
+                        <p>Update Date: <%= new Date(order.updatedAt).toLocaleString() %></p>
+                            
+                        <% if (order.orderStatus==='Processing' || order.orderStatus==='Collected' ) { %>
+                            <span class="status-badge bg-warning text-dark fw-bold "><%=order.orderStatus%></span>
+                        <% } else if(order.orderStatus==='Cancelled' || order.orderStatus==='Return Request' || order.orderStatus==='Returned' ) { %>
+                            <span class="status-badge bg-danger"><%=order.orderStatus%></span>
+                        <% } else  { %>
+                            <span class="status-badge bg-success"><%=order.orderStatus%></span>
+                        <%}%>     
+                        <%if(order.orderStatus==='Cancelled' || order.orderStatus==='Return Request' || order.orderStatus==='Returned'){%>
+                            <p class="" style="margin-bottom: 0;"><strong>Reason:</strong>  <%=order.orderReason%></p>
+                        <%}%>                   
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="hedder">Order Items</div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% order.orderedItems.forEach(item=> { %>
+                            <tr>
+                                <td><%= item.product.productName %></td>
+                                <td><%= item.quantity %></td>
+                                <td>₹ <%= item.product.salePrice %></td>
+                                <td>₹ <%= item.price %></td>
+                            </tr>
+                            <%})%>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3">Subtotal</td>
+                                <td>₹ <%= order.subtotal+order.discount %></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Discount</td>
+                                <td>-₹ <%= order.discount %></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Offer Discount</td>
+                                <td>-₹ <%= order.offerDiscount.toFixed(2) %></td>
+                            </tr>
+                            <% if (order.couponApplied) { %>
+                                <td colspan="3">Coupon Discount</td>
+                                <td>-₹ <%= order.couponDiscount%></td>
+                            <% } %>
+                            <tr>
+                                <td colspan="3">Shipping Charges</td>
+                                <td>Free</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Tax (10%)</td>
+                                <td>₹ <%= order.tax.toFixed(2) %></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"><strong>Total</strong></td>
+                                <td><strong>₹ <%= order.finalAmount.toFixed(2) %></strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <div>
+                <div class="card">
+                    <div class="hedder">Customer Information</div>
+                    <div>
+                        <p><strong><%= order.address.name %></strong></p>
+                        <p><%= order.address.landMark %>, <%= order.address.locality %></p>
+                        <p><%= order.address.city %>, <%= order.address.pincode %></p>
+                        <p><%= order.address.state %></p>
+                        <p>Phone: <%= order.address.phone %>, <%= order.address.altPhone %></p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="hedder">Payment Details</div>
+                    <div>
+                        <p>Payment Method: <%= order.paymentMethod %></p>
+                        <p>Payment Status: <%= order.paymentStatus %></p>
+                        <%if(order.paymentMethod==='RazorPay'){%>
+                            <p>Transaction Id: <%=order.razorpay.paymentId%></p>
+                        <%}else{%>
+                            <p>Transaction Id: Nil</p>
+                        <%}%> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div> 
+    <%- include("../../views/partials/admin/footer.ejs") %>

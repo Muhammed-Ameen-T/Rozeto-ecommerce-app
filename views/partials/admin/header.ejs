@@ -30,38 +30,20 @@
 		<link rel="stylesheet" href="https://unpkg.com/sweetalert/dist/sweetalert.css">
 		<!-- SweetAlert2 CDN -->
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-		
-
-		<!-- *************
-			************ Vendor Css Files *************
-		************ -->
-
 		<!-- Mega Menu -->
 		<link rel="stylesheet" href="/adminAssets/vendor/megamenu/css/megamenu.css">
-
 		<!-- Search Filter JS -->
 		<link rel="stylesheet" href="/adminAssets/vendor/search-filter/search-filter.css">
 		<link rel="stylesheet" href="/adminAssets/vendor/search-filter/custom-search-filter.css">
 		
 	</head>
 	<body>
-
-		<!-- Loading wrapper start -->
-		<!-- <div id="loading-wrapper">
-			<div class="spinner-border"></div>
-			Loading...
-		</div> -->
-		<!-- Loading wrapper end -->
-
 		<!-- Page wrapper start -->
 		<div class="page-wrapper">
-			
 			<!-- Sidebar wrapper start -->
 			<nav class="sidebar-wrapper">
-
 				<!-- Sidebar content start -->
 				<div class="sidebar-tabs">
-
 					<!-- Tabs nav start -->
 					<div class="nav" role="tablist" aria-orientation="vertical">
 						<a href="#" class="logo">
@@ -83,22 +65,26 @@
 							<i class="icon-layers2"></i>
 							<span class="nav-link-text">Catogory Management</span>
 						</a>
-						<a class="nav-link" id="components-tab" href="#tab-components" onclick="handleNavLinkClick(event)" role="tab" aria-controls="tab-components" aria-selected="false">
+						<a class="nav-link" id="components-tab" href="/admin/orders" onclick="handleNavLinkClick(event)" role="tab" aria-controls="tab-components" aria-selected="false">
 							<i class="icon-archive1"></i>
 							<span class="nav-link-text">Order Management</span>
 						</a>
-						<a class="nav-link" id="graphs-tab" href="#tab-graphs" onclick="handleNavLinkClick(event)" role="tab" aria-controls="tab-graphs" aria-selected="false">
+						<a class="nav-link" id="graphs-tab" href="/admin/coupon" onclick="handleNavLinkClick(event)" role="tab" aria-controls="tab-graphs" aria-selected="false">
 							<i class="icon-credit-card"></i>
 							<span class="nav-link-text">Coupon Management</span>
 						</a>
-						<a class="nav-link" id="authentication-tab" href="#tab-authentication" onclick="handleNavLinkClick(event)" role="tab" aria-controls="tab-authentication" aria-selected="false">
-							<i class="icon-pie-chart1"></i>
-							<span class="nav-link-text">Offer Management</span>
+						<a class="nav-link" id="authentication-tab" href="/admin/productOffers" onclick="handleNavLinkClick(event)" role="tab" aria-controls="tab-authentication" aria-selected="false">
+							<i class="fa-solid fa-tag"></i>
+							<span class="nav-link-text">Product Offers</span>
 						</a>
-						<!-- <a class="nav-link settings" id="settings-tab" data-bs-toggle="tab" href="#tab-settings" role="tab" aria-controls="tab-authentication" aria-selected="false">
-							<i class="icon-settings1"></i>
-							<span class="nav-link-text">Settings</span>
-						</a> -->
+						<a class="nav-link" id="authentication-tab" href="/admin/categoryOffers" onclick="handleNavLinkClick(event)" role="tab" aria-controls="tab-authentication" aria-selected="false">
+							<i class="fa-solid fa-percent"></i>
+							<span class="nav-link-text">Category Offers</span>
+						</a>
+						<a class="nav-link" id="authentication-tab" href="/admin/salesReport" onclick="handleNavLinkClick(event)" role="tab" aria-controls="tab-authentication" aria-selected="false">
+							<i class="fa-solid fa-chart-simple"></i>
+							<span class="nav-link-text">Sales Report</span>
+						</a>
 					</div>
 					<!-- Tabs nav end -->
 
@@ -123,7 +109,6 @@
 							<!-- Search container start -->
 							<h2 class="text-danger">Rozeto Admin Dashboard</h2>
 							<!-- Search container end -->
-
 							
 						</div>
 						<div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-3">

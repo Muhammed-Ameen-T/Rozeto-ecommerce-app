@@ -66,10 +66,10 @@ export const toggleProductListing = async (req, res) => {
         }
         const newStatus = !product.isBlocked;
         await Product.updateOne({ _id: productId }, { $set: { isBlocked: newStatus } });
-        await Cart.updateMany(
-            {}, 
-            { $pull: { products: { productId } } } 
-        );
+        // await Cart.updateMany(
+        //     {}, 
+        //     { $pull: { products: { productId } } } 
+        // );
         res.redirect("/admin/products");
     } catch (error) {
         console.error(error, "Error while toggling product listing status.");
@@ -93,7 +93,7 @@ export const addProduct = async (req, res) => {
         uploadImages(req, res, async (err) => {
             if (err) {
                 console.error(err);
-                return res.status(400).json({ error: "Error uploading files." });
+                return res.status(400).json({ error: "Error uploading files. Ensure File Must be PNG/JPG Format and Size below 10mb" });
             }
             if (!req.files || req.files.length === 0) {
                 return res.status(400).json({ error: "No files uploaded." });
@@ -130,8 +130,7 @@ export const getEditProduct = async (req, res) => {
         const productId = req.params.id
         const product = await Product.findById(productId)
         const categories = await Category.find({});
-        const brands = await Brand.find({});
-        res.render('product/editProduct', { categories: categories, product })
+        res.render('editProduct', { categories: categories, product })
     } catch (error) {
         console.error(error);
         res.redirect("/admin/pageError")
@@ -145,7 +144,7 @@ export const editProduct = async (req, res) => {
         uploadImages(req, res, async (err) => {
             if (err) {
                 console.error(err);
-                return res.status(400).json({ error: "Error uploading files." });
+                return res.status(400).json({ error: "Error uploading files. Ensure File Must be PNG/JPG Format and Size below 10mb" });
             }
             const existingProduct = await Product.findById(productId);
             if (!existingProduct) {
@@ -170,24 +169,16 @@ export const editProduct = async (req, res) => {
                 imageURL = imageURL.concat(newImageURLs);
             }
             imageURL = Array.isArray(imageURL) ? imageURL.flat() : [imageURL];
-            let variations = [];
-            if (Array.isArray(req.body.variations)) {
-                variations = req.body.variations.map(variation => ({
-                    size: variation.size,
-                    regularPrice: parseFloat(variation.regularPrice),
-                    salePrice: parseFloat(variation.salePrice),
-                    quantity: parseInt(variation.quantity, 10),
-                }));
-            }
+           
             const updateProduct = await Product.findByIdAndUpdate(productId, {
                 productName: req.body.productName,
                 description: req.body.description,
-                brand: req.body.brands,
                 category: req.body.category,
-                variations: variations,
-                gender: req.body.gender,
                 productImages: imageURL,
                 status: req.body.status,
+                regularPrice: req.body.regularPrice,
+                salePrice: req.body.salePrice,
+                quantity: req.body.quantity,
             }, { new: true });
             // console.log('new updated data', updateProduct)
             if (updateProduct) {
@@ -202,128 +193,3 @@ export const editProduct = async (req, res) => {
         res.redirect("/admin/pageError")
     }
 };
-
-
-
-
-
-
-
-
-// export const productTable = async (req,res) => {
-//     try {
-//         res.render('productList')
-//     } catch (error) {
-//         console.log(error, 'Error at Product table');
-//         res.render('error')
-//     }
-// }
-
-// export const loadAddProduct = async (req,res) => {
-
-//     try {
-
-//         const category = await Category.find({isListed:true})
-//         res.render('addProduct',{cat:category});
-//     } catch (error) {
-//         res.redirect('/admin/apagenotfound')       
-//     }
-// }
-
-// export const uploadImages = upload.array('productImages', 10);
-
-
-
-// export const addProduct = async (req, res) => {
-//     try {
-//         uploadImages(req, res, async (err) => {
-//             if (err) {
-//                 console.error(err);
-//                 return res.status(400).json({ error: "Error uploading files." });
-//             }
-//             if (!req.files || req.files.length === 0) {
-//                 return res.status(400).json({ error: "No files uploaded." });
-//             }
-//             const imagePaths = req.files.map(file => file.path);
-//             const imageURL = imagePaths.map(path => path.replace('public\\', ''));
-//             const existingProduct = await Product.findOne({ productName:{ $regex: new RegExp(`^${req.body.productName}$`, 'i') }  });
-//             if (existingProduct) {
-//                 return res.status(400).json({ error: productAlreadyExists });
-//             }
-//             const newProduct = new Product({
-//                 productName: req.body.productName,
-//                 description: req.body.description,
-//                 category: req.body.category,
-//                 productImages: imageURL,
-//                 status: req.body.status,
-//                 regularPrice: req.body.regularPrice,
-//                 salePrice: req.body.salePrice,
-//                 quantity: req.body.stock
-//             });
-//             await newProduct.save();
-//             return res.json({ message: "Product added successfully" });
-//         });
-//     } catch (error) {
-//         console.error(error);
-//         res.redirect("/admin/pageError")
-//     }
-// };
-
-
-
-// export const addProduct = async (req,res) => {
-//     try {
-//         const products = req.body;
-//         const productExists = await Product.findOne({
-//             productName:products.productName,
-
-//         });
-
-//         if(!productExists){
-//             const images = [];
-
-//             if(req.files  && req.file.length>0){
-//                 for(let i=0;i<req.files.length;i++){
-//                     const orginalImagePath = req.file[i].path;
-//                     const resizedImapePath = path.join('public','uploads','products',req.files[i].filename);
-//                     await sharp(orginalImagePath).resize({width:440,height:440}).toFile(resizedImapePath);
-//                     images.push(req.files[i].filename);
-//                 }
-//             }
-
-//             const categoryId = await Category.findOne({name:products.category});
-
-//             if(!categoryId){
-//                 return req.status(400).join('Invalid Category name');
-//             }
-
-//             const newProduct = new Product({
-//                 productName:products.productName,
-//                 description:products.description,
-//                 category:categoryId._id,
-//                 stock:products.stock,
-//                 regularPrice:products.regularPrice,
-//                 salePrice:products.salePrice,
-//                 createdAr: new Date(),
-//                 productImage:images,
-//                 status:'Listed'
-//             })
-//             await newProduct.save()
-//             return res.redirect('/admin/addProduct')
-//         }else{
-//             return res.status(400).json('Product Already Exist With the same name try another one')
-//         }
-//     } catch (error) {
-//         return res.status(500).json('Internal Server error')
-//         console.log(error)
-//     }
-// }
-
-
-// export const loadEditProduct = async (req,res) => {
-    
-// }
-
-// export const editProduct = async (req,res) => {
-    
-// }

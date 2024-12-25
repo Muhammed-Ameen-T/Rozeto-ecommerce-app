@@ -29,18 +29,17 @@ const orderSchema = new mongoose.Schema({
             type: Number,
             required: true
         },
-        size: {
-            type: String,
-            enum: ["S", "M", "L"],
-            required: true,
-        },
         price: {
             type: Number,
             default: 0
         },
-        variationID: {
-            type: String,
-            required: true
+        status: { 
+            type: String, required: true, 
+            default: 'Processing', 
+            enum: ['Processing', 'Cancelled', 'Return Request', 'Returned'] 
+        }, 
+        requestReason: { 
+            type: String 
         }
     }],
     subtotal: {
@@ -107,7 +106,10 @@ const orderSchema = new mongoose.Schema({
         default: 'Pending'
     },
     razorpay: {
-        paymentId: { type: String },
+        paymentId: { 
+            type: String,
+            default: 'Nill'
+        },
         orderId: { type: String }
     },
     orderStatus: {
@@ -120,26 +122,22 @@ const orderSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    // couponId: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "Coupon",
-    // },
     couponDiscount:{
         type: Number,
         required: false
     },
-    expectedDeliveryDate: {
-        type: Date, 
-    }
+    offerDiscount:{
+        type: Number,
+        required: false
+    },
+    orderReason:{
+        type:String
+    },
+    
+
 }, { timestamps: true })
 
-orderSchema.pre('save', function (next) {
-    const deliveryDays = 7; 
-    if (!this.expectedDeliveryDate) {
-        this.expectedDeliveryDate = new Date(this.createdAt.getTime() + deliveryDays * 24 * 60 * 60 * 1000);
-    }
-    next();
-});
+
 
 const Order = mongoose.model("Order", orderSchema)
 export default Order

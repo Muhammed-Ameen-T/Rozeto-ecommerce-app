@@ -1,0 +1,107 @@
+<%- include("../../views/partials/user/header.ejs") %>
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.min.css" rel="stylesheet">
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="mb-0">Email Verification</h3>
+                </div>
+                <div class="card-body">
+                    <form id="emailVerificationForm" method="post" action="/verifyMail">
+                        <div class="mb-3">
+                            <label for="emailInput" class="form-label">Email Address</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="emailInput" 
+                                name="email"
+                                placeholder="Enter your email" 
+                            >
+                            <div class="invalid-feedback">
+                                Please enter a valid email address.
+                            </div>
+                        </div>
+                        <button 
+                            type="submit" 
+                            class="btn btn-primary w-100"
+                        >
+                            Verify Email
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.all.min.js"></script>
+
+<script>
+    // URL parameter handling
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get('status');
+
+    if (status === 'invalid') {
+        Swal.fire({
+            title: 'Invalid Email',
+            text: 'Not a registered Email.',
+            icon: 'error',
+            confirmButtonText: 'Try Again'
+        });
+    } else if (status === 'success') {
+        const email = urlParams.get('email');
+        Swal.fire({
+            title: 'Success!',
+            text: `OTP sent successfully to ${email}`,
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    }
+
+    const url = window.location.search.substring(1)
+    console.log(url)
+    if (url === 'invalid') {
+        Swal.fire({
+            title: 'Error',
+            text: 'No User Found On this email.',
+            icon: 'error',
+            confirmButtonText: 'Try Again'
+        });
+    }
+
+    // Form submission handler
+    document.getElementById('emailVerificationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const emailInput = document.getElementById('emailInput');
+        const email = emailInput.value.trim();
+
+        // Email validation regex
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(email)) {
+            // Show error alert for invalid email
+            emailInput.classList.add('is-invalid');
+            Swal.fire({
+                title: 'Invalid Email',
+                text: 'Please enter a valid email address.',
+                icon: 'error',
+                confirmButtonText: 'Try Again'
+            });
+        } else {
+            // Submit the form if the email is valid
+            emailInput.classList.remove('is-invalid');
+            this.submit();
+        }
+    });
+
+    // Remove invalid state when user starts typing
+    document.getElementById('emailInput').addEventListener('input', function() {
+        this.classList.remove('is-invalid');
+    });
+</script>
+
+<%- include("../../views/partials/user/footer.ejs") %>

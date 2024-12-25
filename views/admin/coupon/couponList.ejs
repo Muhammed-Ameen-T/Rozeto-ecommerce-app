@@ -1,0 +1,276 @@
+<%- include("../../views/partials/admin/header.ejs") %>				
+<!-- Content wrapper scroll start -->
+<div class="content-wrapper-scroll">
+
+<!-- Content wrapper start -->
+<div class="content-wrapper">
+
+	<!-- Row start -->
+	<div class="row gutters">
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="card">
+				<div class="card-body">
+					<div class="d-flex" style="justify-content: space-between;">
+						<h3>Coupon Management</h3>
+						<!-- Search Form Start -->
+						<form method="GET" action="/admin/coupon">
+							<div class="input-group mb-3" style="width: 25rem;">
+							<input
+								type="text"
+								class="form-control"
+								placeholder="Search Coupon By name..."
+								name="search"
+								value=""
+							/>
+							<div class="input-group-append">
+								<button class="btn btn-primary" type="submit">Search</button>
+							</div>
+							</div>
+						</form>
+						</div>
+					<div class="table-responsive">
+						<table id="copy-print-csv" class="table v-middle table-striped" style="font-size: 14px;">
+							<% if(coupons.length==0){ %>
+								<h4 class="text-center">No Coupon found</h4>
+							<% } else{%>
+							<thead class="table-danger">
+								<tr>
+									<th>#</th>
+									<th>Coupon Code</th>
+									<th>Created On</th>													  
+									<th>Discount</th>
+									<th>Minimum Price</th>
+									<th>Status</th>
+									<th>Expiry</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>	
+								<% coupons.forEach((coupon,index)=> { %>
+									<tr>
+										<td><%= (limit*(currentPage-1)+1+index) %></td>													 
+										<td><b># <%=coupon.code%></b></td>													  
+										<td><%= new Date(coupon.createdAt).toLocaleDateString() %></td>
+										<td>₹ <%= coupon.offerPrice %></td>
+										<td>₹ <%= coupon.minimumPrice %></td>
+										<td>
+										<% if (coupon.status==='Active') { %>
+											<span class="badge bg-success" style="width: 4rem;">Active</span>
+										<% } else if(coupon.status==='Inactive'){ %>	
+											<span class="badge bg-danger" style="width: 4rem;">Inactive</span>
+										<% } else if(coupon.status==='Expired'){ %>
+											<span class="badge bg-danger" style="width: 4rem;">Expired</span>
+										<% } %>
+										</td>
+										<td><%= new Date(coupon.expireOn).toLocaleDateString() %></td>													  
+										<td>
+											<button 
+												type="submit" 
+												class="btn <%= coupon.status === 'Active' ? 'btn-danger' : 'btn-success' %>"
+												onclick="event.preventDefault(); toggleCouponStatus('<%= coupon._id %>')" 
+												style="width: 7rem;">
+												<% if (coupon.status === 'Active') { %>
+													Deactivate
+												<% } else { %>
+													Activate
+												<% } %>
+											</button>
+										</td>																			
+									</tr>
+								<% }); %>
+							<% } %>
+							</tbody>
+						</table>											
+						<button onclick="dsAdd()" id="add-kk" type="submit" class="btn btn-info" href=""><a   style="color: white;">+&nbsp;Create New Coupon</a></button>
+						<nav aria-label="Page navigation example" style="float: right;">
+							<ul class="pagination">
+								<% if (currentPage> 1) { %>
+								<li class="page-item">
+									<a class="page-link" href="?page=<%= currentPage - 1 %>"
+									>Previous</a
+									>
+								</li>
+								<% } %> <% for (let i=1; i <=totalPages; i++) { %>
+								<li
+									class="page-item <%= (i === currentPage) ? 'active' : '' %>"
+								>
+									<a class="page-link" href="?page=<%= i %>"> <%= i %> </a>
+								</li>
+								<% } %> <% if (currentPage < totalPages) { %>
+								<li class="page-item">
+									<a class="page-link" href="?page=<%= currentPage + 1 %>"
+									>Next</a
+									>
+								</li>
+								<% } %>
+							</ul>
+						</nav>
+					</div>
+					</div>
+				</div>
+			</div>
+			<div class="card" style="display: none;" id="add_card">
+				<div class="card-header">
+					<div class="card-title"><h3>Create New Coupon</h3></div>
+				</div>
+				<div class="card-body">
+					<!-- Row start -->
+					<div class="row gutters">
+						<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+							<form id="addCouponForm" method="post" onsubmit="handleForm(event)" action="/admin/addCoupon">
+								<div class="d-flex">
+									<div style="width: 25rem;" class="field-wrapper me-4">
+										<input class="form-control" name="code" id="coupon-code" type="text"/>
+										<div class="field-placeholder">
+											Coupon Code <span class="text-danger">*</span>
+										</div>
+										<span id="code-error" class="error-message text-danger"></span>
+									</div>
+								</div>
+								<div class="d-flex">
+									<div style="width: 25rem;" class="field-wrapper me-4">
+										<input class="form-control" name="offerPrice" id="discount-price" type="number" min="0" step="0.01"/>
+										<div class="field-placeholder">
+											Discount Price <span class="text-danger">*</span>
+										</div>
+										<span id="discount-error" class="error-message text-danger"></span>
+									</div>
+								</div>
+								<div class="d-flex">
+									<div style="width: 25rem;" class="field-wrapper me-4">
+										<input class="form-control" name="minimumPrice" id="min-purchase" type="number" min="0" step="0.01"/>
+										<div class="field-placeholder">
+											Minimum Purchase <span class="text-danger">*</span>
+										</div>
+										<span id="purchase-error" class="error-message text-danger"></span>
+									</div>
+								</div>
+								<div class="d-flex">
+									<div style="width: 25rem;" class="field-wrapper me-4">
+										<input class="form-control" name="expireOn" id="expiry-date" type="date"/>
+										<div class="field-placeholder">
+											Expired On <span class="text-danger">*</span>
+										</div>
+										<span id="expiry-error" class="error-message text-danger"></span>
+									</div>
+								</div>
+								<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 my-3">
+									<a href="/admin/coupon">
+										<button class="btn btn-light me-3" type="button">Cancel</button>
+									</a>
+									<button type="submit" class="btn btn-primary">Submit</button>
+								</div>
+							</form>														
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+<script>	
+function dsAdd() {
+	document.getElementById('add_card').style.display = 'block';
+}
+
+
+
+function toggleCouponStatus(couponId, isActive) {
+	axios.patch(`/admin/toggleCoupon/${couponId}`)
+		.then(response => {
+			if (response.data.success) {
+				Swal.fire({
+					toast: true,
+					position: 'top-end',
+					icon: 'success',
+					title:response.data.message,
+					showConfirmButton: false,
+					timer: 1500
+				});
+				setTimeout(()=>{
+					location.reload();
+				},1000)
+			} else {
+				// Show error if the operation failed
+				Swal.fire({
+					icon: 'error',
+					title: 'Oops...',
+					text: response.data.message,
+				});
+			}
+		})
+		.catch(error => {
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'An error occurred while toggling the coupon status.',
+			});
+			console.error(error);
+		});
+}
+
+function handleForm(event) {
+	event.preventDefault();
+	let isValid = true;
+
+	const code = document.getElementById("coupon-code");
+	const discountPrice = document.getElementById("discount-price");
+	const minPurchase = document.getElementById("min-purchase");
+	const expiryDate = document.getElementById("expiry-date");
+
+	const codeError = document.getElementById("code-error");
+	const discountError = document.getElementById("discount-error");
+	const purchaseError = document.getElementById("purchase-error");
+	const expiryError = document.getElementById("expiry-error");
+
+	if (!code.value) {
+		codeError.textContent = "Coupon Code is required";
+		isValid = false;
+	} else {
+		codeError.textContent = "";
+	}
+
+	if (!discountPrice.value || discountPrice.value <= 0) {
+		discountError.textContent = "Valid Discount Price is required";
+		isValid = false;
+	} else {
+		discountError.textContent = "";
+	}
+
+	if (!minPurchase.value || minPurchase.value <= 0) {
+		purchaseError.textContent = "Valid Minimum Purchase is required";
+		isValid = false;
+	} else {
+		purchaseError.textContent = "";
+	}
+
+	if (!expiryDate.value) {
+		expiryError.textContent = "Expiry Date is required";
+		isValid = false;
+	} else {
+		expiryError.textContent = "";
+	}
+
+	if (isValid) {
+		Swal.fire({
+			icon:'success',
+			title:'Sucess',
+			text:'Coupon Added Sucessfully',
+			submitButtonText:'OK',
+			timer:2000
+		}).then(()=>{
+			document.getElementById("addCouponForm").submit();
+		})
+	}
+}
+</script>
+								
+							
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<!-- Content wrapper scroll end -->
+<%- include("../../views/partials/admin/footer.ejs") %>

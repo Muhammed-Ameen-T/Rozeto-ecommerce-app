@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const {Schema} = mongoose;
+const { Schema } = mongoose;
 
 const couponSchema = new mongoose.Schema({
     code: {
@@ -19,13 +19,10 @@ const couponSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    maximumDiscount: {
-        type: Number,
-        required: true
-    },
-    isActive: {
-        type: Boolean,
-        default: true
+    status: {
+        type: String,
+        enum: ['Active', 'Inactive', 'Expired'],
+        default: 'Active'
     },
     usedBy: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -33,7 +30,7 @@ const couponSchema = new mongoose.Schema({
     }]
 }, {
     timestamps: true
-})
+});
 
-const Coupon = mongoose.model("Coupon", couponSchema)
-export default Coupon
+const Coupon = mongoose.model("Coupon", couponSchema);
+export default Coupon;

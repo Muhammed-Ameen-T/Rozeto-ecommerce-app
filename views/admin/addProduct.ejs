@@ -12,12 +12,12 @@
         <section class="content-main">
             <div class="content-header">
                 <div>
-                    <h2 class="content-title card-title">Add Product</h2>
                 </div>
             </div>
-
-            <div class="card shadow">
+            
+            <div class="card shadow mx-2">
                 <div class="card-body">
+                    <h3 class="content-title">Add Product</h3>
                     <form method="post" action="/admin/addProduct" enctype="multipart/form-data"
                         onsubmit="return handleFormSubmit(event)">
                         <div class="row">
@@ -25,20 +25,20 @@
                             <!-- Product Details -->
                             <div class="col-md-6">
                                 <div class="mb-4">
-                                    <label for="product_name" class="form-label">Name</label>
+                                    <label for="product_name" class="form-label">Name<span class="text-danger">*</span></label>
                                     <input type="text" name="productName" placeholder="Type here" 
                                         class="form-control shadow" id="product_name" />
-                                    <div id="name-error" class="error-message"></div>
+                                    <div id="name-error" class="error-message" style="color: red;"></div>
                                 </div>
                                 <div class="mb-4">
-                                    <label class="form-label">Description</label>
+                                    <label class="form-label">Description<span class="text-danger">*</span></label>
                                     <textarea placeholder="Type here" name="description" class="form-control shadow"
                                         id="descriptionId" rows="3"></textarea>
-                                    <div id="description-error" class="error-message"></div>
+                                    <div id="description-error" class="error-message" style="color: red;"></div>
                                 </div>
                                
                                 <div class="mb-4">
-                                    <label class="form-label">Category</label>
+                                    <label class="form-label">Category<span class="text-danger">*</span></label>
                                     <select name="category" class="form-select shadow form-control">
                                         <% categories.forEach(category=> { %>
                                             <option value="<%= category._id %>">
@@ -51,10 +51,10 @@
 
                             <div class="col-md-6">
                                 <div class="mb-4">
-                                    <label class="form-label">Product Images</label>
+                                    <label class="form-label">Product Images<span class="text-danger">*</span></label>
                                     <input type="file" name="productImages" class="form-control shadow"
                                         id="productImages" />
-                                    <div id="images-error" class="error-message"></div>
+                                    <div id="images-error" class="error-message" style="color: red;"></div>
                                     <div id="imagePreview" class="d-flex flex-wrap mt-3"></div>
                                     <div id="CroppieContainer"></div>
                                     <br>
@@ -63,7 +63,7 @@
 
                             
                                 <div class="mb-4">
-                                    <label class="form-label">Status</label>
+                                    <label class="form-label">Status<span class="text-danger">*</span></label>
                                     <select name="status" class="form-select shadow form-control">
                                         <option value="Available">Available</option>
                                         <option value="Out of Stock">Out of Stock</option>
@@ -74,32 +74,35 @@
                             
                             <div class="row ">
                                 <div class="col-md-2">
-                                    <label class="form-label">Quantity</label>
+                                    <label class="form-label">Quantity<span class="text-danger">*</span></label>
                                     <input type="number" name="quantity" 
                                         id="variation-0-quantity" placeholder="Type here"
                                         class="form-control shadow" />
-                                    <div id="quantity-error" class="error-message"></div>
+                                    <div id="quantity-error" class="error-message" style="color: red;"></div>
                                 </div>
                                 <div class="col-md-2">
-                                    <label class="form-label">Regular Price</label>
+                                    <label class="form-label">Regular Price<span class="text-danger">*</span></label>
                                     <input type="number" name="regularPrice" 
                                         id="variation-0-regularPrice" placeholder="Type here"
                                         class="form-control shadow" />
-                                    <div id="regularPrice-error" class="error-message">
+                                    <div id="regularPrice-error" class="error-message danger" style="color: red;">
                                     </div>
                                 </div>
                                 <div class="col-md-2">
-                                    <label class="form-label">Sale Price</label>
+                                    <label class="form-label">Sale Price<span class="text-danger">*</span></label>
                                     <input type="number" name="salePrice" 
                                         id="variation-0-salePrice" placeholder="Type here"
                                         class="form-control shadow" />
-                                    <div id="salePrice-error" class="error-message"></div>
+                                    <div id="salePrice-error" class="error-messag danger" style="color: red;"></div>
                                 </div>
 
                             </div>
                            
 
-                            <div class="d-grid mt-4">
+                            <div class="d-grid mt-4 d-flex">
+                                <a href="/admin/products">
+                                    <button class="btn btn-light btn-lg me-3" type="button">Cancel</button>
+                                </a>
                                 <button class="btn btn-primary btn-lg" type="submit">Add Product</button>
                             </div>
                         </div>

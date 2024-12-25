@@ -33,26 +33,21 @@ export const userTable = async (req, res) => {
     }
 };
 
-export const blockUser = async (req,res) => {
+export const toggleUserBlockStatus = async (req, res) => {
     try {
         const userId = req.query.id;
-        await User.findByIdAndUpdate(userId,{isBlocked:true});
+        const user = await User.findById(userId);
+        
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        const newStatus = !user.isBlocked;
+        await User.findByIdAndUpdate(userId, { isBlocked: newStatus });
+
         res.redirect('/admin/user-table');
     } catch (error) {
-        console.log('Error while Blocking User',error);
+        console.log('Error while toggling user block status', error);
         res.status(500).send('Internal Server Error');
     }
 };
-
-
-export const unblockUser = async (req,res) => {
-    try {
-        const userId = req.query.id;
-        await User.findByIdAndUpdate(userId,{isBlocked:false});
-        res.redirect('/admin/user-table');
-    } catch (error) {
-        console.log('Error while Un Blocking User',error);
-        res.status(500).send('Internal Server Error');
-    }
-}
-

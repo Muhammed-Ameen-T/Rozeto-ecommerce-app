@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced E-commerce Product Filter</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .product-card {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .product-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .out-of-stock {
+            opacity: 0.6;
+            position: relative;
+        }
+        .out-of-stock::after {
+            content: 'Out of Stock';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255,0,0,0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            z-index: 10;
+        }
+        .popularity-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <!-- Advanced Filter Bar -->
+    <div class="row bg-light py-3 mb-4 align-items-center">
+        <!-- Search Input -->
+        <div class="col-md-3 mb-2">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search products...">
+        </div>
+
+        <!-- Sort Dropdown -->
+        <div class="col-md-3 mb-2">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    Sort By
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+                    <li><a class="dropdown-item" href="#" data-sort="popularity">Popularity</a></li>
+                    <li><a class="dropdown-item" href="#" data-sort="price-low">Price: Low to High</a></li>
+                    <li><a class="dropdown-item" href="#" data-sort="price-high">Price: High to Low</a></li>
+                    <li><a class="dropdown-item" href="#" data-sort="rating">Average Ratings</a></li>
+                    <li><a class="dropdown-item" href="#" data-sort="new">New Arrivals</a></li>
+                    <li><a class="dropdown-item" href="#" data-sort="az">A-Z</a></li>
+                    <li><a class="dropdown-item" href="#" data-sort="za">Z-A</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="col-md-4 mb-2">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="inStockFilter">
+                        <label class="form-check-label" for="inStockFilter">
+                            In Stock Only
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="newArrivalsFilter">
+                        <label class="form-check-label" for="newArrivalsFilter">
+                            New Arrivals
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="featuredFilter">
+                        <label class="form-check-label" for="featuredFilter">
+                            Featured Products
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reset Button -->
+        <div class="col-md-2 mb-2">
+            <button id="resetFilters" class="btn btn-outline-danger w-100">
+                Reset Filters
+            </button>
+        </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="row" id="productGrid">
+        <!-- Product Cards with Enhanced Attributes -->
+        <div class="col-md-4 mb-4">
+            <div class="card product-card" 
+                 data-name="Classic T-Shirt" 
+                 data-price="19.99" 
+                 data-rating="4.5" 
+                 data-stock="10" 
+                 data-new="true"
+                 data-popularity="85"
+                 data-featured="true">
+                <div class="popularity-indicator">Popularity: 85%</div>
+                <img src="/api/placeholder/300/200" class="card-img-top" alt="Classic T-Shirt">
+                <div class="card-body">
+                    <h5 class="card-title">Classic T-Shirt</h5>
+                    <p class="card-text">
+                        Price: $19.99<br>
+                        Rating: 4.5/5<br>
+                        Stock: 10
+                    </p>
+                    <span class="badge bg-success me-1">New Arrival</span>
+                    <span class="badge bg-primary">Featured</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card product-card out-of-stock" 
+                 data-name="Wireless Headphones" 
+                 data-price="99.99" 
+                 data-rating="4.2" 
+                 data-stock="0" 
+                 data-new="false"
+                 data-popularity="65"
+                 data-featured="false">
+                <div class="popularity-indicator">Popularity: 65%</div>
+                <img src="/api/placeholder/300/200" class="card-img-top" alt="Wireless Headphones">
+                <div class="card-body">
+                    <h5 class="card-title">Wireless Headphones</h5>
+                    <p class="card-text">
+                        Price: $99.99<br>
+                        Rating: 4.2/5<br>
+                        Stock: 0
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card product-card" 
+                 data-name="Leather Wallet" 
+                 data-price="49.99" 
+                 data-rating="4.7" 
+                 data-stock="15" 
+                 data-new="true"
+                 data-popularity="75"
+                 data-featured="true">
+                <div class="popularity-indicator">Popularity: 75%</div>
+                <img src="/api/placeholder/300/200" class="card-img-top" alt="Leather Wallet">
+                <div class="card-body">
+                    <h5 class="card-title">Leather Wallet</h5>
+                    <p class="card-text">
+                        Price: $49.99<br>
+                        Rating: 4.7/5<br>
+                        Stock: 15
+                    </p>
+                    <span class="badge bg-success me-1">New Arrival</span>
+                    <span class="badge bg-primary">Featured</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const productGrid = document.getElementById('productGrid');
+    const searchInput = document.getElementById('searchInput');
+    const inStockFilter = document.getElementById('inStockFilter');
+    const newArrivalsFilter = document.getElementById('newArrivalsFilter');
+    const featuredFilter = document.getElementById('featuredFilter');
+    const resetButton = document.getElementById('resetFilters');
+    const sortDropdownItems = document.querySelectorAll('.dropdown-item');
+
+    // Comprehensive Filtering and Sorting Function
+    function filterAndSortProducts() {
+        const products = Array.from(productGrid.querySelectorAll('.product-card'));
+        const searchTerm = searchInput.value.toLowerCase();
+        
+        // Apply All Filters
+        const filteredProducts = products.filter(product => {
+            const inStockOnly = inStockFilter.checked;
+            const isNew = newArrivalsFilter.checked;
+            const isFeatured = featuredFilter.checked;
+            
+            const stock = parseInt(product.dataset.stock);
+            const isNewProduct = product.dataset.new === 'true';
+            const isFeaturedProduct = product.dataset.featured === 'true';
+            const name = product.dataset.name.toLowerCase();
+
+            // Search Filter
+            const matchesSearch = searchTerm === '' || name.includes(searchTerm);
+
+            return matchesSearch &&
+                   (!inStockOnly || stock > 0) && 
+                   (!isNew || isNewProduct) &&
+                   (!isFeatured || isFeaturedProduct);
+        });
+
+        // Sort Products
+        const sortType = document.querySelector('.dropdown-item.active')?.dataset.sort || 'default';
+        filteredProducts.sort((a, b) => {
+            switch(sortType) {
+                case 'popularity':
+                    return parseFloat(b.dataset.popularity) - parseFloat(a.dataset.popularity);
+                case 'price-low':
+                    return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
+                case 'price-high':
+                    return parseFloat(b.dataset.price) - parseFloat(a.dataset.price);
+                case 'rating':
+                    return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+                case 'new':
+                    return (b.dataset.new === 'true' ? 1 : 0) - (a.dataset.new === 'true' ? 1 : 0);
+                case 'az':
+                    return a.dataset.name.localeCompare(b.dataset.name);
+                case 'za':
+                    return b.dataset.name.localeCompare(a.dataset.name);
+                default:
+                    return 0;
+            }
+        });
+
+        // Reorder products in the grid
+        productGrid.innerHTML = '';
+        filteredProducts.forEach(product => productGrid.appendChild(product.closest('.col-md-4')));
+    }
+
+    // Event Listeners for Sort Dropdown
+    sortDropdownItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Remove active from all items
+            sortDropdownItems.forEach(i => i.classList.remove('active'));
+            // Add active to clicked item
+            this.classList.add('active');
+            document.getElementById('sortDropdown').textContent = this.textContent;
+            filterAndSortProducts();
+        });
+    });
+
+    // Checkbox and Search Event Listeners
+    inStockFilter.addEventListener('change', filterAndSortProducts);
+    newArrivalsFilter.addEventListener('change', filterAndSortProducts);
+    featuredFilter.addEventListener('change', filterAndSortProducts);
+    searchInput.addEventListener('input', filterAndSortProducts);
+
+    // Reset Filters
+    resetButton.addEventListener('click', function() {
+        inStockFilter.checked = false;
+        newArrivalsFilter.checked = false;
+        featuredFilter.checked = false;
+        searchInput.value = '';
+        sortDropdownItems.forEach(i => i.classList.remove('active'));
+        document.getElementById('sortDropdown').textContent = 'Sort By';
+        filterAndSortProducts();
+    });
+});
+</script>
+</body>
+</html>

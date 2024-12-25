@@ -69,7 +69,11 @@ const productSchema = new mongoose.Schema({
                 default: Date.now,
             },
         },
-    ], 
+    ],
+    orderCount: {
+        type: Number,
+        default: 0 
+    }
 }, { timestamps: true });
 
 const Product = mongoose.model('Product', productSchema);
@@ -83,24 +87,3 @@ export default Product;
 
 
 
-// variations: [
-//     {
-//         size: {
-//             type: String,
-//             enum: ["25ml", "50ml", "75ml", "100ml", "150ml"],
-//             required: true,
-//         },
-//         regularPrice: {
-//             type: Number,
-//             required: true,
-//         },
-//         salePrice: {
-//             type: Number,
-//             required: true,
-//         },
-//         quantity: {
-//             type: Number,
-//             required: true,
-//         }
-//     }
-// ],

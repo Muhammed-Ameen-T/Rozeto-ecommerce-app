@@ -50,9 +50,6 @@ const categoryOfferSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 
-const ProductOffer = mongoose.model('ProductOffer', ProductOfferSchema);
-const CategoryOffer = mongoose.model('CategoryOffer', categoryOfferSchema);
-
-
-export default { ProductOffer, CategoryOffer };
+export const ProductOffer = mongoose.model('ProductOffer', ProductOfferSchema);
+export const CategoryOffer = mongoose.model('CategoryOffer', categoryOfferSchema);
 

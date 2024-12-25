@@ -94,17 +94,17 @@ function validateForm() {
     }
 
     if (regularPrice == "") {
-        displayErrorMessage("regularPrice-error", "Please enter a description")
+        displayErrorMessage("regularPrice-error", "Please enter a Regular Price")
         isValid = false
     }
 
     if (salePrice == "") {
-        displayErrorMessage("salePrice-error", "Please enter a description")
+        displayErrorMessage("salePrice-error", "Please enter a Sale Price")
         isValid = false
     }
 
     if (quantity == "") {
-        displayErrorMessage("quantity-error", "Please enter a description")
+        displayErrorMessage("quantity-error", "Please enter Product Quantity")
         isValid = false
     }
 

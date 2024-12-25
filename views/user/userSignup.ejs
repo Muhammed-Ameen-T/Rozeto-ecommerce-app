@@ -38,18 +38,35 @@
                     </div>
 
                     <!-- Password Field -->
-                    <div class="wrap-input100 validate-input">
+                    <div class="wrap-input100 validate-input position-relative">
                         <input class="input100" type="password" name="password" id="password" placeholder="Password">
                         <span class="focus-input100"></span>
+                        <!-- Eye Icon for Toggle -->
+                        <span class="position-absolute top-50 end-0 translate-middle-y me-3">
+                            <i class="fa fa-eye-slash" id="togglePassword" style="cursor: pointer;"></i>
+                        </span>
                     </div>
 
                     <!-- Confirm Password Field -->
-                    <div class="wrap-input100 validate-input">
+                    <div class="wrap-input100 validate-input position-relative">
                         <input class="input100" type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password">
                         <span class="focus-input100"></span>
+                        <!-- Eye Icon for Toggle -->
+                        <span class="position-absolute top-50 end-0 translate-middle-y me-3">
+                            <i class="fa fa-eye-slash" id="toggleConfirmPassword" style="cursor: pointer;"></i>
+                        </span>
+                    </div>
+                    <div class="wrap-input100 validate-input">
+                        <input class="input100" type="text" name="referralCode" id="referralCode" placeholder="Referral Code (Optional)">
+                        <span class="focus-input100"></span>
+                    </div>                    
+
+
+                    <div class="text-center p-t-46 p-b-20" style="margin-left: 21rem;">
+                        <a href="/forgotPassword" style="color:#6675df; font-size: small; font-weight: bold;text-decoration:none ;">Forgot Password</a>
                     </div>
 
-                    <div class="container-login100-form-btn pt-2">
+                    <div class="container-login100-form-btn pt-2 mb-3">
                         <button type="button" class="login100-form-btn" id="signupButton">
                             Sign Up
                         </button>
@@ -79,6 +96,43 @@
     </div>
     <%- include("../../views/partials/user/footer.ejs") %>
 
+
+
+<!-- Font Awesome for Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <script>
+        // Password field toggle
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+
+        togglePassword.addEventListener('click', () => {
+            // Toggle the type attribute
+            const type = password.type === 'password' ? 'text' : 'password';
+            password.type = type;
+
+            // Toggle the icon
+            togglePassword.classList.toggle('fa-eye');
+            togglePassword.classList.toggle('fa-eye-slash');
+        });
+
+        // Confirm password field toggle
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const confirmPassword = document.getElementById('confirmPassword');
+
+        toggleConfirmPassword.addEventListener('click', () => {
+            // Toggle the type attribute
+            const type = confirmPassword.type === 'password' ? 'text' : 'password';
+            confirmPassword.type = type;
+
+            // Toggle the icon
+            toggleConfirmPassword.classList.toggle('fa-eye');
+            toggleConfirmPassword.classList.toggle('fa-eye-slash');
+        });
+    </script>
+
+
+
     <!-- Dependencies -->
     <script src="/vendor/jquery/jquery-3.2.1.min.js"></script>
     <script src="/vendor/bootstrap/js/popper.js"></script>
@@ -93,6 +147,7 @@
         const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value.trim();
         const confirmPassword = document.getElementById("confirmPassword").value.trim();
+        const referralCode = document.getElementById("referralCode").value.trim();
         
         
         
@@ -150,7 +205,7 @@
             const response = await fetch('/signup', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, password }),
+                body: JSON.stringify({ name, email, password,referralCode }),
             });
 
             const data = await response.json();

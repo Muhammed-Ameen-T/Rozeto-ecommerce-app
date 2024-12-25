@@ -1,0 +1,613 @@
+<%- include("../../views/partials/user/header.ejs") %>
+
+    <style>
+        body {
+            background: #f5f5f5;
+            margin-top: 20px;
+        }
+
+        .ui-w-80 {
+            width : 80px !important;
+            height: auto;
+        }
+
+        .btn-default {
+            border-color: rgba(24, 28, 33, 0.1);
+            background  : rgba(0, 0, 0, 0);
+            color       : #4E5155;
+        }
+
+        label.btn {
+            margin-bottom: 0;
+        }
+
+        .btn-outline-primary {
+            border-color: #26B4FF;
+            background  : transparent;
+            color       : #26B4FF;
+        }
+
+        .btn {
+            cursor: pointer;
+        }
+
+        .text-light {
+            color: #babbbc !important;
+        }
+
+        .btn-facebook {
+            border-color: rgba(0, 0, 0, 0);
+            background  : #3B5998;
+            color       : #fff;
+        }
+
+        .btn-instagram {
+            border-color: rgba(0, 0, 0, 0);
+            background  : #000;
+            color       : #fff;
+        }
+
+        .card {
+            background-clip: padding-box;
+            box-shadow     : 0 1px 4px rgba(24, 28, 33, 0.012);
+        }
+
+        .row-bordered {
+            overflow: hidden;
+        }
+
+        .account-settings-fileinput {
+            position  : absolute;
+            visibility: hidden;
+            width     : 1px;
+            height    : 1px;
+            opacity   : 0;
+        }
+
+        .account-settings-links .list-group-item.active {
+            font-weight: bold !important;
+        }
+
+        html:not(.dark-style) .account-settings-links .list-group-item.active {
+            background: transparent !important;
+        }
+
+        .account-settings-multiselect~.select2-container {
+            width: 100% !important;
+        }
+
+        .light-style .account-settings-links .list-group-item {
+            padding     : 0.85rem 1.5rem;
+            border-color: rgba(24, 28, 33, 0.03) !important;
+        }
+
+        .light-style .account-settings-links .list-group-item.active {
+            color: #4e5155 !important;
+        }
+
+        .material-style .account-settings-links .list-group-item {
+            padding     : 0.85rem 1.5rem;
+            border-color: rgba(24, 28, 33, 0.03) !important;
+        }
+
+        .material-style .account-settings-links .list-group-item.active {
+            color: #4e5155 !important;
+        }
+
+        .dark-style .account-settings-links .list-group-item {
+            padding     : 0.85rem 1.5rem;
+            border-color: rgba(255, 255, 255, 0.03) !important;
+        }
+
+        .dark-style .account-settings-links .list-group-item.active {
+            color: #fff !important;
+        }
+
+        .light-style .account-settings-links .list-group-item.active {
+            color: #4E5155 !important;
+        }
+
+        .light-style .account-settings-links .list-group-item {
+            padding     : 0.85rem 1.5rem;
+            border-color: rgba(24, 28, 33, 0.03) !important;
+        }
+        
+        .form-group {
+            position: relative;
+        }
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 16px;
+            color: #6c757d;
+        }
+
+    </style>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container light-style flex-grow-1 container-p-y mb-5">
+        <h4 class="font-weight-bold py-3 mb-4">
+            Account settings
+        </h4>
+        <div class="card overflow-hidden">
+            <div class="row no-gutters row-bordered row-border-light">
+                <div class="col-md-3 pt-0">
+                    <div class="list-group list-group-flush account-settings-links">
+                        <a class="list-group-item list-group-item-action active" data-toggle="list"
+                            href="#account-general">General</a>
+                        <a class="list-group-item list-group-item-action" data-toggle="list"
+                            href="#account-change-password">Change password</a>
+                        <a class="list-group-item list-group-item-action" data-toggle="list"
+                            href="#account-info">Address</a>
+                        <a class="list-group-item list-group-item-action" data-toggle="list"
+                            href="#account-social-links">Orders</a>
+                        <!-- <a class="list-group-item list-group-item-action" data-toggle="list"
+                            href="#account-connections">Connections</a>
+                        <a class="list-group-item list-group-item-action" data-toggle="list"
+                            href="#account-notifications">Notifications</a> -->
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="tab-content">
+                        <div class="tab-pane fade active show" id="account-general">
+                            <h3 class="mt-3 ml-3">Account Details</h3>
+                            <hr class="border-light m-0">
+                            <form action="/editUserProfile/<%= user._id %>" method="post" id="editUserProfileForm">
+                                <div class="card-body">
+                                    <!-- Username Field -->
+                                    <div class="form-group">
+                                        <label class="form-label">Username</label>
+                                        <input type="text" name="name" class="form-control mb-1"  oninput="handleChange('g-name')" value="<%= user.name %>" id="g-name">
+                                        <small id="g-nameError" class="text-danger"></small> <!-- Error message -->
+                                    </div>
+                            
+                                    <!-- Phone Field -->
+                                    <div class="form-group">
+                                        <label class="form-label">Phone Number</label>
+                                        <input type="number" name="phone" class="form-control"  oninput="handleChange('g-phone')" value="<%= user && user.phone ? user.phone : '' %>" id="g-phone">
+                                        <small id="g-phoneError" class="text-danger"></small> <!-- Error message -->
+                                    </div>
+                            
+                                    <!-- Email Field (Read-only) -->
+                                    <div class="form-group">
+                                        <label class="form-label">E-mail</label>
+                                        <input type="text" class="form-control mb-1" value="<%= user.email %>" readonly>
+                                    </div>
+                                </div>
+                            
+                                <div class="text-right mb-3 me-3">
+                                    <button type="submit" class="btn btn-primary">Save changes</button>&nbsp;
+                                    <button type="button" class="btn btn-default" onclick="window.history.back();">Cancel</button>
+                                </div>
+                            </form>
+                            
+                        </div>
+                        <div class="tab-pane fade pb-4 pl-5" id="account-change-password">
+                            <h3 class="mt-3 ml-3">Change Password</h3>
+                            <form id="passwordForm" method="post" action="">
+                                <div class="card-body pb-2">
+                                    <div class="form-group position-relative">
+                                        <label for="currentPassword" class="form-label">Current password</label>
+                                        <input type="password" id="currentPassword" class="form-control">
+                                        <span class="toggle-password mt-2" id="toggleCurrentPassword">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                        </span>
+                                        <small id="currentPasswordError" class="text-danger"></small>
+                                    </div>
+                                    <div class="form-group position-relative">
+                                        <label for="newPassword" class="form-label">New password</label>
+                                        <input type="password" id="newPassword" class="form-control">
+                                        <span class="toggle-password mt-2" id="toggleNewPassword">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                        </span>
+                                        <small id="newPasswordError" class="text-danger"></small>
+                                    </div>
+                                    <div class="form-group position-relative">
+                                        <label for="repeatNewPassword" class="form-label">Repeat new password</label>
+                                        <input type="password" id="repeatNewPassword" class="form-control">
+                                        <span class="toggle-password mt-2" id="toggleRepeatNewPassword">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                        </span>
+                                        <small id="repeatNewPasswordError" class="text-danger"></small>
+                                    </div>
+                                </div>
+                                <div class="text-right mt-3 me-3">
+                                    <button type="submit" class="btn btn-primary">Change Password</button>&nbsp;
+                                    <button type="button" class="btn btn-default">Cancel</button>
+                                </div>
+                            </form>                            
+                        </div>
+                        <div class="tab-pane fade" id="account-info">
+                            <div class="container py-5">
+                                <h4 class="mb-4">Saved Addresses</h4>
+                            
+                                <!-- Address Card -->
+                                <div class="card shadow-sm mb-3">
+                                    <div class="card-body">
+                                        <div class="d-flex" >
+                                            <h5 class="card-title">John Doe</h5>
+                                            <span class="badge bg-success" style="height: 20px;margin-left: 2rem;">Primary Address</span>
+                                        </div>
+
+                                        <p class="card-text mb-1">
+                                            <strong>Address:</strong> 123 Main Street, Apt 4B
+                                        </p>
+                                        <p class="card-text mb-1">
+                                            <strong>City:</strong> New York
+                                        </p>
+                                        <p class="card-text mb-1">
+                                            <strong>State:</strong> NY
+                                        </p>
+                                        <p class="card-text mb-1">
+                                            <strong>ZIP Code:</strong> 10001
+                                        </p>
+                                        <p class="card-text mb-3">
+                                            <strong>Phone:</strong> +1 (123) 456-7890
+                                        </p>
+                            
+                                        <!-- Action Buttons -->
+                                        <div class="d-flex justify-content-between">
+                                            <button class="btn btn-primary btn-sm">
+                                                <i class="bi bi-pencil"></i> Edit
+                                            </button>
+                                            <button class="btn btn-danger btn-sm">
+                                                <i class="bi bi-trash"></i> Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Add Address Button -->
+                            <button type="button" class="btn btn-primary mb-3" style="margin-left: 1.1rem;" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                                Add Address
+                            </button>
+
+                            <!-- Modal for Add Address -->
+                            <div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="addAddressModalLabel">Add Shipping Address</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Add Address Form -->
+                                            <div class="form-group">
+                                                <label class="form-label">Full Name</label>
+                                                <input type="text" class="form-control" id="fullName" placeholder="Enter your full name">
+                                                <small class="text-danger" id="fullNameError" style="display: none;">Full Name is required</small>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="form-label">Phone</label>
+                                                <input type="text" class="form-control" id="phone" placeholder="Enter your phone number">
+                                                <small class="text-danger" id="phoneError" style="display: none;">Phone is required and must be valid</small>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="form-label">Street Address</label>
+                                                <input type="text" class="form-control" id="street" placeholder="Enter your street address">
+                                                <small class="text-danger" id="streetError" style="display: none;">Street Address is required</small>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="form-label">City</label>
+                                                <input type="text" class="form-control" id="city" placeholder="Enter your city">
+                                                <small class="text-danger" id="cityError" style="display: none;">City is required</small>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="form-label">Country</label>
+                                                <select class="form-select" id="country">
+                                                    <option value="India" selected>India</option>
+                                                    <option>Canada</option>
+                                                    <option>Germany</option>
+                                                    <option>France</option>
+                                                </select>
+                                                <small class="text-danger" id="countryError" style="display: none;">Country is required</small>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">State</label>
+                                                <input type="text" class="form-control" id="state" placeholder="Enter your state">
+                                                <small class="text-danger" id="stateError" style="display: none;">State is required</small>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="form-label">ZIP/Postal Code</label>
+                                                <input type="text" class="form-control" id="zip" placeholder="Enter your ZIP code">
+                                                <small class="text-danger" id="zipError" style="display: none;">ZIP Code is required</small>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary" id="saveAddressBtn">Save Address</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="account-social-links">
+                            <div class="card-body pb-2">
+                                <div class="container py-5">
+                                    <h4 class="mb-4">Your Orders</h4>
+                                
+                                    <!-- Order Card -->
+                                    <div class="card shadow-sm mb-4">
+                                        <div class="card-body">
+                                            <!-- Order Details Header -->
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h5 class="card-title mb-0">Order #12345</h5>
+                                                <span class="badge bg-success">Delivered</span>
+                                            </div>
+                                            <hr>
+                                            <!-- Product Details -->
+                                            <div class="d-flex">
+                                                <img src="images/f1.png" class="img-thumbnail me-3" style="width: 6rem;height: 6rem;" alt="Product Image">
+                                                <div>
+                                                    <h6 class="mb-1">Product Name</h6>
+                                                    <p class="text-muted mb-1">Category: Electronics</p>
+                                                    <p class="text-muted mb-1">Quantity: 1</p>
+                                                    <p class="text-muted mb-1">Price: $499</p>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <!-- Actions -->
+                                            <div class="d-flex justify-content-between">
+                                                <div>
+                                                    <button class="btn btn-primary btn-sm">
+                                                        <i class="bi bi-box-arrow-up-right"></i> Track Order
+                                                    </button>
+                                                    <button class="btn btn-warning btn-sm">
+                                                        <i class="bi bi-arrow-repeat"></i> Return
+                                                    </button>
+                                                    <button class="btn btn-danger btn-sm">
+                                                        <i class="bi bi-x-circle"></i> Cancel
+                                                    </button>
+                                                </div>
+                                                <div>
+                                                    <p class="text-muted mb-0">
+                                                        Ordered on: <strong>Nov 28, 2024</strong>
+                                                    </p>
+                                                    <p class="text-muted mb-0">
+                                                        Delivered on: <strong>Dec 1, 2024</strong>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('saveAddressBtn').addEventListener('click', function () {
+            let isValid = true;
+
+            // Clear existing error messages
+            document.querySelectorAll('.text-danger').forEach((error) => {
+                error.style.display = 'none';
+            });
+
+            // Get input values
+            const fullName = document.getElementById('fullName').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const street = document.getElementById('street').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const state = document.getElementById('state').value.trim();
+            const zip = document.getElementById('zip').value.trim();
+            const country = document.getElementById('country').value;
+
+            // Full Name Validation
+            if (!fullName) {
+                document.getElementById('fullNameError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Phone Validation
+            const phoneRegex = /^[0-9]{10,15}$/; // Validates phone numbers (10-15 digits)
+            if (!phone || !phoneRegex.test(phone)) {
+                document.getElementById('phoneError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Street Validation
+            if (!street) {
+                document.getElementById('streetError').style.display = 'block';
+                isValid = false;
+            }
+
+            // City Validation
+            if (!city) {
+                document.getElementById('cityError').style.display = 'block';
+                isValid = false;
+            }
+
+            // State Validation
+            if (!state) {
+                document.getElementById('stateError').style.display = 'block';
+                isValid = false;
+            }
+
+            // ZIP Code Validation
+            if (!zip || isNaN(zip)) {
+                document.getElementById('zipError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Country Validation
+            if (!country) {
+                document.getElementById('countryError').style.display = 'block';
+                isValid = false;
+            }
+
+            // If all fields are valid, submit the form (or perform desired action)
+            if (isValid) {
+                alert('Address saved successfully!');
+                // Perform the form submission or API call here
+            }
+        });
+
+        document.getElementById('editUserProfileForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); 
+
+            // Clear previous error messages
+            document.getElementById('g-nameError').textContent = '';
+            document.getElementById('g-phoneError').textContent = '';
+
+            // Get form data
+            const name = document.getElementById('g-name').value.trim();
+            const phone = document.getElementById('g-phone').value.trim();
+
+            let valid = true;
+
+            // Validate Name
+            if (name === '') {
+                document.getElementById('g-nameError').textContent = 'Username is required.';
+                valid = false;
+            }
+
+
+            // If the form is valid, submit it
+            if (valid) {
+                const userId = "<%= user._id %>";
+                const formData = {
+                    name: document.getElementById('g-name').value,
+                    phone: document.getElementById('g-phone').value,
+                };
+
+                try {
+                    const response = await axios.post(`/editUserProfile/${userId}`, formData);
+
+                    if (response.status === 200) {
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Profile updated successfully!',
+                            icon: 'success',
+                            timer: 1000,
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.href = '/profile';
+                        });
+                    }
+                } catch (error) {
+                    if (error.response && error.response.data.error) {
+                        Swal.fire({
+                            timer: 1200,
+                            title: 'Error!',
+                            text: error.response.data.error,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'An unexpected error occurred. Please try again later.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                }
+            }
+        });
+    </script>
+    
+
+    <script>
+        
+        function togglePasswordVisibility(passwordFieldId, toggleIconId) {
+            const passwordField = document.getElementById(passwordFieldId);
+            const toggleIcon = document.getElementById(toggleIconId);
+            const isPassword = passwordField.type === 'password';
+    
+            passwordField.type = isPassword ? 'text' : 'password';
+            toggleIcon.innerHTML = isPassword
+                ? '<i class="fa fa-eye-slash" aria-hidden="true"></i>'
+                : '<i class="fa fa-eye" aria-hidden="true"></i>';
+        }
+    
+        document.getElementById('toggleCurrentPassword').addEventListener('click', function () {
+            togglePasswordVisibility('currentPassword', 'toggleCurrentPassword');
+        });
+    
+        document.getElementById('toggleNewPassword').addEventListener('click', function () {
+            togglePasswordVisibility('newPassword', 'toggleNewPassword');
+        });
+    
+        document.getElementById('toggleRepeatNewPassword').addEventListener('click', function () {
+            togglePasswordVisibility('repeatNewPassword', 'toggleRepeatNewPassword');
+        });
+
+        // Form Validation
+        document.getElementById('passwordForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent form submission
+            let isValid = true;
+
+            // Clear all previous error messages
+            document.querySelectorAll('.text-danger').forEach((errorElement) => (errorElement.textContent = ''));
+
+            // Get field values
+            const currentPassword = document.getElementById('currentPassword').value.trim();
+            const newPassword = document.getElementById('newPassword').value.trim();
+            const repeatNewPassword = document.getElementById('repeatNewPassword').value.trim();
+
+            // Validate Current Password
+            if (!currentPassword) {
+                isValid = false;
+                document.getElementById('currentPasswordError').textContent = 'Current password is required.';
+            }
+
+            // Validate New Password
+            if (!newPassword) {
+                isValid = false;
+                document.getElementById('newPasswordError').textContent = 'New password is required.';
+            } else if (newPassword.length < 6) {
+                isValid = false;
+                document.getElementById('newPasswordError').textContent = 'Password must be at least 6 characters long.';
+            }
+
+            // Validate Repeat New Password
+            if (!repeatNewPassword) {
+                isValid = false;
+                document.getElementById('repeatNewPasswordError').textContent = 'Please confirm your new password.';
+            } else if (repeatNewPassword !== newPassword) {
+                isValid = false;
+                document.getElementById('repeatNewPasswordError').textContent = 'Passwords do not match.';
+            }
+
+            // If all fields are valid, submit the form
+            if (isValid) {
+                // Perform the form submission logic (e.g., send data to the backend via Axios)
+                console.log('Form submitted successfully');
+                Swal.fire({
+                    title: 'Success',
+                    text: 'Password updated successfully!',
+                    icon: 'success',
+                    confirmButtonText: 'Okay',
+                });
+            }
+        });
+
+    </script>
+    
+    
+  
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+<%- include("../../views/partials/user/footer.ejs") %>

@@ -1103,3 +1103,55 @@ a:focus {
 .swal2-content {
   font-family: 'Arial', sans-serif; /* Change to your desired font */
 }
+
+
+.bredaa {
+  background-color: #d5d7d8;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  margin-bottom: 3rem;
+  height: 3rem;
+}
+.breadcrumb-item.active {
+  color: #495057;
+  font-weight: 600;
+}
+.breadcrumb-item a {
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.breadcrumb-item a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+
+.wishlist-icon {
+  position: relative; /* To position the badge inside the icon */
+  display: inline-block;
+  font-size: 21px; /* Size of the icon */
+  color: #333; /* Default color of the icon */
+}
+
+.wishlist-icon .fa-heart {
+  color: #ffffff; /* Icon color (customize as needed) */
+}
+
+.wishlist-icon .badge {
+  position: absolute;
+  top: -5px; /* Adjust to position the badge */
+  right: -10px; /* Adjust to position the badge */
+  background-color: rgb(255, 255, 255); /* Badge color */
+  color: white; /* Badge text color */
+  border-radius: 50%; /* Makes the badge circular */
+  height: 18px; /* Size of the badge */
+  width: 18px; /* Size of the badge */
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centers the text inside the badge */
+  font-size: 12px; /* Font size of the badge text */
+  font-weight: bold; /* Bold text */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Add some shadow for effect */
+}

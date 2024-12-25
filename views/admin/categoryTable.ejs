@@ -12,23 +12,26 @@
 										<div class="d-flex" style="justify-content: space-between;">
 											<h3 class="mb-3">Category Management</h3>
 											<!-- Search Form Start -->
-											<!-- <form method="GET" action="/admin/cat-table">
-											  <div class="input-group mb-3" style="width: 25rem;">
-												<input
-												  type="text"
-												  class="form-control"
-												  placeholder="Search by name or email"
-												  name="search"
-												  value="<%= search %>"
-												/>
-												<div class="input-group-append">
-												  <button class="btn btn-primary" type="submit">Search</button>
+											<form method="GET" action="/admin/cat-table">
+												<div class="input-group mb-3" style="width: 25rem;">
+													<input
+														type="text"
+														class="form-control"
+														placeholder="Search by Category Name.."
+														name="search"
+														value="<%= search %>"
+													/>
+													<div class="input-group-append">
+														<button class="btn btn-primary" type="submit">Search</button>
+													</div>
 												</div>
-											  </div>
-											</form> -->
+											</form>											
 										</div>
 										<div class="table-responsive">
 											<table id="copy-print-csv" class="table v-middle table-striped" style="font-size: 14px;">
+												<% if(cat.length==0){ %>
+													<h4 class="text-center">No Category found</h4>
+												<% } else{%>
 												<thead class="table-danger">
 													<tr>
 														<th>#</th>
@@ -41,6 +44,7 @@
 													</tr>
 												</thead>
 												<tbody>
+
 													<%cat.reverse().forEach((category,index)=>{%>
 													<tr>
 													  <td><%= index + 1 %></td>
@@ -76,6 +80,7 @@
 													  </td>
 													</tr>
 													<%})%>
+													<% } %>
 												</tbody>
 								    		</table>
 											<button onclick="dsAdd()" id="add-kk" type="submit" class="btn btn-info" href=""><a   style="color: white;">+&nbsp;Add New Category</a></button>
@@ -123,7 +128,7 @@
 													>
 													<div class="d-flex">
 														<div style="width: 25rem;" class="field-wrapper me-4">
-															<input class="form-control" name="name" id="product-name" type="text" />
+															<input class="form-control" name="name" id="cat-name" type="text" />
 															<div class="field-placeholder">
 															Category Name <span class="text-danger">*</span>
 															</div>
@@ -131,7 +136,7 @@
 														</div>
 														<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
 															<div class="field-wrapper" style="width: 45rem">
-															<input class="form-control" id="product-des" name="description" type="text" />
+															<input class="form-control" id="cat-des" name="description" type="text" />
 															<div class="field-placeholder">
 																Description<span class="text-danger">*</span>
 															</div>
@@ -335,6 +340,6 @@
 						});
 					}
 				</script>
-								<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+				<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 				<!-- Content wrapper scroll end -->
 				<%- include("../../views/partials/admin/footer.ejs") %>

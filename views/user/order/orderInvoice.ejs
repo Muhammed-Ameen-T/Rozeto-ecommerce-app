@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - Modern Commerce</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --background-color: #f4f6f9;
+        }
+
+        body {
+            background-color: var(--background-color);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        .invoice-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            max-width: 900px;
+            margin: 2rem auto;
+            border: 1px solid rgba(0,0,0,0.05);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .invoice-container:hover {
+            box-shadow: 0 20px 45px rgba(0,0,0,0.12);
+            transform: translateY(-5px);
+        }
+
+        .invoice-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .invoice-details {
+            padding: 2rem;
+            background: #f8f9fa;
+        }
+
+        .invoice-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .invoice-table {
+            margin-bottom: 0;
+        }
+
+        .invoice-table thead {
+            background-color: #f1f3f5;
+        }
+
+        .invoice-actions {
+            background-color: #f1f3f5;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .status-badge {
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+        }
+
+        .total-row {
+            background-color: #f1f3f5 !important;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .invoice-details-grid {
+                grid-template-columns: 1fr;
+            }
+            .invoice-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .invoice-container {
+                box-shadow: none;
+                border: none;
+            }
+        }
+
+        .invoice-meta {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .product-description {
+            color: #6c757d;
+            font-size: 0.85rem;
+        }
+
+        /* Loader styles */
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @media print {
+            html, body {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .invoice-container {
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
+        }
+
+        /* Add these to ensure no extra margins */
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .invoice-container {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="container py-4">
+        <div class="invoice-container" id="invoice-content" style="margin: 0; padding: 0;">
+            <div class="invoice-header">
+                <div class="text-end">
+                    <span class="badge bg-success status-badge">
+                        Payment Completed
+                    </span>
+                </div>
+            </div>
+            
+            <div class="invoice-details">
+                <div class="invoice-details-grid">
+                    <h3 class="mb-2">INVOICE</h3>
+                    <div>
+                        <div>
+                            <h2 class="mb-1">Rozeto</h2>
+                            <p class="invoice-meta mb-0">India's Leading Food delivery Platform.</p>
+                        </div>
+                        <h5 class="text-muted mb-3">Bill To:</h5>
+                        <div>
+                            <p class="mb-1"><strong><%= order.address.name %></strong></p>
+                            <p class="mb-1"><%= order.address.landMark %>, <%= order.address.locality %></p>
+                            <p class="mb-1"><%= order.address.city %></p>
+                            <p class="mb-1"><%= order.address.state %> , PIN: <%= order.address.pincode %></p>
+                            <p class="mb-1"><strong>Phone:</strong> +91 <%= order.address.phone %>, <%= order.address.altPhone %></p>
+                        </div>
+                    </div>
+                    <div class="text-md-end">
+                        <div>
+                            <p class="mb-2"><strong>Order Id:</strong> <%=order.orderId%></p>
+                            <p class="mb-2"><strong>Order Status:</strong> <%=order.orderStatus%></p>
+                            <p class="mb-2"><strong>Order Date:</strong> <%= new Date(order.createdAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) %></p>
+                            <p class="mb-2"><strong>Invoice Date:</strong> <%= new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) %></p>
+                            <p class="mb-2"><strong>Payment Method:</strong> <%=order.paymentMethod%></p>
+                            <%if(order.paymentMethod==='RazorPay'){%>
+                                <p class="mb-1"><strong>Transaction Id:</strong> <%=order.razorpay.paymentId%></p>
+                            <%}%>
+                            <p class="mb-2"><strong>Payment Status:</strong> <%=order.paymentStatus%></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table invoice-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Item Description</th>
+                            <th class="text-center">Quantity</th>
+                            <th class="text-end">Unit Price</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% order.orderedItems.forEach(item=> { %>
+                        <tr>
+                            <td>
+                                <strong><%= item.product.productName %></strong>
+                                <p class="product-description mb-0"><%= item.product.description %></p>
+                            </td>
+                            <td class="text-end"><%= item.quantity %></td>
+                            <td class="text-end">₹ <%= item.product.salePrice %></td>
+                            <td class="text-end">₹ <%= item.price %></td>
+                        </tr>
+                        <% }); %>
+                        
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-end">Subtotal:</td>
+                            <td class="text-end">₹ <%= order.subtotal + order.discount %></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-end">Discount:</td>
+                            <td class="text-end">-₹ <%= order.discount %></td>
+                        </tr>
+                        <%if(order.couponApplied){%>
+                            <tr>
+                                <td colspan="3" class="text-end">Coupon Discount:</td>
+                                <td class="text-end">-₹ <%= order.couponDiscount %></td>
+                            </tr>
+                        <%}%>
+                        <tr>
+                            <td colspan="3" class="text-end">Offer Discount:</td>
+                            <td class="text-end">-₹ <%= order.offerDiscount %></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-end">Tax (10%):</td>
+                            <td class="text-end">₹ <%= order.tax.toFixed(2) %></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-end">Shipping:</td>
+                            <td class="text-end">Free</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td colspan="3" class="text-end fw-bold">Total:</td>
+                            <td class="text-end fw-bold">₹ <%= order.finalAmount.toFixed(2) %></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="invoice-actions no-print">
+                <button id="downloadInvoice" class="btn btn-primary">
+                    <i class="bi bi-download me-2"></i>Download PDF
+                </button>
+                <button onclick="window.print()" class="btn btn-outline-secondary">
+                    <i class="bi bi-printer me-2"></i>Print Invoice
+                </button>
+            </div>
+
+            <div class="p-3 text-center bg-light">
+                <small class="text-muted">
+                    Thank you for your purchase. Need help? Contact rozeto@gmail.com
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- External Libraries -->
+    <!-- html2pdf.js library for PDF conversion -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.getElementById('downloadInvoice').addEventListener('click', function() {
+            // Show loading indicator
+            const loading = document.getElementById('loading');
+            loading.style.display = 'flex';
+
+            // Get the invoice content
+            const element = document.getElementById('invoice-content');
+
+            // PDF generation options
+            const opt = {
+                margin:       [0.2, 0.5], // Reduced top margin, standard side margins
+                filename:     'invoice.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { 
+                    scale: 2,
+                    useCORS: true,
+                    logging: false
+                },
+                jsPDF:        { 
+                    unit: 'in', 
+                    format: 'letter', 
+                    orientation: 'portrait' 
+                }
+            };
+
+            // Generate PDF
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Hide loading indicator
+                loading.style.display = 'none';
+            }).catch(err => {
+                // Handle any errors
+                console.error('PDF generation error:', err);
+                loading.style.display = 'none';
+                alert('Failed to generate PDF. Please try again.');
+            });
+        });
+    </script>
+</body>
+</html>

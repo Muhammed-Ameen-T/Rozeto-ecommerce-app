@@ -33,7 +33,7 @@
                 <thead class="table-danger">
                   <tr>
                     <th>#</th>
-                    <th>Avatar</th>
+                    <!-- <th>Avatar</th> -->
                     <th>Name</th>
                     <th>Phone</th>
                     <th>Status</th>
@@ -47,14 +47,14 @@
                   index)=> { %>
                   <tr>
                     <td><%= (currentPage - 1) * limit + index + 1 %></td>
-                    <td>
+                    <!-- <td>
                       <img
                         src="/img/user7.png"
                         class="img-flag"
                         style="width: 3rem"
                         alt="Country"
                       />
-                    </td>
+                    </td> -->
                     <td>
                       <div class="media-box d-flex">
                         <div class="media-box-body">
@@ -76,50 +76,18 @@
                     </td>
                     <td>
                       <div class="actions">
-                        <!-- <a
-                          href=""
-                          class="me-2"
-                          data-toggle="tooltip"
-                          data-placement="top"
-                          title="Edit the User"
-                          data-original-title="Edit"
-                        >
-                          <i
-                            class="icon-edit1 text-info"
-                            style="font-size: large"
-                          ></i>
-                        </a> -->
-                        
-
-                        <% if (!user.isBlocked) { %>
-                        <a
-                          href="/admin/blockUser?id=<%= user._id %>"
+                          <a
+                          href="/admin/toggleUser?id=<%= user._id %>"
                           class="mx-2"
                           data-toggle="tooltip"
                           data-placement="top"
-                          title="Block the User"
-                          data-original-title="Block"
+                          title="<%= user.isBlocked ? 'Unblock the User' : 'Block the User' %>"
                         >
                           <i
-                            class="icon-slash text-info"
+                            class="<%= user.isBlocked ? 'icon-unlock text-success' : 'icon-slash text-danger' %>"
                             style="font-size: large"
                           ></i>
-                        </a>
-                        <% } else { %>
-                        <a
-                          href="/admin/unblockUser?id=<%= user._id %>"
-                          class="mx-2"
-                          data-toggle="tooltip"
-                          data-placement="top"
-                          title="Unblock the User"
-                        >
-                          <i
-                          class="icon-unlock text-sucess"
-                          style="font-size: 17px; color: green"
-                            aria-hidden="true"
-                          ></i>
-                        </a>
-                        <% } %>
+                        </a>  
                       </div>
                     </td>
                   </tr>

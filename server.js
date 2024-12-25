@@ -11,9 +11,11 @@ import nocache from 'nocache'
 
 // Modules Importing
 import connectDB from './config/db.js'
+import { destroyCouponSession } from './middlewares/destroyCouponSession.js'; 
 import { nextTick } from 'process';
 import passport from './config/passport.js';
-import { handle404, handleErrors } from './middlewares/errorMiddleware.js'; // Import middleware
+import { handle404, handleErrors } from './middlewares/errorMiddleware.js';
+import { getWalletBalance } from './middlewares/getWalletBalance.js';
 
 // External Eminities
 env.config();
@@ -38,10 +40,19 @@ app.use(session({
         maxAge:72*60*60*1000
     }
 }))
-
+app.use((req, res, next) => {
+    res.locals.user = req.session.user || null; // Make user globally available
+    next();
+});
 // passport Middleware
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Wallet Balance Global
+app.use(getWalletBalance);
+
+// Destroy Coupon in session
+app.use(destroyCouponSession);
 
 // cache Control Middleware
 app.use((req, res, next) => {
@@ -55,13 +66,13 @@ app.use(express.static(path.join(__dirname, 'public','userAssets')));
 app.use(express.static(path.join(__dirname, 'public','adminAssets')));
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads/categories')));
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads/products')));
+app.use('/img',express.static(path.join(__dirname,'public/img/product')))
 
 
 
 // Serve Staic Files To the Specific Routes
 app.use('/admin', express.static(path.join(__dirname, 'admin')));
 app.use('/user', express.static(path.join(__dirname, 'user')));
-// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // State The Routes
 app.use('/',userRouter)
@@ -76,6 +87,8 @@ app.use(handle404);
 
 // Global Error Handling Middleware
 app.use(handleErrors);
+
+
 
 // DataBase Connection (MONGO DB)
 connectDB()

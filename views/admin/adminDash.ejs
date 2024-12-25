@@ -1,5 +1,117 @@
 
 <%- include("../../views/partials/admin/header.ejs") %>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+<style>
+		.product-container {
+            width: 280px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+			box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 100%; /* Creates square aspect ratio */
+            overflow: hidden;
+        }
+
+        .product-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .status-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            z-index: 1;
+        }
+
+        .stock-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .product-details {
+            padding: 15px;
+        }
+
+        .product-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .product-spec {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .price {
+            font-size: 18px;
+            font-weight: 700;
+            color: #dc3545;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+		.chart-container {
+            position: relative;
+            height: 50vh;
+            width: 80vw;
+            margin: 0 auto;
+        }
+        .graph-day-selection {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .graph-day-selection .btn {
+            margin: 0 5px;
+            padding: 10px 20px;
+            border: 1px solid #404347;
+            background-color: #ffffff;
+            color: #404347;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .graph-day-selection .btn.active {
+            background-color: #404347;
+            color: #ffffff;
+        }
+</style>
+
 
 			<!-- *************
 				************ Main container start *************
@@ -14,46 +126,52 @@
 
 						<!-- Row start -->
 						<div class="row gutters">
-							<div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+							<div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-12">
 								<div class="stats-tile">
 									<div class="sale-icon">
 										<i class="icon-shopping-bag1"></i>
 									</div>
 									<div class="sale-details">
-										<h2>25</h2>
+										<h2><%=totalProductsCount%></h2>
 										<p>Products</p>
 									</div>
-									<div class="sale-graph">
-										<div id="sparklineLine1"></div>
-									</div>
+									
 								</div>
 							</div>
-							<div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+							<div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-12">
 								<div class="stats-tile">
 									<div class="sale-icon">
-										<i class="icon-shopping-bag1"></i>
+										<i class="fa-solid fa-box"></i>
 									</div>
 									<div class="sale-details">
-										<h2>32</h2>
+										<h2><%=totalOrderCount%></h2>
 										<p>Orders</p>
 									</div>
-									<div class="sale-graph">
-										<div id="sparklineLine2"></div>
-									</div>
+									
 								</div>
 							</div>
-							<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+							<div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12">
+								<div class="stats-tile">
+									<div class="sale-icon">
+										<i class="fa-regular fa-user"></i>
+									</div>
+									<div class="sale-details">
+										<h2><%=totalUserCount%></h2>
+										<p>Customers</p>
+									</div>
+									
+								</div>
+							</div>
+							<div class="col-xl-3 col-lg-2 col-md-4 col-sm-12 col-12">
 								<div class="stats-tile">
 									<div class="sale-icon">
 										<i class="icon-check-circle"></i>
 									</div>
 									<div class="sale-details">
-										<h2>19</h2>
-										<p>Customers</p>
+										<h2><%=totalCategoryCount%></h2>
+										<p>Categories</p>
 									</div>
-									<div class="sale-graph">
-										<div id="sparklineLine3"></div>
-									</div>
+									
 								</div>
 							</div>
 						</div>
@@ -70,45 +188,41 @@
 											<div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-12">
 												<div class="reports-summary">
 													<div class="reports-summary-block">
-														<h5>Great Sales</h5>
+														<h5>₹ <%= totalAmount.toFixed(2) %></h5>
 														<h6>Overall sales of the month</h6>
 													</div>
+													
 													<div class="reports-summary-block">
-														<h5>35 Millions</h5>
-														<h6>Overall earnings</h6>
-													</div>
-													<div class="reports-summary-block">
-														<h5>27 Millions</h5>
+														<h5>₹ <%= totalRevenue.toFixed(2) %></h5>
 														<h6>Overall revenue</h6>
 													</div>
 													<div class="reports-summary-block">
-														<h5>67k</h5>
+														<h5><%=totalUserCount%></h5>
 														<h6>New customers</h6>
 													</div>
-													<button class="btn btn-primary stripes-btn">Generate Report</button>
+													<button class="btn btn-primary stripes-btn" onclick="window.location.href='/admin/salesReport'">Generate Report</button>
 												</div>
 											</div>
 											<div class="col-xl-9 col-lg-9 col-md-8 col-sm-8 col-12">
 												<div class="row gutters">
 													<div class="col-12">
 														<div class="graph-day-selection mt-2" role="group">
-															<button type="button" class="btn active">Today</button>
-															<button type="button" class="btn">Yesterday</button>
-															<button type="button" class="btn">7 days</button>
-															<button type="button" class="btn">15 days</button>
-															<button type="button" class="btn">30 days</button>
-														</div>
+															<button type="button" class="btn active" onclick="filterData('yearly', event)">Yearly</button>
+															<button type="button" class="btn" onclick="filterData('monthly', event)">Monthly</button>
+															<button type="button" class="btn" onclick="filterData('weekly', event)">Weekly</button>
+															<button type="button" class="btn" onclick="filterData('daily', event)">Daily</button>
+														</div>									
 													</div>
-													<div class="col-12">
-														<div id="salesGraph" class="chart-height-xl"></div>
+													<div class="chart-container">
+														<canvas id="newSalesGraph"></canvas>
 													</div>
+						
 												</div>
 											</div>
 										</div>
 										<!-- Row end -->
 									</div>
 								</div>
-
 							</div>
 						</div>
 						<!-- Row end -->
@@ -119,13 +233,14 @@
 
 								<div class="card">
 									<div class="card-header">
-										<div class="card-title">Visitors</div>
+										<div class="card-title">Order Status</div>
 										<div class="graph-day-selection" role="group">
-											<button type="button" class="btn active">Export</button>
 										</div>
 									</div>
 									<div class="card-body">
-										<div id="visitorsGraph" class="chart-height-md"></div>
+										<div class="chart-container" style="margin-bottom: 1rem;">
+											<canvas id="orderStatusChart"></canvas>
+										</div>
 
 										<ul class="stats-list-container">
 											<li class="stats-list-item primary">
@@ -133,44 +248,8 @@
 													<i class="icon-calendar1"></i>
 												</div>
 												<div class="stats-info">
-													<h6 class="stats-title">Week 1</h6>
-													<p class="stats-amount">25</p>
-												</div>
-											</li>
-											<li class="stats-list-item primary">
-												<div class="stats-icon">
-													<i class="icon-calendar1"></i>
-												</div>
-												<div class="stats-info">
-													<h6 class="stats-title">Week 2</h6>
-													<p class="stats-amount">32</p>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</div>
-
-							</div>
-							<div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
-
-								<div class="card">
-									<div class="card-header">
-										<div class="card-title">Orders</div>
-										<div class="graph-day-selection" role="group">
-											<button type="button" class="btn active">View All</button>
-										</div>
-									</div>
-									<div class="card-body">
-										<div id="ordersGraph" class="chart-height-md"></div>
-
-										<ul class="stats-list-container">
-											<li class="stats-list-item primary">
-												<div class="stats-icon">
-													<i class="icon-archive1"></i>
-												</div>
-												<div class="stats-info">
-													<h6 class="stats-title">New</h6>
-													<p class="stats-amount">15</p>
+													<h6 class="stats-title">Orders</h6>
+													<p class="stats-amount"><%= salesCount %></p>
 												</div>
 											</li>
 											<li class="stats-list-item primary">
@@ -179,7 +258,62 @@
 												</div>
 												<div class="stats-info">
 													<h6 class="stats-title">Delivered</h6>
-													<p class="stats-amount">10</p>
+													<p class="stats-amount"><%= orderStatusMap.Delivered %></p>
+												</div>
+											</li>
+											<li class="stats-list-item primary">
+												<div class="stats-icon">
+													<i class="icon-calendar1"></i>
+												</div>
+												<div class="stats-info">
+													<h6 class="stats-title">Returned</h6>
+													<p class="stats-amount"><%= orderStatusMap.Returned %></p>
+												</div>
+											</li>
+											<li class="stats-list-item primary">
+												<div class="stats-icon">
+													<i class="icon-calendar1"></i>
+												</div>
+												<div class="stats-info">
+													<h6 class="stats-title">Cencelled</h6>
+													<p class="stats-amount"><%= orderStatusMap.Cancelled %></p>
+												</div>
+											</li>	
+										</ul>
+									</div>
+								</div>
+
+							</div>
+							<div class="col-xl-8 col-lg-4 col-md-6 col-sm-6 col-12">
+
+								<div class="card">
+									<div class="card-header">
+										<div class="card-title">Sales & Revenue</div>
+										<!-- <div class="graph-day-selection" role="group">
+											<button type="button" class="btn active">View All</button>
+										</div> -->
+									</div>
+									<div class="card-body">
+										<div class="chart-container"> 
+											<canvas id="totalSalesGraph"></canvas> 
+										</div>
+										<ul class="stats-list-container">
+											<li class="stats-list-item primary">
+												<div class="stats-icon">
+													<i class="fa-solid fa-money-bill"></i>
+												</div>
+												<div class="stats-info">
+													<h6 class="stats-title">Total Sales</h6>
+													<p class="stats-amount">₹ <%= totalAmount.toFixed(2) %></p>
+												</div>
+											</li>
+											<li class="stats-list-item primary">
+												<div class="stats-icon">
+													<i class="fa-solid fa-money-bill"></i>
+												</div>
+												<div class="stats-info">
+													<h6 class="stats-title">Total Revenue</h6>
+													<p class="stats-amount">₹ <%= totalRevenue.toFixed(2) %></p>
 												</div>
 											</li>
 										</ul>
@@ -187,35 +321,64 @@
 								</div>
 
 							</div>
-							<div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+							<div class="col-xl-8 col-lg-4 col-md-12 col-sm-12 col-12">
 
 								<div class="card">
 									<div class="card-header">
-										<div class="card-title">Earnings</div>
-										<div class="graph-day-selection" role="group">
+										<div class="card-title">All Over Sales And Discont Details</div>
+										<!-- <div class="graph-day-selection" role="group">
 											<button type="button" class="btn active">Download</button>
-										</div>
+										</div> -->
 									</div>
 									<div class="card-body">
-										<div id="earningsGraph" class="chart-height-md"></div>
+										<div class="chart-container" style="margin-bottom: 2rem;"> 
+											<canvas id="columnChart"></canvas> 
+										</div>
 
 										<ul class="stats-list-container">
 											<li class="stats-list-item primary">
 												<div class="stats-icon">
-													<i class="icon-briefcase"></i>
+													<i class="fa-solid fa-money-bill"></i>
 												</div>
 												<div class="stats-info">
-													<h6 class="stats-title">Today</h6>
-													<p class="stats-amount">$25</p>
+													<h6 class="stats-title">Total Sales</h6>
+													<p class="stats-amount">₹ <%= totalAmount.toFixed(2) %></p>
 												</div>
 											</li>
 											<li class="stats-list-item primary">
 												<div class="stats-icon">
-													<i class="icon-briefcase"></i>
+													<i class="fa-solid fa-money-bill"></i>
 												</div>
 												<div class="stats-info">
-													<h6 class="stats-title">Yesterday</h6>
-													<p class="stats-amount">$18</p>
+													<h6 class="stats-title">Toal Revenue</h6>
+													<p class="stats-amount">₹ <%= totalRevenue.toFixed(2) %></p>
+												</div>
+											</li>
+											<li class="stats-list-item primary">
+												<div class="stats-icon">
+													<i class="fa-solid fa-money-bill"></i>
+												</div>
+												<div class="stats-info">
+													<h6 class="stats-title">Total Discount</h6>
+													<p class="stats-amount">₹ <%= totalDiscount.toFixed(2) %></p>
+												</div>
+											</li>
+											<li class="stats-list-item primary">
+												<div class="stats-icon">
+													<i class="fa-solid fa-money-bill"></i>
+												</div>
+												<div class="stats-info">
+													<h6 class="stats-title">Offer Discount</h6>
+													<p class="stats-amount">₹ <%= totalOfferDiscount.toFixed(2) %></p>
+												</div>
+											</li>
+											<li class="stats-list-item primary">
+												<div class="stats-icon">
+													<i class="fa-solid fa-money-bill"></i>
+												</div>
+												<div class="stats-info">
+													<h6 class="stats-title">Coupon Discount</h6>
+													<p class="stats-amount">₹ <%= totalCouponDiscount.toFixed(2) %></p>
 												</div>
 											</li>
 										</ul>
@@ -223,135 +386,118 @@
 								</div>
 
 							</div>
-						</div>
-						<!-- Row end -->
-
-						<!-- Row start -->
-						<div class="row gutters">
-							<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-								<div class="card">
-									<div class="card-header">
-										<div class="card-title">Recent Orders</div>
-										<div class="graph-day-selection" role="group">
-											<button type="button" class="btn active">Export to Excel</button>
-										</div>
-									</div>
-									<div class="card-body">
-										<div class="table-responsive">
-											<table class="table products-table">
-												<thead>
-													<tr>
-														<th>Order No.</th>
-														<th>Ordered Date</th>
-														<th>Product</th>
-														<th>Delivery Status</th>												
-														<th>Amount</th>
-														<th>Discount</th>
-														<th>Location</th>
-														<th>Est Delivery Date</th>
-													</tr>
-												</thead>
-												<tbody>
-													<tr>
-														<td>#55589</td>
-														<td>20/11/2020</td>
-														<td>
-															<img class="user" src="img/products/bag.jpg" alt="Product Image">
-														</td>
-														<td>
-															<span class="badge">Moving</span>
-														</td>
-														<td>$385.00</td>
-														<td>30%</td>
-														<td>Los Angeles, California</td>
-														<td>22/11/2020</td>
-													</tr>
-													<tr>
-														<td>#23198</td>
-														<td>23/11/2020</td>												
-														<td>
-															<img class="user" src="img/products/toy.jpg" alt="Product Image">
-														</td>
-														<td>
-															<span class="badge">Shipped</span>
-														</td>
-														<td>$539.00</td>
-														<td>25%</td>
-														<td>Arverne, New York</td>
-														<td>27/11/2020</td>
-													</tr>
-													<tr>
-														<td>#87324</td>
-														<td>26/11/2020</td>												
-														<td>
-															<img class="user" src="img/products/pencils.jpg" alt="Product Image">
-														</td>
-														<td>
-															<span class="badge">Pending</span>
-														</td>
-														<td>$671.00</td>
-														<td>35%</td>
-														<td>Mesquite, Texas</td>
-														<td>29/11/2020</td>
-													</tr>
-													<tr>
-														<td>#65673</td>
-														<td>25/11/2020</td>
-														<td>
-															<img class="user" src="img/products/camera.jpg" alt="Product Image">
-														</td>
-														<td>
-															<span class="badge">Cancelled</span>
-														</td>
-														<td>$490.00</td>
-														<td>21%</td>
-														<td>Hallandale, Florida</td>
-														<td>26/11/2020</td>
-													</tr>
-												</tbody>
-											</table>
-										</div>
-									</div>
+							<div class="col-xl-4 bg-light">
+								<div class="col-lg-12 px-2">
+									<h2 class="text-center my-3">Best-Selling Categories</h2>
+									<ul class="list-group list-group-flush">
+										<% topCategories.forEach(category => { %>
+										  <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+											<div class="d-flex">
+												<img src="uploads/<%=category.image%>" alt="<%=category.image%>" style="width: 4rem;border-radius: 10px;border: 2px solid black;">
+												<h4 class="fw-semibold" style="margin-top: 1rem;margin-left:7px;"><%= category.categoryName %></h4>
+											</div>
+											<div class="d-flex">
+												<span class="badge bg-success rounded-pill mt-2" style="font-size: larger;margin-right: 1rem;height: 25px;"><%= category.totalSold %> sold</span>
+												<button class="btn btn-outline-danger" style="width: 7rem;" onclick="window.location.href='/admin/editcat?id=<%=category._id%>'">
+													<i class="fas fa-edit me-1"></i>Edit
+												</button>
+											</div>
+										  </li>
+										<% }) %>
+									  </ul>
 								</div>
 							</div>
 						</div>
 						<!-- Row end -->
 
-						<!-- Row start -->
-						<div class="row gutters">
-							<div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
-								<div class="goal-container">
-									<div class="goal-info">
-										<h5>Today's Goal</h5>
-										<h6>70/100</h6>
-									</div>
-									<div class="goal-graph">
-										<div id="todaysTarget"></div>
-										<div class="circle-one"></div>
-										<div class="circle-two"></div>
+						<!-- Best selling Products START-->
+						<div class="container py-5">
+							<div class="row g-4 bg-light" style=" justify-content: space-around;border: 1px solid red;">
+								<h3 class="text-danger">Best Selling Products</h3>
+								<!-- Best Seller Product -->
+								<% topProducts.forEach(product=> { %>
+								<div class="col-auto">
+									<div class="product-container mb-5">
+										<div class="image-wrapper">
+											<span class="status-tag bg-danger text-white">Best Seller</span>
+											<img src="<%=product.productImages[0]%>" alt="iPhone 14 Pro" class="product-image">
+										</div>
+										<div class="product-details">
+											<div class="d-flex justify-content-between align-items-center mb-2">
+												<h5 class="product-title"><%= product.productName %></h5>
+												<div class="d-flex align-items-center">
+													<div class="stock-dot bg-success"></div>
+													<small class="text-muted" style="font-size: 11px;"><%= product.productStatus %></small>
+												</div>
+											</div>
+											<div class="product-spec"><%= product.productDesc %></div>
+											<div class="d-flex justify-content-between align-items-end mb-2">
+												<div class="price">₹ <%= product.productPrice %></div>
+												<small class="text-success" style="font-size: 11px;">
+													<i class="fas fa-arrow-up"></i> <%= product.totalSold %> sold
+												</small>
+											</div>
+											<div class="action-buttons">
+												<button class="btn btn-sm btn-outline-danger btn-action flex-grow-1" onclick="window.location.href='/admin/editProduct/<%=product._id%>'">
+													<i class="fas fa-edit me-1"></i>Edit
+												</button>
+												<button class="btn btn-sm btn-danger btn-action flex-grow-1" onclick="window.location.href='/admin/products'">
+													<i class="fas fa-eye me-1"></i>View
+												</button>
+											</div>
+										</div>
 									</div>
 								</div>
-							</div>							
-							<div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
-								<div class="graph-card">
-									<h6>New Customers</h6>
-									<h4>2500</h4>
-									<div class="graph-placeholder">
-										<div id="customersGraph"></div>
-									</div>
-								</div>
-							</div>
-							<div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
-								<div class="payments-card">
-									<h6>Balance</h6>
-									<h4>$5699.89</h4>
-									<div class="custom-btn-group mt-2">
-										<button class="btn btn-outline-primary"><i class="icon-credit-card"></i>Deposit</button>
-										<button class="btn btn-primary"><i class="icon-credit-card"></i>Withdraw</button>
-									</div>
-								</div>
+								<% }) %>
 							</div>
 						</div>
+						 <!-- Best Selling  Productcs END -->
+
+						
+								
+						<!-- product-dashboard -->
+						<div class="container py-5">
+							<div class="row g-4 bg-light" style=" justify-content: space-around;border: 1px solid red;">
+								<h3 class="text-danger">Low Stock Products</h3>
+								
+								<!-- Low Stock -->
+								<% lowStockProducts.forEach(product=> { %>
+								<div class="col-auto">
+									<div class="product-container mb-5">
+										<div class="image-wrapper">
+											<%if(product.quantity===0){%>
+												<span class="status-tag bg-danger text-white">Out of Stock</span>
+											<%}else{%>
+												<span class="status-tag bg-warning text-dark">Low Stock</span>
+											<%}%>
+											<img src="<%= product.productImages[0]%>" alt="AirPods Pro" class="product-image">
+										</div>
+										<div class="product-details">
+											<div class="d-flex justify-content-between align-items-center mb-2">
+												<h5 class="product-title"><%= product.productName %></h5>
+												<div class="d-flex align-items-center">
+													<div class="stock-dot bg-warning"></div>
+													<small class="text-muted" style="font-size: 11px;"><%= product.quantity %> left</small>
+												</div>
+											</div>
+											<div class="product-spec"><%= product.productName %></div>
+											<div class="d-flex justify-content-between align-items-end mb-2">
+												<div class="price">₹<%= product.salePrice %></div>
+												<small class="text-danger" style="font-size: 11px;">Restock</small>
+											</div>
+											<div class="action-buttons">
+												<button class="btn btn-sm btn-warning btn-action flex-grow-1" onclick="window.location.href='/admin/editProduct/<%=product._id%>'">
+													<i class="fas fa-plus me-1"></i>Stock
+												</button>
+												<button class="btn btn-sm btn-outline-warning btn-action flex-grow-1" onclick="window.location.href='/admin/products'">
+													<i class="fas fa-eye me-1"></i>View
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+								<% }) %>
+								
 						<!-- Row end -->
 
 					</div>
@@ -359,10 +505,407 @@
 
 					<!-- App footer start -->
 					<!-- App footer end -->
-
+				</div>
+				
 				</div>
 				<!-- Content wrapper scroll end -->
 
+				<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+				<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+
+				<!-- Pass dynamic value as a global variable -->
+				
+    <!-- Pass initial sales data as a global variable -->
+    
+   
+	
+	<script>
+        let salesChart;
+        let orderStatusChart;
+        let totalSalesChart;
+
+        function filterData(filterType, event) {
+            // Highlight the active button
+            document.querySelectorAll('.graph-day-selection .btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Fetch the filtered data and update the charts
+            axios.get(`admin/adminDashData?filterType=${filterType}`)
+                .then(response => {
+                    const salesData = response.data.salesReport;
+                    console.log('Sales Data:', salesData);
+
+                    const orderStatusCounts = response.data.orderStatusCounts || {};
+                    console.log('Order Status Counts:', orderStatusCounts);
+
+                    const formattedSalesData = response.data.formattedSalesData || [];
+                    console.log('Formatted Sales Data:', formattedSalesData);
+
+                    updateSalesChart(filterType, salesData);
+                    updateOrderStatusChart(orderStatusCounts);
+                    updateTotalSalesChart(filterType, formattedSalesData);
+					updateColumnChart(formattedSalesData);
+                })
+                .catch(error => console.error('Error fetching filtered data:', error));
+        }
+
+		function updateSalesChart(filterType, salesData) {
+            const ctx = document.getElementById('newSalesGraph').getContext('2d');
+            let labels = [];
+            let data = [];
+
+            salesData.forEach(item => {
+                switch (filterType) {
+                    case 'yearly':
+                        labels.push(item.createdAt.split('T')[0]);
+                        break;
+                    case 'monthly':
+                        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                        labels.push(monthNames[parseInt(item.createdAt.split('-')[1], 10) - 1]);
+                        break;
+                    case 'weekly':
+                        const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                        labels.push(weekDays[new Date(item.createdAt).getDay()]);
+                        break;
+                    case 'daily':
+                        labels.push(`${new Date(item.createdAt).getHours()}:00`);
+                        break;
+                    default:
+                        labels.push("No Data");
+                        break;
+                }
+                data.push(item.finalAmount);
+            });
+
+            const chartData = {
+                labels: labels,
+                datasets: [{
+                    label: 'Sales',
+                    data: data,
+                    backgroundColor: '#fff1f1',
+                    borderColor: 'red',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 5,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: 'red',
+                    pointBorderColor: '#ffffff',
+                }]
+            };
+
+            const config = {
+                type: 'line',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            labels: {
+                                color: 'red'
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#404347'
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: '#e0e6ed'
+                            },
+                            ticks: {
+                                color: '#404347'
+                            }
+                        }
+                    }
+                }
+            };
+
+            if (salesChart) {
+                salesChart.destroy();
+            }
+            salesChart = new Chart(ctx, config);
+        }
+
+		
+        function updateOrderStatusChart(orderStatusCounts) {
+            const ctx = document.getElementById('orderStatusChart').getContext('2d');
+            const labels = Object.keys(orderStatusCounts);
+            const data = Object.values(orderStatusCounts);
+
+            const chartData = {
+                labels: labels,
+                datasets: [{
+                    label: 'Order Status',
+                    data: data,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            const config = {
+                type: 'doughnut',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (tooltipItem) {
+                                    return `${tooltipItem.label}: ${tooltipItem.raw}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            if (orderStatusChart) {
+                orderStatusChart.destroy();
+            }
+            orderStatusChart = new Chart(ctx, config);
+        }
+   
+
+
+        function updateTotalSalesChart(filterType, formattedSalesData) {
+			const ctx = document.getElementById('totalSalesGraph').getContext('2d');
+			let labels = [];
+			let totalSalesData = [];
+			let totalOrdersData = [];
+			let totalRevenueData = [];
+
+			formattedSalesData.forEach(item => {
+				labels.push(item.period);
+				totalSalesData.push(item.totalSales);
+				totalOrdersData.push(item.totalOrders);
+				totalRevenueData.push(item.totalRevenue);
+			});
+
+			const chartData = {
+				labels: labels,
+				datasets: [
+					{
+						label: 'Total Sales',
+						data: totalSalesData,
+						backgroundColor: 'rgba(255, 99, 132, 0.2)',
+						borderColor: 'rgba(255, 99, 132, 1)',
+						borderWidth: 1
+					},
+					{
+						label: 'Total Revenue',
+						data: totalRevenueData,
+						backgroundColor: 'rgba(75, 192, 192, 0.2)',
+						borderColor: 'rgba(75, 192, 192, 1)',
+						borderWidth: 1
+					}
+				]
+			};
+
+			const config = {
+				type: 'bar',
+				data: chartData,
+				options: {
+					responsive: true,
+					plugins: {
+						legend: {
+							display: true,
+							labels: {
+								color: 'rgb(75, 192, 192)'
+							}
+						},
+						tooltip: {
+							mode: 'index',
+							intersect: false
+						}
+					},
+					interaction: {
+						mode: 'nearest',
+						axis: 'x',
+						intersect: false
+					},
+					scales: {
+						x: {
+							grid: {
+								display: false
+							},
+							ticks: {
+								color: '#404347'
+							}
+						},
+						y: {
+							grid: {
+								color: '#e0e6ed'
+							},
+							ticks: {
+								color: '#404347'
+							}
+						}
+					}
+				}
+			};
+
+			if (totalSalesChart) {
+				totalSalesChart.destroy();
+			}
+			totalSalesChart = new Chart(ctx, config);
+		}
+
+		function updateColumnChart(formattedSalesData) {
+			const ctx = document.getElementById('columnChart').getContext('2d');
+			let labels = [];
+			let totalSalesData = [];
+			let totalRevenueData = [];
+			let totalDiscountData = [];
+			let totalOfferDiscountData = [];
+			let totalCouponDiscountData = [];
+
+			formattedSalesData.forEach(item => {
+				labels.push(item.period);
+				totalSalesData.push(item.totalSales);
+				totalRevenueData.push(item.totalRevenue);
+				totalDiscountData.push(item.totalDiscount);
+				totalOfferDiscountData.push(item.totalOfferDiscount);
+				totalCouponDiscountData.push(item.totalCouponDiscount);
+			});
+
+			const chartData = {
+				labels: labels,
+				datasets: [
+					{
+						label: 'Total Sales',
+						data: totalSalesData,
+						backgroundColor: 'rgba(255, 99, 132, 0.2)',
+						borderColor: 'rgba(255, 99, 132, 1)',
+						borderWidth: 1
+					},
+					{
+						label: 'Total Revenue',
+						data: totalRevenueData,
+						backgroundColor: 'rgba(54, 162, 235, 0.2)',
+						borderColor: 'rgba(54, 162, 235, 1)',
+						borderWidth: 1
+					},
+					{
+						label: 'Total Discount',
+						data: totalDiscountData,
+						backgroundColor: 'rgba(75, 192, 192, 0.2)',
+						borderColor: 'rgba(75, 192, 192, 1)',
+						borderWidth: 1
+					},
+					{ 
+						label: 'Total Coupon Discount', 
+						data: totalCouponDiscountData, 
+						backgroundColor: 'rgba(255, 206, 86, 0.2)', 
+						borderColor: 'rgba(255, 206, 86, 1)', 
+						borderWidth: 1 
+					},	
+					{
+						label: 'Total Offer Discount',
+						data: totalOfferDiscountData,
+						backgroundColor: 'rgba(153, 102, 255, 0.2)',
+						borderColor: 'rgba(153, 102, 255, 1)',
+						borderWidth: 1
+					},
+					
+				]
+			};
+
+			const config = {
+				type: 'bar',
+				data: chartData,
+				options: {
+					responsive: true,
+					plugins: {
+						legend: {
+							display: true,
+							labels: {
+								color: 'rgb(75, 192, 192)'
+							}
+						},
+						tooltip: {
+							mode: 'index',
+							intersect: false
+						}
+					},
+					interaction: {
+						mode: 'nearest',
+						axis: 'x',
+						intersect: false
+					},
+					scales: {
+						x: {
+							grid: {
+								display: false
+							},
+							ticks: {
+								color: '#404347'
+							}
+						},
+						y: {
+							grid: {
+								color: '#e0e6ed'
+							},
+							ticks: {
+								color: '#404347'
+							}
+						}
+					}
+				}
+			};
+
+			if (columnChart && typeof columnChart.destroy === 'function') {
+				columnChart.destroy();
+			}
+			columnChart = new Chart(ctx, config);
+		}
+
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            filterData('yearly', { target: document.querySelector('button.active') });
+        });
+    </script>
+
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.js"></script>
+				
 
 					<!-- App footer start -->
 					<%- include("../../views/partials/admin/footer.ejs") %>

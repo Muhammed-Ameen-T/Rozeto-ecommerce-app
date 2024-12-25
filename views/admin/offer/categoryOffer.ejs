@@ -1,0 +1,286 @@
+<%- include("../../views/partials/admin/header.ejs") %>				
+<!-- Content wrapper scroll start -->
+<div class="content-wrapper-scroll">
+
+<!-- Content wrapper start -->
+<div class="content-wrapper">
+
+	<!-- Row start -->
+	<div class="row gutters">
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="card">
+				<div class="card-body">
+					<div class="d-flex" style="justify-content: space-between;">
+						<h3>Category Offer Management</h3>
+						<!-- Search Form Start -->
+						<form method="GET" action="/admin/categoryOffers/">
+							<div class="input-group mb-3" style="width: 25rem;">
+							<input
+								type="text"
+								class="form-control"
+								placeholder="Search Offer By name..."
+								name="search"
+								value=""
+							/>
+							<div class="input-group-append">
+								<button class="btn btn-primary" type="submit">Search</button>
+							</div>
+							</div>
+						</form>
+						</div>
+					<div class="table-responsive">
+						<table id="copy-print-csv" class="table v-middle table-striped" style="font-size: 14px;">
+							<% if (categoryOffers.length===0) { %>
+								<h4 class="text-center">No Offer found</h4>
+							<% } else{%>
+							<thead class="table-danger">
+								<tr>
+									<th>#</th>
+									<th>Offer Name</th>
+									<th>Created On</th>
+									<th>Category Name</th>													  
+									<th>Offer Percentage</th>
+									<th>Status</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>	
+								<% categoryOffers.forEach((categoryOffer,index)=> { %>
+									<tr id="offer-<%= categoryOffer._id %>">
+										<td><%= (limit*(currentPage-1)+1+index) %></td>													 
+										<td><%= categoryOffer.offerName %></td>	
+										<td><%= new Date(categoryOffer.createdAt).toLocaleDateString() %></td>													  												  
+										<td><%= categoryOffer.categoryName %></td>
+										<td><%= categoryOffer.offerPercentage %>%</td>
+										<td>
+											<% if (categoryOffer.isActive) { %>
+												<span class="badge bg-success" style="width: 4rem;">Active</span>
+											<% } else { %>
+												<span class="badge bg-danger" style="width: 4rem;">Inactive</span>
+											<% } %>
+										</td>
+										<td class=" d-flex">
+											<form action="/admin/toggleCategoryOffer/<%= categoryOffer._id %>" method="POST">
+												<button type="submit" style="width: 7rem;justify-content: center;" class="btn me-4 <%= categoryOffer.isActive ? 'btn-danger' : 'btn-success' %>">
+													<%= categoryOffer.isActive ? 'Deactivate' : 'Activate' %>
+												</button>
+											</form>
+								   
+											<!-- Delete button -->
+	
+											<button type="button" onclick="deleteOffer('<%= categoryOffer._id %>')"
+												class="btn btn-danger">Delete</button>
+										</td>																			
+									</tr>
+								<% }); %>
+							<% } %>
+							</tbody>
+						</table>											
+						<button onclick="dsAdd()" id="add-kk" type="submit" class="btn btn-info" href=""><a   style="color: white;">+&nbsp;Create New Offer</a></button>
+						<nav aria-label="Page navigation example" style="float: right;">
+							<ul class="pagination">
+								<% if (currentPage> 1) { %>
+								<li class="page-item">
+									<a class="page-link" href="?page=<%= currentPage - 1 %>"
+									>Previous</a
+									>
+								</li>
+								<% } %> <% for (let i=1; i <=totalPages; i++) { %>
+								<li
+									class="page-item <%= (i === currentPage) ? 'active' : '' %>"
+								>
+									<a class="page-link" href="?page=<%= i %>"> <%= i %> </a>
+								</li>
+								<% } %> <% if (currentPage < totalPages) { %>
+								<li class="page-item">
+									<a class="page-link" href="?page=<%= currentPage + 1 %>"
+									>Next</a
+									>
+								</li>
+								<% } %>
+							</ul>
+						</nav>
+					</div>
+					</div>
+				</div>
+			</div>
+			<div class="card" style="display: none;" id="add_card">
+				<div class="card-header">
+					<div class="card-title"><h3>Create New Category Offer</h3></div>
+				</div>
+				<div class="card-body">
+					<!-- Row start -->
+					<div class="row gutters">
+						<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+							<form id="addCouponForm" method="post" onsubmit="handleForm(event)" action="/admin/addcategoryOffer">
+								<div class="d-flex">
+									<div style="width: 25rem;" class="field-wrapper me-4">
+										<input class="form-control" name="offerName" id="coupon-code" type="text"/>
+										<div class="field-placeholder">
+											Offer Name <span class="text-danger">*</span>
+										</div>
+										<span id="code-error" class="error-message text-danger"></span>
+									</div>
+								</div>
+								<div class="d-flex">
+									<div style="width: 25rem;" class="field-wrapper me-4">
+										<input class="form-control" name="offerPercentage" id="discount-price" type="number" min="0" step="0.01"/>
+										<div class="field-placeholder">
+											Offer Percentage <span class="text-danger">*</span>
+										</div>
+										<span id="discount-error" class="error-message text-danger"></span>
+									</div>
+								</div>
+								<div class="d-flex">
+									<div style="width: 25rem;" class="field-wrapper me-4">
+										<select name="categoryId" id="categoryId" class="form-select shadow border">
+											<option value="">-- Select a Category --</option>
+												<% category.forEach(category => { %>
+													<% if (category.isListed !==false) { %>
+														<% if (category.offerPercentage==0) { %>
+															<option name="categoryId" value="<%= category._id %>"><%= category.name %></option>
+														<% }else{ %>
+															<option name="categoryId" value="<%= category._id %>" class="bg-dark text-light" disabled><%= category.name %> (Offer Already Applied) </option>
+														<% } %>
+													<% } %>
+												<% }); %>
+										</select>
+										<div class="field-placeholder">
+											Choose the Category <span class="text-danger">*</span>
+										</div>
+										<span id="expiry-error" class="error-message text-danger"></span>
+									</div>
+								</div>
+								<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 my-3">
+									<a href="/admin/categoryOffers">
+										<button class="btn btn-light me-3" type="button">Cancel</button>
+									</a>
+									<button type="submit" class="btn btn-primary">Submit</button>
+								</div>
+							</form>														
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+<script>	
+function dsAdd() {
+	document.getElementById('add_card').style.display = 'block';
+}
+
+
+function deleteOffer(categoryOfferId) {
+	Swal.fire({
+		title: 'Are you sure?',
+		text: "You want to delete this offer!",
+		icon: 'warning',
+		showCancelButton: true,
+		confirmButtonColor: '#3085d6',
+		cancelButtonColor: '#d33',
+		confirmButtonText: 'Yes, delete it!'
+	}).then((result) => {
+		if (result.isConfirmed) {
+			axios.delete(`/admin/deleteCategoryOffer/${categoryOfferId}`)
+				.then(response => {
+					Swal.fire({
+						title: 'Deleted!',
+						icon: 'success',
+					})
+					document.getElementById(`offer-${categoryOfferId}`).remove();
+
+				})
+				.catch(error => {
+					Swal.fire(
+						'Error!',
+						'An error occurred while deleting the offer.',
+						'error'
+					);
+				});
+		}
+	});
+}
+
+
+function handleForm(event) {
+	event.preventDefault();
+
+	// Get form elements
+	const form = document.getElementById('addCouponForm');
+	const code = document.getElementById('coupon-code').value.trim();
+	const offerPrice = document.getElementById('discount-price').value.trim();
+	const categoryId = document.getElementById('categoryId').value.trim();
+
+	// Reset error messages
+	document.getElementById('code-error').innerText = '';
+	document.getElementById('discount-error').innerText = '';
+	document.getElementById('expiry-error').innerText = '';
+
+	// Validate form fields
+	let isValid = true;
+
+	if (code === '') {
+		document.getElementById('code-error').innerText = 'Offer Name is required';
+		isValid = false;
+	}
+
+	if (offerPrice === '' || isNaN(offerPrice) || parseFloat(offerPrice) <= 0) {
+		document.getElementById('discount-error').innerText = 'Offer Percentage must be a positive number';
+		isValid = false;
+	}
+
+	if (categoryId === '') {
+		document.getElementById('expiry-error').innerText = 'Please select a Category';
+		isValid = false;
+	}
+
+	if (!isValid) {
+		return;
+	}
+
+	// Submit form data using Axios
+	axios.post('/admin/addCategoryOffer', {
+		offerName: code,
+		offerPercentage: offerPrice,
+		categoryId: categoryId
+	})
+	.then(response => {
+		if (response.data.success) {
+			Swal.fire({
+				icon: 'success',
+				title: 'Success',
+				text: 'Offer added successfully!',
+				timer: 2000,
+				showConfirmButton: false
+			}).then(() => {
+				window.location.href = '/admin/categoryOffers';
+			});
+		} else {
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: response.data.message || 'An error occurred while adding the offer.',
+			});
+		}
+	})
+	.catch(error => {
+		console.error('Error adding offer:', error);
+		Swal.fire({
+			icon: 'error',
+			title: 'Error',
+			text: 'An error occurred while adding the offer. Please try again.',
+		});
+	});
+}
+</script>
+								
+							
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<!-- Content wrapper scroll end -->
+<%- include("../../views/partials/admin/footer.ejs") %>

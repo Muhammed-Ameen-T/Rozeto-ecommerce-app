@@ -6,6 +6,7 @@ import multer from 'multer';
 import path from 'path';
 
 
+
 export const catTable = async (req, res) => {
     try {
         let search = req.query.search || "";
@@ -13,29 +14,32 @@ export const catTable = async (req, res) => {
         const limit = 4;
         const skip = (page - 1) * limit;
 
-        const categoryData = await Category.find({})
+        const categoryData = await Category.find({
+            name: { $regex: search, $options: 'i' }
+        })
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit);
 
-            // categoryData.forEach(category => {
-            //     console.log('Category Image Path:', category.image);
-            // });
+        const totalCategories = await Category.countDocuments({
+            name: { $regex: search, $options: 'i' }
+        });
 
-        const totalCategories = await Category.countDocuments();
         const totalPages = Math.ceil(totalCategories / limit);
+
         res.render('categoryTable', {
             cat: categoryData,
             currentPage: page,
             totalPages: totalPages,
             totalCategories: totalCategories,
-            search:search
+            search: search
         });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error', message: error.message });
     }
 };
+
 
 export const addCat = async (req, res) => {
     try {

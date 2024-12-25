@@ -1,4 +1,84 @@
 <%- include("../../views/partials/user/header.ejs") %>
+<style>
+   .offer-badge {
+            position: absolute !important;
+            top: 0 !important;
+            right: 0 !important;
+            margin: 10px !important;
+            padding: 8px 15px !important;
+            background: linear-gradient(135deg, #28a745, #20c997) !important;
+            color: white !important;
+            font-weight: bold !important;
+            border-radius: 25px !important;
+            box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3) !important;
+            transform: translateZ(0) !important;
+            transition: all 0.3s ease !important;
+            z-index: 10 !important;
+            animation: badgePulse 2s infinite !important;
+        }
+
+        .offer-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #ff2f00, #ff6a00);
+            z-index: -1;
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .offer-badge:hover {
+            transform: translateZ(0) scale(1.05) !important;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4) !important;
+        }
+
+        .offer-badge:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes badgePulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+            }
+        }
+
+        /* Optional: Add shimmer effect */
+        .offer-badge::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(100%) rotate(45deg);
+            }
+        }
+</style>
 <div class="hero_area">
   <div class="bg-box">
     <img src="images/hero-bg.jpg" alt="" />
@@ -12,19 +92,13 @@
             <div class="row">
               <div class="col-md-7 col-lg-6">
                 <div class="detail-box">
-                  <h1><% if (user) { %>
-                  Hello, <strong><%= user.name %></strong>
-                  <% } else { %>
-                  Rozeto Ecommerce App<% } %></h1>
+                  <h1>Rozeto India's Leading Food delivery platform</h1>
                   
                   <p>
-                    Doloremque, itaque aperiam facilis rerum, commodi,
-                    temporibus sapiente ad mollitia laborum quam quisquam esse
-                    error unde. Tempora ex doloremque, labore, sunt repellat
-                    dolore, iste magni quos nihil ducimus libero ipsam.
+                    "Craving something delicious? Dive into a feast of mouthwatering burgers, sizzling pizzas, creamy pasta, and so much more. Freshly prepared and delivered fast, we bring the ultimate comfort food experience right to your doorstep. Satisfy your hunger and elevate your cravings today!"
                   </p>
                   <div class="btn-box">
-                    <a href="productPage.html" class="btn1" style="text-decoration: none;"> Order Now </a>
+                    <a href="/menu" class="btn1" style="text-decoration: none;"> Order Now </a>
                   </div>
                 </div>
               </div>
@@ -36,15 +110,12 @@
             <div class="row">
               <div class="col-md-7 col-lg-6">
                 <div class="detail-box">
-                  <h1>Fast Food Restaurant</h1>
+                  <h1>All taste Buds Are Inherited by 'Rozeto'</h1>
                   <p>
-                    Doloremque, itaque aperiam facilis rerum, commodi,
-                    temporibus sapiente ad mollitia laborum quam quisquam esse
-                    error unde. Tempora ex doloremque, labore, sunt repellat
-                    dolore, iste magni quos nihil ducimus libero ipsam.
+                    "Treat your taste buds to a world of flavor! From juicy burgers to cheesy pizzas and delightful pasta, we’ve got all your cravings covered. Fresh, fast, and irresistibly delicious—your next favorite meal is just a click away!"
                   </p>
                   <div class="btn-box">
-                    <a href="" class="btn1" style="text-decoration: none;"> Order Now </a>
+                    <a href="/menu" class="btn1" style="text-decoration: none;"> Order Now </a>
                   </div>
                 </div>
               </div>
@@ -56,15 +127,12 @@
             <div class="row">
               <div class="col-md-7 col-lg-6">
                 <div class="detail-box">
-                  <h1>Fast Food Restaurant</h1>
+                  <h1>Best Burgers are Made Up Here. Why wait place Order.</h1>
                   <p>
-                    Doloremque, itaque aperiam facilis rerum, commodi,
-                    temporibus sapiente ad mollitia laborum quam quisquam esse
-                    error unde. Tempora ex doloremque, labore, sunt repellat
-                    dolore, iste magni quos nihil ducimus libero ipsam.
+                    "Satisfy your cravings with every bite! Whether it’s a juicy burger, cheesy pizza, or creamy pasta, we deliver deliciousness straight to your door. Quick, easy, and always tasty—order now and indulge in the ultimate food experience!"
                   </p>
                   <div class="btn-box">
-                    <a href="" class="btn1" style="text-decoration: none;"> Order Now </a>
+                    <a href="/menu" class="btn1" style="text-decoration: none;"> Order Now </a>
                   </div>
                 </div>
               </div>
@@ -92,841 +160,409 @@
 
 <section class="offer_section layout_padding-bottom">
   <div class="offer_container">
+    <div class="heading_container heading_center">
+      <h2>Category Offers</h2>
+    </div>
     <div class="container">
       <div class="row">
-        <div class="col-md-6">
-          <div class="box">
-            <div class="img-box">
-              <img src="images/o1.jpg" alt="" />
-            </div>
-            <div class="detail-box">
-              <h5>Tasty Thursdays</h5>
-              <h6><span>20%</span> Off</h6>
-              <a href="" style="text-decoration: none;">
-                Order Now
-                <svg
-                  version="1.1"
-                  id="Capa_1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                  x="0px"
-                  y="0px"
-                  viewBox="0 0 456.029 456.029"
-                  style="enable-background: new 0 0 456.029 456.029"
-                  xml:space="preserve"
-                >
-                  <g>
-                    <g>
-                      <path
-                        d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
-                     c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"
-                      />
-                    </g>
-                  </g>
-                  <g>
-                    <g>
-                      <path
-                        d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
-                     C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
-                     c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
-                     C457.728,97.71,450.56,86.958,439.296,84.91z"
-                      />
-                    </g>
-                  </g>
-                  <g>
-                    <g>
-                      <path
-                        d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
-                     c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"
-                      />
-                    </g>
-                  </g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                </svg>
-              </a>
+        <%categoryOffers.forEach(item=>{%>
+          <%if(item.isActive){%>
+          <div class="col-md-6">
+            <div class="box">
+              <div class="img-box bg-light">
+                <img src="/uploads/<%= item.categoryId.image%>" style="margin-top: 0rem;" alt="<%= item.categoryId.image%>" />
+              </div>
+              <div class="detail-box">
+                <h5><%=item.offerName%></h5>
+                <h6><span>Extra <%=item.offerPercentage%>%</span> Off</h6>
+                <a href="/menu?category=<%= item.categoryId._id %>&stock=Available&sort=createdAt&order=asc" style="text-decoration: none;">Order Now</a>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-6">
-          <div class="box">
-            <div class="img-box">
-              <img src="images/o2.jpg" alt="" />
-            </div>
-            <div class="detail-box">
-              <h5>Pizza Days</h5>
-              <h6><span>15%</span> Off</h6>
-              <a href="" style="text-decoration: none;">
-                Order Now
-                <svg
-                  version="1.1"
-                  id="Capa_1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                  x="0px"
-                  y="0px"
-                  viewBox="0 0 456.029 456.029"
-                  style="enable-background: new 0 0 456.029 456.029"
-                  xml:space="preserve"
-                >
-                  <g>
-                    <g>
-                      <path
-                        d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
-                     c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"
-                      />
-                    </g>
-                  </g>
-                  <g>
-                    <g>
-                      <path
-                        d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
-                     C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
-                     c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
-                     C457.728,97.71,450.56,86.958,439.296,84.91z"
-                      />
-                    </g>
-                  </g>
-                  <g>
-                    <g>
-                      <path
-                        d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
-                     c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"
-                      />
-                    </g>
-                  </g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                  <g></g>
-                </svg>
-              </a>
+          <%}%>
+        <%})%>
+      </div>
+    </div>
+  </div>
+  <div class="offer_container mt-5">
+    <div class="heading_container heading_center">
+      <h2>Product Offers</h2>
+    </div>
+    <div class="container">
+      <div class="row"> 
+        <%productOffers.forEach(item=>{%>
+          <%if(item.isActive && item.productId.offerPercentage===item.offerPercentage){%>
+          <div class="col-md-6">
+            <div class="box">
+              <div class="img-box bg-white">
+                <img src="/<%= item.productId.productImages[0]%>" alt="" />
+              </div>
+              <div class="detail-box">
+                <h5><%=item.offerName%></h5>
+                <h6><span>Extra <%=item.offerPercentage%>%</span> Off</h6>
+                <a href="/productinfo?id=<%= item.productId._id %>" style="text-decoration: none;">Order Now</a>
+              </div>
             </div>
           </div>
-        </div>
+          <%}%>
+        <%})%>
       </div>
     </div>
   </div>
 </section>
-
-<!-- end offer section -->
-
 <!-- food section -->
 
 <section class="food_section layout_padding-bottom">
   <div class="container">
     <div class="heading_container heading_center">
-      <h2>Our Menu</h2>
+      <h2>Best Sellers</h2>
     </div>
-
-    <ul class="filters_menu">
-      <li class="active" data-filter="*">All</li>
-      <li data-filter=".burger">Burger</li>
-      <li data-filter=".pizza">Pizza</li>
-      <li data-filter=".pasta">Pasta</li>
-      <li data-filter=".fries">Fries</li>
-    </ul>
 
     <div class="filters-content">
       <div class="row grid">
+        <% bestSellers.forEach(product=> { %>
+
         <div class="col-sm-6 col-lg-4 all pizza">
           <div class="box">
             <div>
-              <div class="img-box">
-                <img src="images/f1.png" alt="" />
+              <div class="img-box" onclick="window.location.href='/productinfo?id=<%= product._id %>';">
+                <img src="<%= product.productImages[0].replace(/\\/g, '/') %>" alt="" />
               </div>
               <div class="detail-box">
-                <h5>Delicious Pizza</h5>
+                <% if (product.offerPercentage > 0 && product.status === 'Available') { %>
+                  <div class="badge offer-badge bg-success text-white position-absolute top-0 end-0 m-2 rounded-pill">
+                      <%= product.offerPercentage %>% Off
+                  </div>
+                <% } %>
+              
+                <h5><%= product.productName %></h5>
                 <p>
-                  Veniam debitis quaerat officiis quasi cupiditate quo, quisquam
-                  velit, magnam voluptatem repellendus sed eaque
+                  <%= product.description %>
                 </p>
                 <div class="options">
-                  <h6>$20</h6>
-                  <a href="">
-                    <svg
-                      version="1.1"
-                      id="Capa_1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      xmlns:xlink="http://www.w3.org/1999/xlink"
-                      x="0px"
-                      y="0px"
-                      viewBox="0 0 456.029 456.029"
-                      style="enable-background: new 0 0 456.029 456.029"
-                      xml:space="preserve"
-                    >
-                      <g>
-                        <g>
-                          <path
-                            d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
-                         c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"
-                          />
-                        </g>
-                      </g>
-                      <g>
-                        <g>
-                          <path
-                            d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
-                         C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
-                         c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
-                         C457.728,97.71,450.56,86.958,439.296,84.91z"
-                          />
-                        </g>
-                      </g>
-                      <g>
-                        <g>
-                          <path
-                            d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
-                         c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"
-                          />
-                        </g>
-                      </g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-lg-4 all burger">
-          <div class="box">
-            <div>
-              <div class="img-box">
-                <img src="images/f2.png" alt="" />
-              </div>
-              <div class="detail-box">
-                <h5>Delicious Burger</h5>
-                <p>
-                  Veniam debitis quaerat officiis quasi cupiditate quo, quisquam
-                  velit, magnam voluptatem repellendus sed eaque
-                </p>
-                <div class="options">
-                  <h6>$15</h6>
-                  <a href="">
-                    <svg
-                      version="1.1"
-                      id="Capa_1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      xmlns:xlink="http://www.w3.org/1999/xlink"
-                      x="0px"
-                      y="0px"
-                      viewBox="0 0 456.029 456.029"
-                      style="enable-background: new 0 0 456.029 456.029"
-                      xml:space="preserve"
-                    >
-                      <g>
-                        <g>
-                          <path
-                            d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
-                         c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"
-                          />
-                        </g>
-                      </g>
-                      <g>
-                        <g>
-                          <path
-                            d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
-                         C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
-                         c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
-                         C457.728,97.71,450.56,86.958,439.296,84.91z"
-                          />
-                        </g>
-                      </g>
-                      <g>
-                        <g>
-                          <path
-                            d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
-                         c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"
-                          />
-                        </g>
-                      </g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-lg-4 all pizza">
-          <div class="box">
-            <div>
-              <div class="img-box">
-                <img src="images/f3.png" alt="" />
-              </div>
-              <div class="detail-box">
-                <h5>Delicious Pizza</h5>
-                <p>
-                  Veniam debitis quaerat officiis quasi cupiditate quo, quisquam
-                  velit, magnam voluptatem repellendus sed eaque
-                </p>
-                <div class="options">
-                  <h6>$17</h6>
-                  <a href="">
-                    <svg
-                      version="1.1"
-                      id="Capa_1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      xmlns:xlink="http://www.w3.org/1999/xlink"
-                      x="0px"
-                      y="0px"
-                      viewBox="0 0 456.029 456.029"
-                      style="enable-background: new 0 0 456.029 456.029"
-                      xml:space="preserve"
-                    >
-                      <g>
-                        <g>
-                          <path
-                            d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
-                         c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"
-                          />
-                        </g>
-                      </g>
-                      <g>
-                        <g>
-                          <path
-                            d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
-                         C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
-                         c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
-                         C457.728,97.71,450.56,86.958,439.296,84.91z"
-                          />
-                        </g>
-                      </g>
-                      <g>
-                        <g>
-                          <path
-                            d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
-                         c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"
-                          />
-                        </g>
-                      </g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-lg-4 all pasta">
-          <div class="box">
-            <div>
-              <div class="img-box">
-                <img src="images/f4.png" alt="" />
-              </div>
-              <div class="detail-box">
-                <h5>Delicious Pasta</h5>
-                <p>
-                  Veniam debitis quaerat officiis quasi cupiditate quo, quisquam
-                  velit, magnam voluptatem repellendus sed eaque
-                </p>
-                <div class="options">
-                  <h6>$18</h6>
-                  <a href="">
-                    <svg
-                      version="1.1"
-                      id="Capa_1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      xmlns:xlink="http://www.w3.org/1999/xlink"
-                      x="0px"
-                      y="0px"
-                      viewBox="0 0 456.029 456.029"
-                      style="enable-background: new 0 0 456.029 456.029"
-                      xml:space="preserve"
-                    >
-                      <g>
-                        <g>
-                          <path
-                            d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
-                         c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"
-                          />
-                        </g>
-                      </g>
-                      <g>
-                        <g>
-                          <path
-                            d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
-                         C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
-                         c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
-                         C457.728,97.71,450.56,86.958,439.296,84.91z"
-                          />
-                        </g>
-                      </g>
-                      <g>
-                        <g>
-                          <path
-                            d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
-                         c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"
-                          />
-                        </g>
-                      </g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-lg-4 all fries">
-          <div class="box">
-            <div>
-              <div class="img-box">
-                <img src="images/f5.png" alt="" />
-              </div>
-              <div class="detail-box">
-                <h5>French Fries</h5>
-                <p>
-                  Veniam debitis quaerat officiis quasi cupiditate quo, quisquam
-                  velit, magnam voluptatem repellendus sed eaque
-                </p>
-                <div class="options">
-                  <h6>$10</h6>
-                  <a href="">
-                    <svg
-                      version="1.1"
-                      id="Capa_1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      xmlns:xlink="http://www.w3.org/1999/xlink"
-                      x="0px"
-                      y="0px"
-                      viewBox="0 0 456.029 456.029"
-                      style="enable-background: new 0 0 456.029 456.029"
-                      xml:space="preserve"
-                    >
-                      <g>
-                        <g>
-                          <path
-                            d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
-                         c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"
-                          />
-                        </g>
-                      </g>
-                      <g>
-                        <g>
-                          <path
-                            d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
-                         C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
-                         c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
-                         C457.728,97.71,450.56,86.958,439.296,84.91z"
-                          />
-                        </g>
-                      </g>
-                      <g>
-                        <g>
-                          <path
-                            d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
-                         c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"
-                          />
-                        </g>
-                      </g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-lg-4 all pizza">
-          <div class="box">
-            <div>
-              <div class="img-box">
-                <img src="images/f6.png" alt="" />
-              </div>
-              <div class="detail-box">
-                <h5>Delicious Pizza</h5>
-                <p>
-                  Veniam debitis quaerat officiis quasi cupiditate quo, quisquam
-                  velit, magnam voluptatem repellendus sed eaque
-                </p>
-                <div class="options">
-                  <h6>$15</h6>
-                  <a href="">
-                    <svg
-                      version="1.1"
-                      id="Capa_1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      xmlns:xlink="http://www.w3.org/1999/xlink"
-                      x="0px"
-                      y="0px"
-                      viewBox="0 0 456.029 456.029"
-                      style="enable-background: new 0 0 456.029 456.029"
-                      xml:space="preserve"
-                    >
-                      <g>
-                        <g>
-                          <path
-                            d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
-                         c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"
-                          />
-                        </g>
-                      </g>
-                      <g>
-                        <g>
-                          <path
-                            d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
-                         C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
-                         c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
-                         C457.728,97.71,450.56,86.958,439.296,84.91z"
-                          />
-                        </g>
-                      </g>
-                      <g>
-                        <g>
-                          <path
-                            d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
-                         c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"
-                          />
-                        </g>
-                      </g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-lg-4 all burger">
-          <div class="box">
-            <div>
-              <div class="img-box">
-                <img src="images/f7.png" alt="" />
-              </div>
-              <div class="detail-box">
-                <h5>Tasty Burger</h5>
-                <p>
-                  Veniam debitis quaerat officiis quasi cupiditate quo, quisquam
-                  velit, magnam voluptatem repellendus sed eaque
-                </p>
-                <div class="options">
-                  <h6>$12</h6>
-                  <a href="">
-                    <svg
-                      version="1.1"
-                      id="Capa_1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      xmlns:xlink="http://www.w3.org/1999/xlink"
-                      x="0px"
-                      y="0px"
-                      viewBox="0 0 456.029 456.029"
-                      style="enable-background: new 0 0 456.029 456.029"
-                      xml:space="preserve"
-                    >
-                      <g>
-                        <g>
-                          <path
-                            d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
-                         c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"
-                          />
-                        </g>
-                      </g>
-                      <g>
-                        <g>
-                          <path
-                            d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
-                         C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
-                         c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
-                         C457.728,97.71,450.56,86.958,439.296,84.91z"
-                          />
-                        </g>
-                      </g>
-                      <g>
-                        <g>
-                          <path
-                            d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
-                         c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"
-                          />
-                        </g>
-                      </g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-lg-4 all burger">
-          <div class="box">
-            <div>
-              <div class="img-box">
-                <img src="images/f8.png" alt="" />
-              </div>
-              <div class="detail-box">
-                <h5>Tasty Burger</h5>
-                <p>
-                  Veniam debitis quaerat officiis quasi cupiditate quo, quisquam
-                  velit, magnam voluptatem repellendus sed eaque
-                </p>
-                <div class="options">
-                  <h6>$14</h6>
-                  <a href="">
-                    <svg
-                      version="1.1"
-                      id="Capa_1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      xmlns:xlink="http://www.w3.org/1999/xlink"
-                      x="0px"
-                      y="0px"
-                      viewBox="0 0 456.029 456.029"
-                      style="enable-background: new 0 0 456.029 456.029"
-                      xml:space="preserve"
-                    >
-                      <g>
-                        <g>
-                          <path
-                            d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
-                         c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"
-                          />
-                        </g>
-                      </g>
-                      <g>
-                        <g>
-                          <path
-                            d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
-                         C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
-                         c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
-                         C457.728,97.71,450.56,86.958,439.296,84.91z"
-                          />
-                        </g>
-                      </g>
-                      <g>
-                        <g>
-                          <path
-                            d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
-                         c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"
-                          />
-                        </g>
-                      </g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-lg-4 all pasta">
-          <div class="box">
-            <div>
-              <div class="img-box">
-                <img src="images/f9.png" alt="" />
-              </div>
-              <div class="detail-box">
-                <h5>Delicious Pasta</h5>
-                <p>
-                  Veniam debitis quaerat officiis quasi cupiditate quo, quisquam
-                  velit, magnam voluptatem repellendus sed eaque
-                </p>
-                <div class="options">
-                  <h6>$10</h6>
-                  <a href="">
-                    <svg
-                      version="1.1"
-                      id="Capa_1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      xmlns:xlink="http://www.w3.org/1999/xlink"
-                      x="0px"
-                      y="0px"
-                      viewBox="0 0 456.029 456.029"
-                      style="enable-background: new 0 0 456.029 456.029"
-                      xml:space="preserve"
-                    >
-                      <g>
-                        <g>
-                          <path
-                            d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
-                         c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"
-                          />
-                        </g>
-                      </g>
-                      <g>
-                        <g>
-                          <path
-                            d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
-                         C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
-                         c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
-                         C457.728,97.71,450.56,86.958,439.296,84.91z"
-                          />
-                        </g>
-                      </g>
-                      <g>
-                        <g>
-                          <path
-                            d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
-                         c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"
-                          />
-                        </g>
-                      </g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                      <g></g>
-                    </svg>
-                  </a>
-                </div>
+                  <h6 style="text-decoration: line-through;">₹&nbsp;<%= product.regularPrice %></h6>
+                  <h6 style="margin-right: 12rem;">₹&nbsp;<%= product.salePrice %></h6>
+                  <% if (product.quantity!==0 && product.status!=='Discontinued' && product.status!=='Out of Stock') { %>
+                    <% if(cartProductIds.includes(product._id.toString())){ %>
+                      <div onclick="window.location.href='/loadCart';" class="wishlist-icon" style="border-radius: 20px; width: 2.5rem;padding-left: 9px;background-color: #ffbe33;padding-top: 1px;">
+                        <i class="fa-solid fa-cart-shopping me-2 mt-2" style="color: white;"></i> 
+                      </div>
+                    <%}else { %>
+                        <div onclick="addToCart(event,'<%= product._id %>')" class="wishlist-icon" style="border-radius: 20px; width: 2.5rem;padding-left: 9px;background-color: #ffbe33;padding-top: 1px;">
+                          <i class="fa-solid fa-cart-shopping me-2 mt-2" style="color: white;"></i> 
+                        </div>
+                    <% } %>
+                    
+                    <% if (wishlistProductIds.includes(product._id.toString())) { %>
+                        <div onclick="window.location.href='/wishlist'" class="wishlist-icon" style="border-radius: 20px; width: 2.5rem;padding-left: 9px;background-color: #ffbe33;padding-top: 1px;">
+                          <i class="fa fa-heart me-1 mt-2" style="color: red;"></i> 
+                        </div>
+                    <% } else { %>
+                        <div onclick="toggleWishlist(event,'<%= product._id %>')" class="wishlist-icon" style="border-radius: 20px; width: 2.5rem;padding-left: 9px;background-color: #ffbe33;padding-top: 1px;">
+                            <i class="fa fa-heart me-1 mt-2"></i> 
+                        </div>
+                    <% } %>
+                    <%if(product.quantity<10){%>
+                      <div onclick="" class="badge bg-danger text-white position-absolute top-0 start-0 m-2 rounded-pill">
+                        Only <%=product.quantity%> stock Left
+                      </div>  
+                    <%}%>
+                  <%}else{%>
+                    <% if (wishlistProductIds.includes(product._id.toString())) { %>
+                        <div onclick="window.location.href='/wishlist'" class="wishlist-icon" style="border-radius: 20px; width: 2.5rem;padding-left: 9px;background-color: #ffbe33;padding-top: 1px;">
+                          <i class="fa fa-heart me-1 mt-2" style="color: red;"></i> 
+                        </div>
+                    <% } else { %>
+                        <div onclick="toggleWishlist(event,'<%= product._id %>')" class="wishlist-icon" style="border-radius: 20px; width: 2.5rem;padding-left: 9px;background-color: #ffbe33;padding-top: 1px;">
+                            <i class="fa fa-heart me-1 mt-2"></i> 
+                        </div>
+                    <% } %>
+                    <% if (product.quantity===0 || product.status==='Out of Stock') { %>
+                      <div onclick="outOfStock()" class="badge bg-danger text-white position-absolute top-0 start-0 m-2 rounded-pill">
+                        Out of Stock
+                      </div>     
+                    <%}else{%>             
+                      <div onclick="" class="badge bg-danger text-white position-absolute top-0 start-0 m-2 rounded-pill">
+                        Discontinued
+                      </div>  
+                    <%}%>
+                  <% } %>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <% }) %>
     </div>
-    <div class="btn-box">
-      <a style="text-decoration: none;" href=""> View More </a>
+  </div>
+</section>
+<!-- end offer section -->
+<section class="food_section layout_padding-bottom">
+  <div class="container">
+    <div class="heading_container heading_center">
+      <h2>New Arrivals</h2>
+    </div>
+
+    <div class="filters-content">
+      <div class="row grid">
+        <%for (let i=0; i < 8 && i < 6; i++) { const product=newArrivals[i]; %>
+        <div class="col-sm-6 col-lg-4 all pizza">
+          <div class="box">
+            <div>
+              <div class="img-box" onclick="window.location.href='/productinfo?id=<%= product._id %>';">
+                <img src="<%= product.productImages[0].replace(/\\/g, '/') %>" alt="" />
+              </div>
+              <div class="detail-box">
+                <% const oneWeekAgo = new Date(new Date().setDate(new Date().getDate() - 7)); %>
+                <% const isNewArrival = new Date(product.createdAt) > oneWeekAgo; %>
+                <% if (isNewArrival && product.status !== 'Out of Stock' && product.status !== 'Discontinue') { %> 
+                    <div class="badge bg-success text-white position-absolute top-0 start-0 m-2 rounded-pill">
+                        New Arrivals
+                    </div> 
+                <% } %>
+                <%if(product.offerPercentage>0 && product.status==='Available'){%>
+                  <div class="badge offer-badge bg-success text-white position-absolute top-0 end-0 m-2 rounded-pill">
+                      <%=product.offerPercentage%>% Off
+                  </div>
+                <%}%>
+                <h5><%= product.productName %></h5>
+                <p>
+                  <%= product.description %>
+                </p>
+                <div class="options">
+                  <h6 style="text-decoration: line-through;">₹&nbsp;<%= product.regularPrice %></h6>
+                  <h6 style="margin-right: 12rem;">₹&nbsp;<%= product.salePrice %></h6>
+                  <% if (product.quantity!==0 && product.status!=='Discontinued' && product.status!=='Out of Stock') { %>
+                    <% if(cartProductIds.includes(product._id.toString())){ %>
+                      <div onclick="window.location.href='/loadCart';" class="wishlist-icon" style="border-radius: 20px; width: 2.5rem;padding-left: 9px;background-color: #ffbe33;padding-top: 1px;">
+                        <i class="fa-solid fa-cart-shopping me-2 mt-2" style="color: white;"></i> 
+                      </div>
+                    <%}else { %>
+                        <div onclick="addToCart(event,'<%= product._id %>')" class="wishlist-icon" style="border-radius: 20px; width: 2.5rem;padding-left: 9px;background-color: #ffbe33;padding-top: 1px;">
+                          <i class="fa-solid fa-cart-shopping me-2 mt-2" style="color: white;"></i> 
+                        </div>
+                    <% } %>
+                    
+                    <% if (wishlistProductIds.includes(product._id.toString())) { %>
+                        <div onclick="window.location.href='/wishlist'" class="wishlist-icon" style="border-radius: 20px; width: 2.5rem;padding-left: 9px;background-color: #ffbe33;padding-top: 1px;">
+                          <i class="fa fa-heart me-1 mt-2" style="color: red;"></i> 
+                        </div>
+                    <% } else { %>
+                        <div onclick="toggleWishlist(event,'<%= product._id %>')" class="wishlist-icon" style="border-radius: 20px; width: 2.5rem;padding-left: 9px;background-color: #ffbe33;padding-top: 1px;">
+                            <i class="fa fa-heart me-1 mt-2"></i> 
+                        </div>
+                    <% } %>
+                    <%if(product.quantity<10){%>
+                      <div onclick="" class="badge bg-danger text-white position-absolute top-0 start-0 m-2 rounded-pill">
+                        Only <%=product.quantity%> stock Left
+                      </div>  
+                    <%}%>
+                  <%}else{%>
+                    <% if (wishlistProductIds.includes(product._id.toString())) { %>
+                        <div onclick="window.location.href='/wishlist'" class="wishlist-icon" style="border-radius: 20px; width: 2.5rem;padding-left: 9px;background-color: #ffbe33;padding-top: 1px;">
+                          <i class="fa fa-heart me-1 mt-2" style="color: red;"></i> 
+                        </div>
+                    <% } else { %>
+                        <div onclick="toggleWishlist(event,'<%= product._id %>')" class="wishlist-icon" style="border-radius: 20px; width: 2.5rem;padding-left: 9px;background-color: #ffbe33;padding-top: 1px;">
+                            <i class="fa fa-heart me-1 mt-2"></i> 
+                        </div>
+                    <% } %>
+                    <% if (product.quantity===0 || product.status==='Out of Stock') { %>
+                      <div onclick="outOfStock()" class="badge bg-danger text-white position-absolute top-0 start-0 m-2 rounded-pill">
+                        Out of Stock
+                      </div>     
+                    <%}else{%>             
+                      <div onclick="" class="badge bg-danger text-white position-absolute top-0 start-0 m-2 rounded-pill">
+                        Discontinued
+                      </div>  
+                    <%}%>
+                  <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% } %>
     </div>
   </div>
 </section>
 
-<!-- end food section -->
+
+
+  <!-- about section -->
+
+  <section class="about_section layout_padding">
+    <div class="container  ">
+
+      <div class="row">
+        <div class="col-md-6 ">
+          <div class="img-box">
+            <img src="images/about-img.png" alt="">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="detail-box">
+            <div class="heading_container">
+              <h2>
+                We Are Rozeto
+              </h2>
+            </div>
+            <p>
+              Welcome to Rozeto, your ultimate destination for ordering delicious and freshly prepared fast food online! We are passionate about satisfying your cravings with a wide variety of mouthwatering options like burgers, pizzas, pasta, and more. Whether you're looking for a quick bite on a busy day, planning a cozy meal at home, or treating your loved ones to their favorite comfort food, we've got you covered. Our platform connects you with the best local chefs and restaurants, ensuring that every dish is crafted with high-quality ingredients and delivered hot and fresh to your doorstep. At Rozeto, we believe food is not just about taste but also about convenience and joy. That’s why we’ve made our ordering process simple, seamless, and lightning-fast. Dive into our diverse menu, customize your orders just the way you like, and enjoy the irresistible flavors of your favorite fast foods—all at the click of a button. Let us make every meal a celebration of taste, convenience, and happiness!
+            </p>
+            <!-- <a href="">
+              Read More
+            </a> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<script>
+
+    function addToCart(event,productId) {
+      event.preventDefault()
+      axios.post('/addProductToCart', { productId })
+          .then(response => {
+              if (response.data.success) {
+                  Swal.fire({
+                      toast: true,
+                      timer: 800,
+                      timerProgressBar: true,
+                      title: response.data.message,
+                      // text: response.data.message,
+                      icon: 'success',
+                      position: 'top-end',
+                      showConfirmButton: false,
+                      customClass: {
+                          popup: 'custom-toast'
+                      }
+                  })
+                  // Reload the current page
+                  setTimeout(() => {                    
+                      location.reload();
+                  }, 900);
+
+                  const cartButton = document.querySelector(`a[onclick="addToCart('${productId}')"]`);
+                  if (cartButton) {
+                      cartButton.href = '/loadCartPage';
+                      const img = cartButton.querySelector('img');
+                      img.src = 'img/icon/inCart.png';
+                      img.alt = 'Go to Cart';
+                      img.title = 'Go to Cart';
+                      cartButton.setAttribute('onclick', '');
+                  }
+              } else {
+                  Swal.fire({
+                      toast: true,
+                      timer: 800,
+                      timerProgressBar: true,
+                      title: 'Please Login first!',
+                      icon: 'error',
+                      position: 'top-end',
+                      showConfirmButton: false,
+                      customClass: {
+                          popup: 'custom-toast'
+                      }
+                  })
+              }
+          })
+          .catch(error => {
+                Swal.fire({
+                    toast: true,
+                    timer: 800,
+                    timerProgressBar: true,
+                    title: 'Please Login first!',
+                    icon: 'error',
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    customClass: {
+                        popup: 'custom-toast'
+                    }
+                })
+              console.error('There was an error adding the product to the cart:', error);
+          });
+  }
+
+  function outOfStock() {
+      Swal.fire({
+          toast: true,
+          timer: 1100,
+          timerProgressBar: true,
+          title: 'Out Of Stock',
+          // text: 'Failed to add product to cart',
+          icon: 'warning',
+          position: 'top-end',
+          showConfirmButton: false,
+          customClass: {
+              popup: 'custom-toast'
+          }
+      })
+  }
+
+  function toggleWishlist(event, productId) {
+    event.preventDefault();
+    
+    axios.post('/toggleWishlist', { productId })
+        .then(response => {
+            if (response.data.success) {
+                Swal.fire({
+                    toast: true,
+                    timer: 800,
+                    timerProgressBar: true,
+                    title: response.data.message,
+                    icon: 'success',
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    customClass: {
+                        popup: 'custom-toast'
+                    }
+                });
+                
+                setTimeout(() => {
+                    window.location.reload();
+                }, 900);
+            } else {
+                Swal.fire({
+                    toast: true,
+                    timer: 800,
+                    timerProgressBar: true,
+                    title: response.data.message,
+                    icon: 'error',
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    customClass: {
+                        popup: 'custom-toast'
+                    }
+                });
+            }
+        })
+        .catch(error => {
+            console.error('There was an error adding the product to the wishlist:', error);
+            let errorMessage = 'An error occurred. Please try again.';
+            if (error.response && error.response.status === 401) {
+                errorMessage = 'Please login first!';
+            }
+            Swal.fire({
+                toast: true,
+                timer: 800,
+                timerProgressBar: true,
+                title: errorMessage,
+                icon: 'error',
+                position: 'top-end',
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'custom-toast'
+                }
+            });
+        });
+  }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+  <!-- end about section -->
 
 <%-include("../../views/partials/user/footer.ejs")%>

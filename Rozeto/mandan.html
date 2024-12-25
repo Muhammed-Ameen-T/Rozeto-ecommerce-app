@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artisan Chocolate Truffles - Gourmet Delight</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #8B4513;
+            --secondary-color: #D2691E;
+            --background-color: #FFF8E7;
+        }
+
+        body {
+            background-color: var(--background-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .product-gallery .main-image {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .product-gallery .main-image:hover {
+            transform: scale(1.02);
+        }
+
+        .product-gallery .thumbnail {
+            cursor: pointer;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .product-gallery .thumbnail:hover,
+        .product-gallery .thumbnail.active {
+            opacity: 1;
+            border-color: var(--primary-color);
+        }
+
+        .product-details {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .add-to-cart-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+
+        .review-section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .related-product-card {
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .related-product-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row">
+            <!-- Product Gallery -->
+            <div class="col-md-6 product-gallery">
+                <div class="main-image mb-4">
+                    <img src="/api/placeholder/600/400" id="mainProductImage" class="img-fluid" alt="Chocolate Truffles">
+                </div>
+                <div class="thumbnails d-flex justify-content-center">
+                    <img src="/api/placeholder/120/80" class="img-thumbnail mx-2 thumbnail active" data-large="/api/placeholder/600/400" alt="Truffle Image 1">
+                    <img src="/api/placeholder/120/80" class="img-thumbnail mx-2 thumbnail" data-large="/api/placeholder/600/400" alt="Truffle Image 2">
+                    <img src="/api/placeholder/120/80" class="img-thumbnail mx-2 thumbnail" data-large="/api/placeholder/600/400" alt="Truffle Image 3">
+                </div>
+            </div>
+
+            <!-- Product Details -->
+            <div class="col-md-6">
+                <div class="product-details">
+                    <h1 class="mb-3">Artisan Chocolate Truffles</h1>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="text-warning me-2">
+                            ★★★★☆
+                        </div>
+                        <span class="text-muted">(24 Reviews)</span>
+                    </div>
+                    <p class="lead text-muted mb-4">
+                        Handcrafted chocolate truffles made with the finest Belgian chocolate, filled with rich ganache and dusted with cocoa powder.
+                    </p>
+                    
+                    <div class="d-flex align-items-center mb-4">
+                        <h2 class="me-4 mb-0">$24.99</h2>
+                        <span class="text-muted text-decoration-line-through">$29.99</span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Quantity</label>
+                        <div class="input-group">
+                            <button class="btn btn-outline-secondary" type="button" id="decrease-qty">-</button>
+                            <input type="text" class="form-control text-center" value="1" id="quantity">
+                            <button class="btn btn-outline-secondary" type="button" id="increase-qty">+</button>
+                        </div>
+                    </div>
+
+                    <button class="btn add-to-cart-btn w-100">
+                        <i data-lucide="shopping-cart" class="me-2"></i> Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reviews Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="review-section">
+                    <h3 class="mb-4">Customer Reviews</h3>
+                    
+                    <!-- Existing Reviews -->
+                    <div class="mb-4">
+                        <div class="d-flex align-items-center mb-2">
+                            <strong class="me-3">Sarah M.</strong>
+                            <div class="text-warning">★★★★★</div>
+                        </div>
+                        <p class="text-muted">Absolutely delicious! These truffles are a true gourmet experience.</p>
+                    </div>
+
+                    <!-- Review Form -->
+                    <div class="review-form mt-4">
+                        <h4>Write a Review</h4>
+                        <form id="reviewForm">
+                            <div class="mb-3">
+                                <label for="reviewName" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="reviewName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="reviewRating" class="form-label">Rating</label>
+                                <select class="form-select" id="reviewRating" required>
+                                    <option value="">Select Rating</option>
+                                    <option value="5">★★★★★ (5 Stars)</option>
+                                    <option value="4">★★★★☆ (4 Stars)</option>
+                                    <option value="3">★★★☆☆ (3 Stars)</option>
+                                    <option value="2">★★☆☆☆ (2 Stars)</option>
+                                    <option value="1">★☆☆☆☆ (1 Star)</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="reviewText" class="form-label">Review</label>
+                                <textarea class="form-control" id="reviewText" rows="4" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit Review</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Products -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3 class="mb-4">Related Products</h3>
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card related-product-card">
+                            <img src="/api/placeholder/300/200" class="card-img-top" alt="Related Product 1">
+                            <div class="card-body">
+                                <h5 class="card-title">Dark Chocolate Collection</h5>
+                                <p class="card-text">$19.99</p>
+                                <button class="btn btn-sm btn-outline-primary quick-view" data-bs-toggle="modal" data-bs-target="#quickViewModal">Quick View</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- More related products... -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick View Modal -->
+    <div class="modal fade" id="quickViewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Product Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Quick view product details will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Image Gallery
+        document.querySelectorAll('.thumbnail').forEach(thumbnail => {
+            thumbnail.addEventListener('click', function() {
+                // Remove active class from all thumbnails
+                document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                
+                // Add active to current thumbnail
+                this.classList.add('active');
+                
+                // Update main image
+                const largeImageSrc = this.getAttribute('data-large');
+                document.getElementById('mainProductImage').src = largeImageSrc;
+            });
+        });
+
+        // Quantity Control
+        document.getElementById('decrease-qty').addEventListener('click', function() {
+            const qtyInput = document.getElementById('quantity');
+            let currentValue = parseInt(qtyInput.value);
+            if (currentValue > 1) {
+                qtyInput.value = currentValue - 1;
+            }
+        });
+
+        document.getElementById('increase-qty').addEventListener('click', function() {
+            const qtyInput = document.getElementById('quantity');
+            let currentValue = parseInt(qtyInput.value);
+            qtyInput.value = currentValue + 1;
+        });
+
+        // Review Form Submission
+        document.getElementById('reviewForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Review submitted! (Note: This is a demo. In a real application, this would send data to a backend.)');
+            this.reset();
+        });
+
+        // Quick View Modal
+        document.querySelectorAll('.quick-view').forEach(button => {
+            button.addEventListener('click', function() {
+                const productCard = this.closest('.related-product-card');
+                const productTitle = productCard.querySelector('.card-title').textContent;
+                const productPrice = productCard.querySelector('.card-text').textContent;
+                const productImage = productCard.querySelector('.card-img-top').src;
+
+                const modalBody = document.querySelector('#quickViewModal .modal-body');
+                modalBody.innerHTML = `
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img src="${productImage}" class="img-fluid" alt="${productTitle}">
+                        </div>
+                        <div class="col-md-6">
+                            <h3>${productTitle}</h3>
+                            <p class="lead">${productPrice}</p>
+                            <p>Additional product details would go here...</p>
+                            <button class="btn btn-primary">Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+            });
+        });
+    </script>
+</body>
+</html>

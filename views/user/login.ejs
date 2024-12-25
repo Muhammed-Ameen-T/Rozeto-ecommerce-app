@@ -33,9 +33,16 @@
                     <div class="wrap-input100 validate-input">
                         <input class="input100" type="password" name="password" id="password" placeholder="Password">
                         <span class="focus-input100"></span>
+                        <span class="position-absolute top-50 end-0 translate-middle-y me-3">
+                            <i class="fa fa-eye-slash" id="togglePassword" style="cursor: pointer;"></i>
+                        </span>
                     </div>		
 
-                    <div class="container-login100-form-btn pt-2 mt-4">
+                    <div class="text-center p-t-46 p-b-20" style="margin-left: 21rem;">
+                        <a href="/forgotPassword" style="color:#6675df; font-size: small; font-weight: bold;text-decoration:none ;">Forgot Password</a>
+                    </div>
+
+                    <div class="container-login100-form-btn pt-2 mt-2">
                         <button type="submit" class="login100-form-btn mb-3" id="loginButton">Login</button>
                     </div>
 
@@ -64,6 +71,26 @@
     <script src="/vendor/bootstrap/js/popper.js"></script>
     <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script>
+        // Password field toggle
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+
+        togglePassword.addEventListener('click', () => {
+            // Toggle the type attribute
+            const type = password.type === 'password' ? 'text' : 'password';
+            password.type = type;
+
+            // Toggle the icon
+            togglePassword.classList.toggle('fa-eye');
+            togglePassword.classList.toggle('fa-eye-slash');
+        });
+
+        // Confirm password field toggle
+        
+    </script>
+
 
     <script>
         document.getElementById("loginForm").addEventListener("submit", async function (e) {
