@@ -10,7 +10,7 @@ Rozeto is a dynamic ecommerce platform tailored for food ordering. Customers can
 
 🛒 Product Catalog: Browse a curated selection of food items.
 
-🔍 Search & Filter: Find products by category, cuisine, price range, and more.
+🔍 Search & Filter: Find products by category, price range, and more.
 
 👤 User Accounts: Secure registration and login.
 
@@ -46,7 +46,3 @@ Licensed under the MIT License.
 
 This tailored description captures the essence of the Rozeto Ecommerce App, highlighting its comprehensive features and user-centric design for a seamless food ordering experience. If you need any further adjustments or additional details, feel free to let me know! 😊
 
-
-
-
-Message Copilot
