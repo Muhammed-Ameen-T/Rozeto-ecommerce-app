@@ -235,8 +235,7 @@ export const adminDashPage = async (req, res) => {
             orderStatusMap[status._id] = status.count;
         });
 
-        //~~~~~~~~~~~~     top selling product ,category and brand       ~~~~~~~~~~~//
-        // top 5 best-selling products
+        // top 8 best-selling products
         const topProducts = await Order.aggregate([
             { $match: filter },
             { $unwind: "$orderedItems" },
@@ -261,9 +260,8 @@ export const adminDashPage = async (req, res) => {
             { $unwind: "$category" },
             { $project: { categoryName: "$category.name", totalSold: 1 , _id:"$category._id" ,image:"$category.image"} }
         ]);
-        
 
-        //~~~~~~~~~~~~~     Low stock productsss         ~~~~~~~~~~~~~~~~~~~//
+        // Low Stock Prodcts.   
         const lowStockProducts = await Product.aggregate([
             // Match products with quantity less than 20
             { 
