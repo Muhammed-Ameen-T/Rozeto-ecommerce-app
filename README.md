@@ -40,7 +40,9 @@ Rozeto is a dynamic ecommerce platform tailored for food ordering. Customers can
 
 
 
-🛠️ Tech Stack
+
+
+🔧 Tech Stack
 
 Frontend: HTML, CSS, Bootstrap, JavaScript
 
