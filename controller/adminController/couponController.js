@@ -39,7 +39,12 @@ export const addCoupon = async (req, res) => {
         const today = new Date().setHours(0, 0, 0, 0); // Sets the current date to start of the day
         const expiryDate = new Date(expireOn).setHours(0, 0, 0, 0); // Sets expiry date to start of the day
 
-        const status = expiryDate < today ? 'Expired' : 'Active';
+        const status = expiryDate <= today ? 'Expired' : 'Active';
+
+        const existingCoupon = await Coupon.findOne({ code }); 
+        if (existingCoupon) { 
+            return res.status(400).send('Coupon code already exists.'); 
+        }
 
         const newCoupon = new Coupon({
             code,
@@ -81,7 +86,7 @@ export const toggleCoupon = async (req, res) => {
 const updateExpiredCoupons = async () => {
     try {
         const today = new Date().setHours(0, 0, 0, 0);
-        await Coupon.updateMany({ expireOn: { $lt: today }, status: 'Active' }, { status: 'Expired' });
+        await Coupon.updateMany({ expireOn: { $lte: today }, status: 'Active' }, { status: 'Expired' });
     } catch (error) {
         console.error('Error updating expired coupons:', error);
     }

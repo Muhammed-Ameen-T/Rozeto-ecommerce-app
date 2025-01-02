@@ -413,13 +413,13 @@
                     </button>
                     <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
                         <li>
-                            <a class="dropdown-item" id="dropdown-itemsa" href="/menu?category=&stock=<%= stockFilter %>&sort=<%= sort %>&order=<%= order %>">
+                            <a class="dropdown-item" id="dropdown-itemsa" href="/menu?search=<%= searchQuery %>&category=&stock=<%= stockFilter %>&sort=<%= sort %>&order=<%= order %>">
                                 All Categories
                             </a>
                         </li>
                         <% categories.forEach(category => { %>
                             <li>
-                                <a class="dropdown-item" id="dropdown-items" href="/menu?category=<%= category._id %>&stock=<%= stockFilter %>&sort=<%= sort %>&order=<%= order %>">
+                                <a class="dropdown-item" id="dropdown-items" href="/menu?search=<%= searchQuery %>&category=<%= category._id %>&stock=<%= stockFilter %>&sort=<%= sort %>&order=<%= order %>">
                                     <%= category.name %>
                                 </a>
                             </li>
@@ -435,25 +435,25 @@
                     <ul class="dropdown-menu">
                         <li>
                             <a class="dropdown-item <%= !stockFilter ? 'active' : '' %>" 
-                               href="/menu?category=<%= categoryFilter %>&stock=&sort=<%= sort %>&order=<%= order %>">
+                               href="/menu?search=<%= searchQuery %>&category=<%= categoryFilter %>&stock=&sort=<%= sort %>&order=<%= order %>">
                                 All Products
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item <%= stockFilter === 'Available' ? 'active' : '' %>" 
-                               href="/menu?category=<%= categoryFilter %>&stock=Available&sort=<%= sort %>&order=<%= order %>">
+                               href="/menu?search=<%= searchQuery %>&category=<%= categoryFilter %>&stock=Available&sort=<%= sort %>&order=<%= order %>">
                                 Available
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item <%= stockFilter === 'Out of Stock' ? 'active' : '' %>" 
-                               href="/menu?category=<%= categoryFilter %>&stock=Out%20of%20Stock&sort=<%= sort %>&order=<%= order %>">
+                               href="/menu?search=<%= searchQuery %>&category=<%= categoryFilter %>&stock=Out%20of%20Stock&sort=<%= sort %>&order=<%= order %>">
                                 Out of Stock
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item <%= stockFilter === 'Discontinued' ? 'active' : '' %>" 
-                               href="/menu?category=<%= categoryFilter %>&stock=Discontinued&sort=<%= sort %>&order=<%= order %>">
+                               href="/menu?search=<%= searchQuery %>&category=<%= categoryFilter %>&stock=Discontinued&sort=<%= sort %>&order=<%= order %>">
                                 Discontinued
                             </a>
                         </li>
@@ -473,38 +473,38 @@
                   <select class="form-select sort-select" onchange="location = this.value;">
                     <option value="/menu" active>Sort By</option>
                       <option
-                          value="/menu?sort=createdAt&order=desc&category=<%= categoryFilter %>&stock=<%= stockFilter %>"
+                          value="/menu?search=<%= searchQuery %>&sort=createdAt&order=desc&category=<%= categoryFilter %>&stock=<%= stockFilter %>"
                           <%= sort === 'createdAt' && order === 'desc' ? 'selected' : '' %>
                       >
                           New Arrivals
                       </option>
-                      <option value="/menu?sort=orderCount&order=desc&category=<%= categoryFilter %>&stock=<%= stockFilter %>" 
+                      <option value="/menu?search=<%= searchQuery %>&sort=orderCount&order=desc&category=<%= categoryFilter %>&stock=<%= stockFilter %>" 
                         <%= sort === 'orderCount' && order === 'desc' ? 'selected' : '' %> 
                         > Popularity
                       </option> 
-                      <option value="/menu?sort=rating&order=desc&category=<%= categoryFilter %>&stock=<%= stockFilter %>" 
+                      <option value="/menu?search=<%= searchQuery %>&sort=rating&order=desc&category=<%= categoryFilter %>&stock=<%= stockFilter %>" 
                         <%= sort === 'rating' && order === 'desc' ? 'selected' : '' %> > Average Rating 
                       </option>
                       <option
-                          value="/menu?sort=salePrice&order=asc&category=<%= categoryFilter %>&stock=<%= stockFilter %>"
+                          value="/menu?search=<%= searchQuery %>&sort=salePrice&order=asc&category=<%= categoryFilter %>&stock=<%= stockFilter %>"
                           <%= sort === 'salePrice' && order === 'asc' ? 'selected' : '' %>
                       >
                           Price: Low to High
                       </option>
                       <option
-                          value="/menu?sort=salePrice&order=desc&category=<%= categoryFilter %>&stock=<%= stockFilter %>"
+                          value="/menu?search=<%= searchQuery %>&sort=salePrice&order=desc&category=<%= categoryFilter %>&stock=<%= stockFilter %>"
                           <%= sort === 'salePrice' && order === 'desc' ? 'selected' : '' %>
                       >
                           Price: High to Low
                       </option>
                       <option
-                          value="/menu?sort=productName&order=asc&category=<%= categoryFilter %>&stock=<%= stockFilter %>"
+                          value="/menu?search=<%= searchQuery %>&sort=productName&order=asc&category=<%= categoryFilter %>&stock=<%= stockFilter %>"
                           <%= sort === 'productName' && order === 'asc' ? 'selected' : '' %>
                       >
                           Name: A to Z
                       </option>
                       <option
-                          value="/menu?sort=productName&order=desc&category=<%= categoryFilter %>&stock=<%= stockFilter %>"
+                          value="/menu?search=<%= searchQuery %>&sort=productName&order=desc&category=<%= categoryFilter %>&stock=<%= stockFilter %>"
                           <%= sort === 'productName' && order === 'desc' ? 'selected' : '' %>
                       >
                           Name: Z to A

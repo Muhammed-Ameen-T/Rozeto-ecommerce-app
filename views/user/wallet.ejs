@@ -240,7 +240,7 @@
                                     </span>
                                 </td>
                                 <td class="amount">₹<%= transaction.amount.toFixed(2) %></td>
-                                <% if (transaction.description === 'Referral bonus') { %>
+                                <% if (transaction.description.startsWith('Referral bonus')) { %>
                                     <td><a href="/profile" class="text-primary"><i class="fa-regular fa-eye"></i></a></td>
                                 <% } else { %>
                                     <td><a href="/orderDetails?orderId=<%= transaction.orderId %>" class="text-primary"><i class="fa-regular fa-eye"></i></a></td>

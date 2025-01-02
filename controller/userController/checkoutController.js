@@ -101,6 +101,11 @@ export const loadCheckout = async (req, res) => {
 export const validateCoupon = async (req, res) => {
     try {
         const { couponCode, userId, cartTotal } = req.body;
+
+        if (req.session.coupon) { 
+            return res.json({ isValid: false, errorMessage: 'Already Applied a Coupon! If you want Apply new Coupon Remove Existing One.' });
+        }
+
         const today = new Date();
 
         if (!userId) {
@@ -283,7 +288,7 @@ export const placeOrder = async (req, res) => {
                 amount: newOrder.finalAmount,
                 type: 'debit',
                 orderId: newOrder._id,
-                description: `Purchase Products for order ID: ${newOrder._id}`
+                description: `Purchase Products for order ID: ${newOrder.orderId}`
             });
             await wallet.save();
         }

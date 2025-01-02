@@ -160,56 +160,18 @@ export const adminDashPage = async (req, res) => {
         const totalUserCount = await User.countDocuments();
         const totalOrderCount = await Order.countDocuments();
         const totalCategoryCount = await Category.countDocuments();
-
-        let filter = {};
-        const filterType = req.query.filterType || 'yearly';
-        const startDate = req.query.startDate ? new Date(req.query.startDate) : null;
-        const endDate = req.query.endDate ? new Date(req.query.endDate) : null;
-        switch (filterType) {
-            case 'daily':
-                filter.createdAt = {
-                    $gte: moment().startOf('day').toDate(),
-                    $lt: moment().endOf('day').toDate(),
-                };
-                break;
-            case 'weekly':
-                filter.createdAt = {
-                    $gte: moment().startOf('week').toDate(),
-                    $lt: moment().endOf('week').toDate(),
-                };
-                break;
-            case 'yearly':
-                filter.createdAt = {
-                    $gte: moment().startOf('year').toDate(),
-                    $lt: moment().endOf('year').toDate(),   
-                };
-                break;
-            case 'custom':
-                if (startDate && endDate) {
-                    filter.createdAt = {
-                        $gte: startDate,
-                        $lt: endDate,
-                    };
-                }
-                break;
-            default:
-                break;
-        }
-        //~~~~~~~~~    graph data for pie,single line ,poalr Area graphs   ~~~~~~~~~~~//
         const overallOrderAmount = await Order.aggregate([
-            { $match: filter }, { $group: { _id: null, totalAmount: { $sum: "$finalAmount" } } }]);
+            { $group: { _id: null, totalAmount: { $sum: "$finalAmount" } } }]);
         const overallDiscount = await Order.aggregate([
-            { $match: filter }, { $group: { _id: null, totalDiscount: { $sum: "$discount" } } }]);
+            { $group: { _id: null, totalDiscount: { $sum: "$discount" } } }]);
         const totalAmount = overallOrderAmount.length > 0 ? overallOrderAmount[0].totalAmount : 0;
         const totalDiscount = overallDiscount.length > 0 ? overallDiscount[0].totalDiscount : 0;
-        const salesReport = await Order.find(filter)
-        const salesCount = await Order.countDocuments(filter);
+        const salesReport = await Order.find()
+        const salesCount = await Order.countDocuments();
         const overallOfferDiscount = await Order.aggregate([
-            { $match: filter },
             { $group: { _id: null, totalOfferDiscount: { $sum: "$offerDiscount" } } }
         ]);
         const overallCouponDiscount = await Order.aggregate([ 
-            { $match: filter },
             { $group: { _id: null, totalCouponDiscount: { $sum: "$couponDiscount" } } } 
         ]);
         const totalCouponDiscount = overallCouponDiscount.length > 0 ? overallCouponDiscount[0].totalCouponDiscount : 0;
@@ -220,7 +182,6 @@ export const adminDashPage = async (req, res) => {
 
 
         const orderStatusCounts = await Order.aggregate([
-            { $match: filter },
             { $group: { _id: "$orderStatus", count: { $sum: 1 } } }
         ]);
         const orderStatusMap = {
@@ -237,7 +198,6 @@ export const adminDashPage = async (req, res) => {
 
         // top 8 best-selling products
         const topProducts = await Order.aggregate([
-            { $match: filter },
             { $unwind: "$orderedItems" },
             { $group: { _id: "$orderedItems.product", totalSold: { $sum: "$orderedItems.quantity" } } },
             { $sort: { totalSold: -1 } },
@@ -249,7 +209,6 @@ export const adminDashPage = async (req, res) => {
 
         // top 5 best-selling categories
         const topCategories = await Order.aggregate([
-            { $match: filter },
             { $unwind: "$orderedItems" },
             { $lookup: { from: "products", localField: "orderedItems.product", foreignField: "_id", as: "productDetails" } },
             { $unwind: "$productDetails" },
@@ -297,9 +256,6 @@ export const adminDashPage = async (req, res) => {
             totalAmount,
             totalDiscount,
             salesReport,
-            filterType,
-            startDate,
-            endDate,
             orderStatusMap,
             topProducts,
             topCategories,
@@ -313,7 +269,7 @@ export const adminDashPage = async (req, res) => {
         res.render('error');
     }
 };
-
+ 
 
 export const adminLogin = async (req,res) => {
     try {

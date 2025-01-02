@@ -189,7 +189,7 @@
 												<div class="reports-summary">
 													<div class="reports-summary-block">
 														<h5>₹ <%= totalAmount.toFixed(2) %></h5>
-														<h6>Overall sales of the month</h6>
+														<h6>Overall sales</h6>
 													</div>
 													
 													<div class="reports-summary-block">
@@ -368,8 +368,8 @@
 													<i class="fa-solid fa-money-bill"></i>
 												</div>
 												<div class="stats-info">
-													<h6 class="stats-title">Offer Discount</h6>
-													<p class="stats-amount">₹ <%= totalOfferDiscount.toFixed(2) %></p>
+													<h6 class="stats-title">Total Coupon Discount</h6>
+													<p class="stats-amount">₹ <%= totalCouponDiscount.toFixed(2) %></p>
 												</div>
 											</li>
 											<li class="stats-list-item primary">
@@ -377,8 +377,8 @@
 													<i class="fa-solid fa-money-bill"></i>
 												</div>
 												<div class="stats-info">
-													<h6 class="stats-title">Coupon Discount</h6>
-													<p class="stats-amount">₹ <%= totalCouponDiscount.toFixed(2) %></p>
+													<h6 class="stats-title">Total Offer Discount</h6>
+													<p class="stats-amount">₹ <%= totalOfferDiscount.toFixed(2) %></p>
 												</div>
 											</li>
 										</ul>
@@ -551,98 +551,173 @@
         }
 
 		function updateSalesChart(filterType, salesData) {
-            const ctx = document.getElementById('newSalesGraph').getContext('2d');
-            let labels = [];
-            let data = [];
+			const ctx = document.getElementById('newSalesGraph').getContext('2d');
+			let labels = [];
+			let data = [];
 
-            salesData.forEach(item => {
-                switch (filterType) {
-                    case 'yearly':
-                        labels.push(item.createdAt.split('T')[0]);
-                        break;
-                    case 'monthly':
-                        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                        labels.push(monthNames[parseInt(item.createdAt.split('-')[1], 10) - 1]);
-                        break;
-                    case 'weekly':
-                        const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-                        labels.push(weekDays[new Date(item.createdAt).getDay()]);
-                        break;
-                    case 'daily':
-                        labels.push(`${new Date(item.createdAt).getHours()}:00`);
-                        break;
-                    default:
-                        labels.push("No Data");
-                        break;
-                }
-                data.push(item.finalAmount);
-            });
+			if (filterType === 'monthly') {
+				let dailyData = {};
+				const monthNames = ["JAN", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "DEC"];
+				let currentMonth = null;
+				
+				// Aggregate sales data by day within the given month
+				salesData.forEach(item => {
+					const date = new Date(item.createdAt);
+					const day = date.getDate();
+					const month = date.getMonth();
+					const dayKey = `Day ${day}`;
 
-            const chartData = {
-                labels: labels,
-                datasets: [{
-                    label: 'Sales',
-                    data: data,
-                    backgroundColor: '#fff1f1',
-                    borderColor: 'red',
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 5,
-                    pointHoverRadius: 8,
-                    pointBackgroundColor: 'red',
-                    pointBorderColor: '#ffffff',
-                }]
-            };
+					if (!dailyData[dayKey]) {
+						dailyData[dayKey] = 0;
+					}
+					dailyData[dayKey] += item.finalAmount;
+				});
 
-            const config = {
-                type: 'line',
-                data: chartData,
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: true,
-                            labels: {
-                                color: 'red'
-                            }
-                        },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false,
-                        }
-                    },
-                    interaction: {
-                        mode: 'nearest',
-                        axis: 'x',
-                        intersect: false
-                    },
-                    scales: {
-                        x: {
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                color: '#404347'
-                            }
-                        },
-                        y: {
-                            grid: {
-                                color: '#e0e6ed'
-                            },
-                            ticks: {
-                                color: '#404347'
-                            }
-                        }
-                    }
-                }
-            };
+				// Create labels and data for the chart
+				const sortedDays = Object.keys(dailyData).sort((a, b) => {
+					return parseInt(a.split(' ')[1]) - parseInt(b.split(' ')[1]);
+				});
+				sortedDays.forEach(dayKey => {
+					const day = parseInt(dayKey.split(' ')[1]);
+					const date = new Date();
+					date.setDate(day);
+					const month = date.getMonth();
+					if (currentMonth !== month) {
+						labels.push(`${monthNames[month]} ${day}`);
+						currentMonth = month;
+					} else {
+						labels.push(`${day}`);
+					}
+					data.push(dailyData[dayKey]);
+				});
+			} else if (filterType === 'yearly') {
+				let monthlyData = {};
+				const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+				const currentYear = new Date().getFullYear();
 
-            if (salesChart) {
-                salesChart.destroy();
-            }
-            salesChart = new Chart(ctx, config);
-        }
+				// Initialize data for all 12 months
+				for (let i = 0; i < 12; i++) {
+					monthlyData[`${currentYear}-${i + 1}`] = 0;
+				}
+
+				// Aggregate sales data by month
+				salesData.forEach(item => {
+					const date = new Date(item.createdAt);
+					const month = date.getFullYear() + '-' + (date.getMonth() + 1);
+					monthlyData[month] += item.finalAmount;
+				});
+
+				// Create labels and data for the chart
+				for (let i = 0; i < 12; i++) {
+					labels.push(`${monthNames[i]} ${currentYear}`);
+					data.push(monthlyData[`${currentYear}-${i + 1}`]);
+				}
+			} else if (filterType === 'weekly') {
+				let dailyData = {};
+				const today = new Date();
+				const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+				// Initialize dailyData for the last 7 days
+				weekDays.forEach(day => {
+					dailyData[day] = 0;
+				});
+
+				// Aggregate sales data for the last 7 days
+				salesData.forEach(item => {
+					const date = new Date(item.createdAt);
+					const day = weekDays[date.getDay()];
+					if (dailyData[day] !== undefined) {
+						dailyData[day] += item.finalAmount;
+					}
+				});
+
+				// Create labels and data for the chart
+				weekDays.forEach(day => {
+					labels.push(day);
+					data.push(dailyData[day]);
+				});
+			} else {
+				// Existing logic for other filter types
+				salesData.forEach(item => {
+					const date = new Date(item.createdAt);
+					switch (filterType) {
+						case 'daily':
+							labels.push(`${date.getHours()}:00`);
+							break;
+						default:
+							labels.push("No Data");
+							break;
+					}
+					data.push(item.finalAmount);
+				});
+			}
+
+			const chartData = {
+				labels: labels,
+				datasets: [{
+					label: 'Sales',
+					data: data,
+					backgroundColor: '#fff1f1',
+					borderColor: 'red',
+					borderWidth: 2,
+					fill: true,
+					tension: 0.4,
+					pointRadius: 5,
+					pointHoverRadius: 8,
+					pointBackgroundColor: 'red',
+					pointBorderColor: '#ffffff',
+				}]
+			};
+
+			const config = {
+				type: 'line',
+				data: chartData,
+				options: {
+					responsive: true,
+					plugins: {
+						legend: {
+							display: true,
+							labels: {
+								color: 'red'
+							}
+						},
+						tooltip: {
+							mode: 'index',
+							intersect: false,
+						}
+					},
+					interaction: {
+						mode: 'nearest',
+						axis: 'x',
+						intersect: false
+					},
+					scales: {
+						x: {
+							grid: {
+								display: false
+							},
+							ticks: {
+								color: '#404347'
+							}
+						},
+						y: {
+							grid: {
+								color: '#e0e6ed'
+							},
+							ticks: {
+								color: '#404347'
+							}
+						}
+					}
+				}
+			};
+
+			if (salesChart) { 
+				salesChart.destroy();
+			}
+			salesChart = new Chart(ctx, config);
+		}
+
 
 		
         function updateOrderStatusChart(orderStatusCounts) {

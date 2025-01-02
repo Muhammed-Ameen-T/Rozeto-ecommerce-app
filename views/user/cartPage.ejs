@@ -301,11 +301,15 @@
             <h4 class="product_name mb-5">The Total Amount Of</h4>
             <div class="price_indiv d-flex justify-content-between">
               <p>Product amount</p>
-              <p>₹<span id="product_total_amt"><span id="cart-subtotal">&nbsp;<%= (products.reduce((total, product) => total + product.totalPrice, 0)).toFixed(2) %></span></span></p>
+              <p>₹<span id="product_total_amt"><span id="cart-subtotal">&nbsp;<%= (products.reduce((total, product) => total + product.totalPrice + totalDiscount, 0)).toFixed(2) %></span></span></p>
             </div>
             <div class="price_indiv d-flex justify-content-between">
               <p>Tax(10%)</p>
               <p>₹<span id="cart-tax">&nbsp;<%= tax.toFixed(2) %></span></p>
+            </div>
+            <div class="price_indiv d-flex justify-content-between">
+              <p>Discount</p>
+              <p>-₹<span id="cart-tax">&nbsp;<%= totalDiscount.toFixed(2) %></span></p>
             </div>
             <div class="price_indiv d-flex justify-content-between">
               <p>Offer Discount</p>

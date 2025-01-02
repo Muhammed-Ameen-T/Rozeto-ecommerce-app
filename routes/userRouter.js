@@ -57,18 +57,18 @@ router.get('/loadNewPassword', loadNewPassword)
 router.post('/resetPasswords',resetPasswords)
 
 // User Profile
-router.get('/profile',loadUserProfile)
-router.get('/userAddresses',loadUserAddress)
-router.get('/userOrders',loadUserOrders)
-router.get('/userPassword',loadUserChange)
-router.post('/editUserProfile/:id',editUserProfile)
-router.post('/resetPassword', resetPassword)
+router.get('/profile',userAuth,loadUserProfile)
+router.get('/userAddresses',userAuth,loadUserAddress)
+router.get('/userOrders',userAuth,loadUserOrders)
+router.get('/userPassword',userAuth,loadUserChange)
+router.post('/editUserProfile/:id',userAuth,editUserProfile)
+router.post('/resetPassword',userAuth, resetPassword)
 
 //address management
-router.post('/addAddress/:id', addAddress)
-router.get('/loadEditAddressPage',loadEditAddressPage)
-router.post('/editAddress/:id', editAddress)
-router.delete('/deleteAddress/:id', deleteAddress)
+router.post('/addAddress/:id',userAuth, addAddress)
+router.get('/loadEditAddressPage',userAuth,loadEditAddressPage)
+router.post('/editAddress/:id',userAuth, editAddress)
+router.delete('/deleteAddress/:id',userAuth, deleteAddress)
 
 // Cart Management
 router.get('/loadCart',userAuth,loadCartPage)
@@ -82,7 +82,7 @@ router.get('/checkout',userAuth,loadCheckout)
 router.post('/checkout',userAuth,loadCheckout)
 router.post('/placeOrder',userAuth,placeOrder)
 router.post('/coupon',userAuth,validateCoupon)
-router.post('/removeCoupon',removeCoupon)
+router.post('/removeCoupon',userAuth,removeCoupon)
 router.post('/create-razorpay-order',createRazorpayOrder)
 router.post('/payment-success',userAuth,handlePaymentSuccess)
 router.post('/payment-failure',userAuth,handlePaymentFailure)
@@ -93,14 +93,14 @@ router.get('/orderDetails',userAuth,orderDetails)
 router.post('/cancelOrder',cancelOrder)
 router.post('/returnOrder',returnRequest)
 router.get('/downloadInvoice',userAuth,downloadInvoice)
-router.post('/retryPayment',retryPayment)
+router.post('/retryPayment',userAuth,retryPayment)
 
 // Wishlist Page
 router.get('/wishlist',userAuth,loadWishlist)
-router.post('/removeFromWishlist',removeFromWishlist)
+router.post('/removeFromWishlist',userAuth,removeFromWishlist)
 router.post('/toggleWishlist',toggleWishlist)
 
 // Wallet Page
-router.get('/wallet',loadWallet)
+router.get('/wallet',userAuth,loadWallet)
 
 export default router;

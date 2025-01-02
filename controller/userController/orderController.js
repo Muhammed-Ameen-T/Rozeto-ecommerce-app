@@ -59,7 +59,7 @@ export const cancelOrder =  async (req, res) => {
                 amount: order.finalAmount,
                 type: 'credit',
                 orderId: order._id,
-                description: `Cancelled order amount for Order ID: ${order._id}`
+                description: `Cancelled order amount for Order ID: ${order.orderId}`
             });
             await wallet.save();
         }

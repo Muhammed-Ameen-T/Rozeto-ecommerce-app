@@ -238,7 +238,7 @@ function handleForm(event) {
 		discountError.textContent = "";
 	}
 
-	if (!minPurchase.value || minPurchase.value <= 0) {
+	if (!minPurchase.value || minPurchase.value <= 0 || parseFloat(minPurchase.value) < parseFloat(discountPrice.value) ) {
 		purchaseError.textContent = "Valid Minimum Purchase is required";
 		isValid = false;
 	} else {

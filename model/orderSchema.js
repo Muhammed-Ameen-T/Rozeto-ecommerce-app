@@ -77,7 +77,6 @@ const orderSchema = new mongoose.Schema({
         },
         landMark: {
             type: String,
-            required: true
         },
         state: {
             type: String,

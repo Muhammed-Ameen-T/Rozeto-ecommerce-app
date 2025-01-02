@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 const {Schema} = mongoose;
-// import generateReferralCode from '../helper/generateReferralCode.js';
 import crypto from 'crypto';
 
 
@@ -9,7 +8,7 @@ const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-    },
+    }, 
     email: {
         type: String,
         required: true,
@@ -50,8 +49,8 @@ const userSchema = new mongoose.Schema({
 
 // Function to generate referral code
 function generateReferralCode(name) {
-    const prefix = name.substring(0, 4).toUpperCase(); // Get the first two letters and convert to uppercase
-    const uniqueId = crypto.randomBytes(2).toString('hex'); // Generate a unique identifier (e.g., 6 hex characters)
+    const prefix = name.substring(0, 4).toUpperCase(); 
+    const uniqueId = crypto.randomBytes(2).toString('hex'); 
     return `${prefix}${uniqueId}`;
 }
 

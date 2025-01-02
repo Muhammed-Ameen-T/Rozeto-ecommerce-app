@@ -89,21 +89,25 @@ export const loadCartPage = async (req, res) => {
         }
 
         let totalOfferDiscount = 0;
-
+        let totalDiscount = 0;
         const products = cart.products.map(item => {
             const product = item.productId;
             const offerDiscount = (product.offerPercentage * product.salePrice / 100) * item.quantity;
             totalOfferDiscount += offerDiscount;
+            const discounts = (product.regularPrice - product.salePrice ) * item.quantity;
+            totalDiscount +=discounts;
+
             return {
                 _id: item._id,
                 productId: item.productId._id,
                 productName: product.productName,
-                salePrice: product.salePrice,
+                salePrice: product.regularPrice,
                 quantity: item.quantity,
                 totalPrice: item.totalPrice,
                 productImages: product.productImages,
                 stock: product.quantity,
-                offerDiscount: offerDiscount
+                offerDiscount: offerDiscount,
+                discount: totalDiscount
             };
         });
 
@@ -117,7 +121,8 @@ export const loadCartPage = async (req, res) => {
             subtotal,
             tax,
             grandTotal,
-            totalOfferDiscount
+            totalOfferDiscount,
+            totalDiscount
         });
     } catch (error) {
         console.error('Error while loading cart page:', error);

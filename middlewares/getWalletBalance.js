@@ -16,3 +16,4 @@ export const getWalletBalance = async (req, res, next) => {
         next();
     }
 };
+

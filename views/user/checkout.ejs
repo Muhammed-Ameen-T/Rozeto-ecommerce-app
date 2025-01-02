@@ -507,6 +507,7 @@ select {
     padding: 15px;
     position: relative;
     transition: all 0.2s ease;
+    border: 2px dashed #007bff;
 }
 .address-card:hover {
     box-shadow: 0 4px 15px rgba(0,0,0,0.12);
@@ -661,6 +662,32 @@ hr {
             font-size: 0.8rem;
             margin-top: 5px;
         }
+        /* Custom scrollbar for WebKit browsers */
+#coupon-container::-webkit-scrollbar,
+#address-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+#coupon-container::-webkit-scrollbar-track,
+#address-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+#coupon-container::-webkit-scrollbar-thumb,
+#address-container::-webkit-scrollbar-thumb {
+    background: #4a86f5;
+    border-radius: 10px;
+}
+
+#coupon-container::-webkit-scrollbar-thumb:hover,
+#address-container::-webkit-scrollbar-thumb:hover {
+    background: #4355fa;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
 </style>
 
 
@@ -672,10 +699,10 @@ hr {
   <nav aria-label="breadcrumb" class="breda m-5">
     <ol class="breadcrumb breadcrumb-custom">
       <li class="breadcrumb-item">
-        <a href="/""><i class="fas fa-home me-2"></i>Home</a>
+        <a href="/"><i class="fas fa-home me-2"></i>Home</a>
       </li>
       <li class="breadcrumb-item">
-        <a href="/loadCart" onclick="return handleRemoveCoupon(event)">Cart</a>
+        <a href="/loadCart">Cart</a>
       </li>
       <li class="breadcrumb-item active" aria-current="page">Product Checkout</li>
     </ol>
@@ -684,76 +711,71 @@ hr {
 <main class="container" style="margin-bottom:6rem ;">
     <div class="row d-flex justify-content-between">
         <div class="col-md-6 column">
-          <section class="second-block">
-            <h4><span><small>1.</small></span> Shipping details</h4>
-            <h5 class="mb-3">Select Delivery Address</h5>
-            <% if (addresses.length === 0) { %>
-                <p>No addresses found. Please add one to place an order.</p>
-            <% } else { %>
-                <div id="primary-address" class="address-card selected position-relative">
-                    <% const primaryAddress = addresses.find(address => address.isActive); %>
-                    <% if (primaryAddress) { %>
-                        <div class="form-check address-radio" style="margin-left: 31rem;">
-                            <input class="form-check-input" type="radio" name="selectedAddress" value="<%= primaryAddress._id %>" checked onchange="selectAddress('<%= primaryAddress._id %>')">
-                        </div>
-                        <div class="address-details">
-                            <div class="d-flex mb-2">
-                                <h6 class="mb-1 mt-1"><%= primaryAddress.addressType %> Address</h6>
-                                <div class="primary-badge">
-                                    <i class="fas fa-check-circle"></i>
-                                    Primary Address
-                                </div>
-                            </div>
-                            <p class="text-muted mb-0">
-                                <b><%= primaryAddress.name %></b>, <%= primaryAddress.landMark %><br>
-                                <%= primaryAddress.locality %>, <%= primaryAddress.city %>, <%= primaryAddress.state %>, <%= primaryAddress.pincode %><br>
-                                Phone: <%= primaryAddress.phone %>, <%= primaryAddress.altPhone %>
-                            </p>
-                            <div class="compact-actions">
-                                <a href="/loadEditAddressPage?id=<%= primaryAddress._id %>"><span class="action-link">Edit</span></a>
-                            </div>
-                        </div>
-                    <% } %>
-                </div>
-                <div id="secondary-addresses" style="display: none;">
-                    <% addresses.forEach((address, index) => { %>
-                        <% if (!address.isActive) { %>
-                            <div class="address-card selected position-relative">
-                                <div class="form-check address-radio" style="margin-left: 31rem;">
-                                    <input class="form-check-input" id="address-<%= index %>" type="radio" name="selectedAddress" value="<%= address._id %>" onchange="selectAddress('<%= address._id %>')">
+            <section class="second-block">
+                <h4><span><small>1.</small></span> Shipping details</h4>
+                <h5 class="mb-3">Select Delivery Address</h5>
+                <% if (addresses.length === 0) { %>
+                    <p>No addresses found. Please add one to place an order.</p>
+                <% } else { %>
+                    <div id="address-container" style="max-height: 400px; overflow-y: auto; border: 1px solid black;border-radius: 6px;" class="p-1">
+                        <div id="primary-address" class="address-card selected position-relative">
+                            <% const primaryAddress = addresses.find(address => address.isActive); %>
+                            <% if (primaryAddress) { %>
+                                <div class="form-check address-radio" style="margin-left: 30rem;">
+                                    <input class="form-check-input" type="radio" name="selectedAddress" value="<%= primaryAddress._id %>" checked onchange="selectAddress('<%= primaryAddress._id %>')">
                                 </div>
                                 <div class="address-details">
                                     <div class="d-flex mb-2">
-                                        <h6 class="mb-1 mt-1"><%= address.addressType %> Address</h6>
+                                        <h6 class="mb-1 mt-1"><%= primaryAddress.addressType %> Address</h6>
+                                        <div class="primary-badge">
+                                            <i class="fas fa-check-circle"></i>
+                                            Primary Address
+                                        </div>
                                     </div>
                                     <p class="text-muted mb-0">
-                                        <b><%= address.name %></b>, <%= address.landMark %><br>
-                                        <%= address.locality %>, <%= address.city %>, <%= address.state %>, <%= address.pincode %><br>
-                                        Phone: <%= address.phone %>, <%= address.altPhone %>
+                                        <b><%= primaryAddress.name %></b>, <%= primaryAddress.landMark %><br>
+                                        <%= primaryAddress.locality %>, <%= primaryAddress.city %>, <%= primaryAddress.state %>, <%= primaryAddress.pincode %><br>
+                                        Phone: <%= primaryAddress.phone %>, <%= primaryAddress.altPhone %>
                                     </p>
                                     <div class="compact-actions">
-                                        <a href="/loadEditAddressPage?id=<%= address._id %>"><span class="action-link">Edit</span></a>
+                                        <a href="/loadEditAddressPage?id=<%= primaryAddress._id %>"><span class="action-link">Edit</span></a>
                                     </div>
                                 </div>
-                            </div>
-                        <% } %>
-                    <% }); %>
-                </div>
-                <!-- Show More Addresses Button -->
-
-                <div class="text-center mt-3">
-                    <button class="btn btn-sm btn-outline-primary" id="show-more-addresses">
-                        Show More Addresses
-                    </button>
-                </div>
-                <!-- Add New Address Button -->
+                            <% } else { %>
+                                <p>No Primary Address! Choose Secondary Address From Show More Addresses</p>
+                            <% } %>
+                        </div>
+                        <% addresses.forEach((address, index) => { %>
+                            <% if (!address.isActive) { %>
+                                <div class="address-card position-relative">
+                                    <div class="form-check address-radio" style="margin-left: 30rem;">
+                                        <input class="form-check-input" id="address-<%= index %>" type="radio" name="selectedAddress" value="<%= address._id %>" onchange="selectAddress('<%= address._id %>')">
+                                    </div>
+                                    <div class="address-details">
+                                        <div class="d-flex mb-2">
+                                            <h6 class="mb-1 mt-1"><%= address.addressType %> Address</h6>
+                                        </div>
+                                        <p class="text-muted mb-0">
+                                            <b><%= address.name %></b>, <%= address.landMark %><br>
+                                            <%= address.locality %>, <%= address.city %>, <%= address.state %>, <%= address.pincode %><br>
+                                            Phone: <%= address.phone %>, <%= address.altPhone %>
+                                        </p>
+                                        <div class="compact-actions">
+                                            <a href="/loadEditAddressPage?id=<%= address._id %>"><span class="action-link">Edit</span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% } %>
+                        <% }); %>
+                    </div>
                 <% } %>
                 <div class="text-center mt-3">
                     <button class="btn btn-sm btn-outline-primary" id="toggleAddressForm" data-bs-toggle="modal" data-bs-target="#addAddressModal">
                         + Add New Address
                     </button>
                 </div>
-        </section>
+            </section>
+            
                 
             
             <hr style="border: none; border-top: 2px solid #0000007c; width: 100%;" class="my-4">
@@ -783,24 +805,6 @@ hr {
                             </label>
                           </div>
                         </div>
-
-                        <!-- <div class="checkout__input__checkbox wrapper-cards">
-                            <div class="credit-card ml-1">
-                              <label for="payment-card">
-                                <input type="radio" id="credit-card-rrr" name="payment-method"> Credit Card
-                              </label>
-                            </div>
-                            <div class="cards-info">
-                                <a href="#"> <i class="fab fa-cc-visa"></i> </a>
-                                <a href="#"> <i class="fab fa-cc-mastercard"></i> </a>
-                                <a href="#"> <i class="fab fa-cc-amex"></i> </a>
-                                <p><small>If your card is not on the list, let us know</small>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="note">
-                              <p><small> <i class="fas fa-lock"></i> This is a secure 128-bit SSL Encrypted payment.You're safe.</small></p>
-                        </div> -->
                     </div>
                 </form>
                 <div id="card-form" class="card-form">
@@ -877,7 +881,7 @@ hr {
                     <span id="offerDiscount"><strong>-&nbsp;₹&nbsp;<%= totalOfferDiscount.toFixed(2) %></strong></span>
                 </li>
                 <li class="cost" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                  <div>
+                  <div class="d-flex">
                       <span>Coupon Discount</span>
                       <button class="" id="removeCouponBtn" style="background-color: #ffffff; color: rgb(237, 14, 14); border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;"><i class="fa-solid fa-trash"></i></button>
                   </div>
@@ -907,29 +911,27 @@ hr {
                 </li>
             </ul>
           </section>
-          <div id="coupon-list">
+          <div id="coupon-list" class=" mt-4" style="border: 1px solid black;">
             <% if (coupons && coupons.length > 0) { %>
-                <% coupons.slice(0, 2).forEach(coupon => { %>  
-                    <div class="coupon-container my-3" style="margin-left: 2rem;">
-                        <div class="coupon-discount">
-                            <h3>Save ₹<%= coupon.offerPrice %></h3>
+                <div id="coupon-container" style="max-height: 300px; overflow-y: auto; margin-left: 2rem;">
+                    <% coupons.forEach(coupon => { %>  
+                        <div class="coupon-container my-3">
+                            <div class="coupon-discount">
+                                <h3>Save ₹<%= coupon.offerPrice %></h3>
+                            </div>
+                            <p class="mb-1">On orders above ₹<%= coupon.minimumPrice %></p>
+                            <p class="mb-2">(Expires on <%= new Date(coupon.expireOn).toLocaleDateString() %>)</p>
+                            <div id="coupon-code" class="coupon-code">
+                                <%= coupon.code %>
+                            </div>
+                            <div id="copy-tooltip">Copied!</div>
                         </div>
-                        <p class="mb-1">On orders above ₹<%= coupon.minimumPrice %></p>
-                        <p class="mb-2">(Expires on <%= new Date(coupon.expireOn).toLocaleDateString() %>)</p>
-                        <div id="coupon-code" class="coupon-code">
-                            <%= coupon.code %>
-                        </div>
-                        <div id="copy-tooltip">Copied!</div>
-                    </div>
-                <% }); %>
-                <% if (coupons.length > 2) { %>
-                    <button id="loadMoreCoupons" class="btn btn-outline-primary my-3" style="margin-left: 2rem;">Load More Coupons</button>
-                    <button id="showLessCoupons" class="btn btn-outline-secondary my-3" style="margin-left: 2rem; display: none;">Show Less Coupons</button>
-                <% } %>
+                    <% }); %>
+                </div>
             <% } else { %>
                 <p>No available coupons.</p>
             <% } %>
-        </div>
+        </div>                
         </div>
     </div>
 </main>
@@ -1016,55 +1018,21 @@ hr {
 
 
 <script>
-  function selectAddress(addressId) {
-      // Store the selected address ID in localStorage
-      localStorage.setItem('selectedAddressId', addressId);
+// Adjust scroll speed
+const couponContainer = document.getElementById('coupon-container');
+const addressContainer = document.getElementById('address-container');
 
-      // Unselect any previously selected address
-      const previouslySelectedRadio = document.querySelector('input[name="selectedAddress"]:checked');
-      if (previouslySelectedRadio) {
-          previouslySelectedRadio.checked = false;
-      }
+couponContainer.addEventListener('wheel', (event) => {
+    event.preventDefault();
+    couponContainer.scrollTop += event.deltaY * 0.5; // Adjust the multiplier to control speed
+});
 
-      // Set the new selected address as checked
-      const addressRadio = document.querySelector(`input[name="selectedAddress"][value="${addressId}"]`);
-      if (addressRadio) {
-          addressRadio.checked = true;
-      }
-  }
+addressContainer.addEventListener('wheel', (event) => {
+    event.preventDefault();
+    addressContainer.scrollTop += event.deltaY * 0.5; // Adjust the multiplier to control speed
+});
 
-  // Retrieve the selected address from localStorage on page load
-  document.addEventListener('DOMContentLoaded', function() {
-      const selectedAddressId = localStorage.getItem('selectedAddressId');
-      if (selectedAddressId) {
-          const addressRadio = document.querySelector(`input[name="selectedAddress"][value="${selectedAddressId}"]`);
-          if (addressRadio) {
-              addressRadio.checked = true;
-          }
-      } else {
-          // If no address is selected, check the primary address by default
-          const primaryAddressRadio = document.querySelector('input[name="selectedAddress"]:checked');
-          if (primaryAddressRadio) {
-              primaryAddressRadio.checked = true;
-          }
-      }
-  });
 </script>
-
-
-<script>
-  document.getElementById('show-more-addresses').addEventListener('click', function() {
-      var secondaryAddresses = document.getElementById('secondary-addresses');
-      if (secondaryAddresses.style.display === 'none') {
-          secondaryAddresses.style.display = 'block';
-          this.textContent = 'Show Less Addresses';
-      } else {
-          secondaryAddresses.style.display = 'none';
-          this.textContent = 'Show More Addresses';
-      }
-  });
-</script>
-
 
 
 
@@ -1072,76 +1040,82 @@ hr {
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-      const couponDiscountElement = document.getElementById('couponDiscount');
-      const removeCouponBtn = document.getElementById('removeCouponBtn');
-      const cartTotalElement = document.getElementById('cart-total');
+    
+document.addEventListener('DOMContentLoaded', function() {
+    const couponDiscountElement = document.getElementById('couponDiscount');
+    const removeCouponBtn = document.getElementById('removeCouponBtn');
+    const cartTotalElement = document.getElementById('cart-total');
+    const cartTotalVal = cartTotalElement?.textContent || '';
+    var cleanedTotal = cartTotalVal.replace(/[^0-9.]/g, ''); 
+    console.log('cartTotalVal', cleanedTotal);
+    
+    // Extract coupon discount value
+    const couponDiscountVal = couponDiscountElement?.textContent || ''; 
+    const discountAmount = parseFloat(couponDiscountVal.replace('₹', '').replace('-', '').trim()); 
+    console.log('Coupon discount amount:', discountAmount);
 
-      // Assuming 'couponDiscount' value is set as a global variable by backend or fetched from session
-      const couponDiscount = parseFloat('<%= couponDiscount %>') || 0;
+    if (couponDiscountElement && discountAmount > 0) {
+        couponDiscountElement.innerHTML = `<strong>-&nbsp;₹&nbsp;${discountAmount.toFixed(2)}</strong>`;
+    }
 
-      if (couponDiscountElement && couponDiscount > 0) {
-          couponDiscountElement.innerHTML = `<strong>-&nbsp;₹&nbsp;${couponDiscount.toFixed(2)}</strong>`;
-      }
+    // Add event listener to Remove Coupon button
+    if (removeCouponBtn) {
+        removeCouponBtn.addEventListener('click', async function(event) {
+            event.preventDefault(); // Prevent any default behavior
 
-      // Add event listener to Remove Coupon button
-      if (removeCouponBtn) {
-          removeCouponBtn.addEventListener('click', function() {
-              const userId = document.querySelector('#userID')?.textContent.trim();
+            const userId = document.querySelector('#userID')?.textContent.trim();
+            console.log('User ID:', userId);
 
-              axios.post('/removeCoupon', { userId })
-              .then(response => {
-                  if (response.data.success) {
-                      Swal.fire({
-                          icon: 'success',
-                          title: 'Coupon removed successfully!',
-                          timer: 2000,
-                          showConfirmButton: false
-                      }).then(()=>{
-                        if (cartTotalElement) {
-                          const currentTotalText = cartTotalElement.textContent.replace('₹', '').trim(); 
-                          const currentTotal = parseFloat(currentTotalText) || 0; 
-                          console.log(`Current total before update: ${currentTotal}`); 
-                          console.log(`Coupon discount to add back: ${couponDiscount}`); 
-                          const updatedTotal = (currentTotal + couponDiscount).toFixed(2); 
-                          console.log(`Updated total after coupon removal: ${updatedTotal}`);
-                          cartTotalElement.textContent = `₹ ${updatedTotal}`;
+            
+            const currentTotalText = cartTotalElement.textContent.replace('₹', '').trim();
+            const currentTotal = parseFloat(currentTotalText) || 0;
+
+            try {
+                const response = await axios.post('/removeCoupon', { userId });
+                if (response.data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Coupon removed successfully!',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        // Update the cart total dynamically
+                        let updatedTotal = (currentTotal + discountAmount).toFixed(2);
+                        cartTotalElement.textContent = `₹ ${cleanedTotal}`;
+
+                        if (couponDiscountElement) {
+                            couponDiscountElement.innerHTML = `<strong>-&nbsp;₹&nbsp;0.00</strong>`;
                         }
-                      })
 
-                      // Update the cart total and remove coupon discount display
+                        if (removeCouponBtn) {
+                            removeCouponBtn.style.display = 'none';
+                        }
 
-                      couponDiscountElement.innerHTML = `<strong>-&nbsp;₹&nbsp;0.00</strong>`;
-                      removeCouponBtn.style.display = 'none';
-
-                      setTimeout(() => {
-                        window.location.reload()
-                      }, 2000);
-                      
-                  } else {
-                      Swal.fire({
-                          icon: 'error',
-                          title: 'Error!',
-                          text: 'Failed to remove coupon. Please try again.',
-                          timer: 2000,
-                          showConfirmButton: false
-                      });
-                  }
-              })
-              .catch(error => {
-                  console.error('Error removing coupon:', error);
-                  Swal.fire({
-                      icon: 'error',
-                      title: 'Error!',
-                      text: 'Failed to remove coupon. Please try again.',
-                      timer: 2000,
-                      showConfirmButton: false
-                  });
-              });
-          });
-      }
-  });
-
+                        // Confirm the update was applied
+                        console.log('Cart total updated:', cartTotalElement.textContent);
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to remove coupon. Please try again.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            } catch (error) {
+                console.error('Error removing coupon:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Failed to remove coupon. Please try again.',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+        });
+    }
+});
 
 
     // Existing coupon validation script here...
@@ -1721,51 +1695,52 @@ async function handlePaymentFailure(orderId) {
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-      const loadMoreButton = document.getElementById('loadMoreCoupons');
-      const showLessButton = document.getElementById('showLessCoupons');
-      let currentCount = 2;
+    const loadMoreButton = document.getElementById('loadMoreCoupons');
+    const showLessButton = document.getElementById('showLessCoupons');
+    let currentCount = 1;
 
-      loadMoreButton?.addEventListener('click', function() {
-          const coupons = <%- JSON.stringify(coupons) %>;
-          const couponContainer = document.querySelector('.coupon-container').parentNode;
+    loadMoreButton?.addEventListener('click', function() {
+        const coupons = <%- JSON.stringify(coupons) %>;
+        const couponContainer = document.getElementById('coupon-list');
 
-          if (currentCount < coupons.length) {
-              coupons.slice(currentCount, currentCount + 2).forEach(coupon => {
-                  const couponElement = document.createElement('div');
-                  couponElement.className = 'coupon-container my-3';
-                  couponElement.style.marginLeft = '2rem';
-                  couponElement.innerHTML = `
-                      <div class="coupon-discount">
-                          <h3>Save ₹${coupon.offerPrice}</h3>
-                      </div>
-                      <p class="mb-1">On orders above ₹${coupon.minimumPrice}</p>
-                      <p class="mb-2">(Expires on ${new Date(coupon.expireOn).toLocaleDateString()})</p>
-                      <div id="coupon-code" class="coupon-code">
-                          ${coupon.code}
-                      </div>
-                      <div id="copy-tooltip">Copied!</div>
-                  `;
-                  couponContainer.appendChild(couponElement);
-              });
-              currentCount += 2;
+        if (currentCount < coupons.length) {
+            coupons.slice(currentCount, currentCount + 2).forEach(coupon => {
+                const couponElement = document.createElement('div');
+                couponElement.className = 'coupon-container my-3';
+                couponElement.style.marginLeft = '2rem';
+                couponElement.innerHTML = `
+                    <div class="coupon-discount">
+                        <h3>Save ₹${coupon.offerPrice}</h3>
+                    </div>
+                    <p class="mb-1">On orders above ₹${coupon.minimumPrice}</p>
+                    <p class="mb-2">(Expires on ${new Date(coupon.expireOn).toLocaleDateString()})</p>
+                    <div id="coupon-code" class="coupon-code">
+                        ${coupon.code}
+                    </div>
+                    <div id="copy-tooltip">Copied!</div>
+                `;
+                couponContainer.appendChild(couponElement);
+            });
+            currentCount += 2;
 
-              if (currentCount >= coupons.length) {
-                  loadMoreButton.style.display = 'none';
-              }
+            if (currentCount >= coupons.length) {
+                loadMoreButton.style.display = 'none';
+            }
 
-              showLessButton.style.display = 'inline-block';
-          }
-      });
+            showLessButton.style.display = 'inline-block';
+        }
+    });
 
-      showLessButton?.addEventListener('click', function() {
-          const couponContainer = document.querySelector('.coupon-container').parentNode;
-          const couponsToHide = couponContainer.querySelectorAll('.coupon-container:not(:nth-child(-n+2))');
-          couponsToHide.forEach(coupon => coupon.remove());
-          currentCount = 2;
-          showLessButton.style.display = 'none';
-          loadMoreButton.style.display = 'inline-block';
-      });
-  });
+    showLessButton?.addEventListener('click', function() {
+        const couponContainer = document.getElementById('coupon-list');
+        const couponsToHide = couponContainer.querySelectorAll('.coupon-container:not(:nth-child(1))');
+        couponsToHide.forEach(coupon => coupon.remove());
+        currentCount = 1;
+        showLessButton.style.display = 'none';
+        loadMoreButton.style.display = 'inline-block';
+    });
+});
+
 </script>
 
 

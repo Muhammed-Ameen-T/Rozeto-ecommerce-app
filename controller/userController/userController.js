@@ -22,7 +22,8 @@ export const loadLogin = async (req, res) => {
         res.render('login');
     } catch (error) {
         console.error(error);
-errorResponse({},)    }
+        errorResponse({},)   
+    }
 };
 
 export const loadSignup = async (req, res) => {
@@ -259,7 +260,7 @@ export const verifyotp = async (req, res) => {
                 transactions: user.referredBy ? [{
                     amount: 50,
                     type: 'credit',
-                    description: 'Referral bonus'
+                    description: `Referral bonus`
                 }] : []
             });
 
@@ -273,7 +274,7 @@ export const verifyotp = async (req, res) => {
                 referrerWallet.transactions.push({
                     amount: 50,
                     type: 'credit',
-                    description: 'Referral bonus'
+                    description: `Referral bonus for referring ${user.name}`
                 });
                 await referrerWallet.save();
             }

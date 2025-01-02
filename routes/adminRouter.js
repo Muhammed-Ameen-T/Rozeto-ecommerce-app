@@ -14,8 +14,7 @@ import { adminAuth } from '../middlewares/auth.js'
 
 //Admin Dashboard
 router.get('/',adminAuth,adminDashPage)
-router.get('/adminDashData', adminDashData);
-
+router.get('/adminDashData',adminAuth, adminDashData);
 
 
 // Admin Authentication
@@ -38,7 +37,7 @@ router.post('/editProduct/:id',adminAuth,editProduct)
 
 // User Management Routes
 router.get('/user-table',adminAuth,userTable)
-router.get('/toggleUser',toggleUserBlockStatus)
+router.get('/toggleUser',adminAuth,toggleUserBlockStatus)
 
 // Category Management Routes
 router.get('/cat-table',adminAuth,catTable)
@@ -51,27 +50,27 @@ router.get('/unblockCat',adminAuth,unblockCat)
 //Order Management Routes
 router.get('/orders',adminAuth,orderInfo)
 router.get('/orderDetails',adminAuth,orderDetails)
-router.post('/updateOrderStatus',updateOrderStatus)
+router.post('/updateOrderStatus',adminAuth,updateOrderStatus)
 
 // Coupon Management Routes
-router.get('/coupon',loadCouponPage)
-router.post('/addCoupon',addCoupon)
-router.patch('/toggleCoupon/:couponId',toggleCoupon)
+router.get('/coupon',adminAuth,loadCouponPage)
+router.post('/addCoupon',adminAuth,addCoupon)
+router.patch('/toggleCoupon/:couponId',adminAuth,toggleCoupon)
 
-router.get('/salesReport',loadSalesReport)
-router.get('/salesReport/excel',downloadSalesReportExcel)
-router.get('/salesReport/pdf',downloadSalesReportPDF)
+router.get('/salesReport',adminAuth,loadSalesReport)
+router.get('/salesReport/excel',adminAuth,downloadSalesReportExcel)
+router.get('/salesReport/pdf',adminAuth,downloadSalesReportPDF)
 
 // Product Offer Routes 
-router.get('/productOffers',loadProductOffer)
-router.post('/addProductOffer',addProductoffer)
-router.post('/toggleProductOffer/:id',toggleProductOffer)
-router.delete('/deleteProductOffer/:id',deleteProductOffer)
+router.get('/productOffers',adminAuth,loadProductOffer)
+router.post('/addProductOffer',adminAuth,addProductoffer)
+router.post('/toggleProductOffer/:id',adminAuth,toggleProductOffer)
+router.delete('/deleteProductOffer/:id',adminAuth,deleteProductOffer)
 
 // Category Offer Routes
-router.get('/categoryOffers',loadCategoryOffer);
-router.post('/addCategoryOffer',addCategoryOffer)
-router.post('/toggleCategoryOffer/:id',toggleCategoryOffer)
-router.delete('/deleteCategoryOffer/:id',deleteCategoryOffer)
+router.get('/categoryOffers',adminAuth,loadCategoryOffer);
+router.post('/addCategoryOffer',adminAuth,addCategoryOffer)
+router.post('/toggleCategoryOffer/:id',adminAuth,toggleCategoryOffer)
+router.delete('/deleteCategoryOffer/:id',adminAuth,deleteCategoryOffer)
 
 export default router
