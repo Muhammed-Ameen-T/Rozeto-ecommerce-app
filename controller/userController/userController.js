@@ -466,7 +466,7 @@ export const loadSingleProduct = async (req, res) => {
             }
         }
 
-        res.render('productinfo', {
+        res.render('productInfo', {
             singleProduct,
             relatedProducts,
             wishlistProductIds,
