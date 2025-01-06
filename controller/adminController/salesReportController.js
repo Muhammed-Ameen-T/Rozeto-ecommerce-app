@@ -1,6 +1,6 @@
 import Order from '../../model/orderSchema.js';
 import excel from 'exceljs';
-import pdf from 'html-pdf';
+import puppeteer from 'puppeteer';
 import moment from 'moment/moment.js';
 
 
@@ -177,12 +177,14 @@ export const downloadSalesReportExcel = async (req, res) => {
 };
 
 
+
 export const downloadSalesReportPDF = async (req, res) => {
     try {
         let filter = {};
         const filterType = req.query.filterType || 'yearly';
         const startDate = req.query.startDate ? new Date(req.query.startDate) : null;
         const endDate = req.query.endDate ? new Date(req.query.endDate) : null;
+
         // Filter logic based on filterType
         switch (filterType) {
             case 'daily':
@@ -286,30 +288,24 @@ export const downloadSalesReportPDF = async (req, res) => {
             </body>
         </html>`;
 
-        // PDF options
-        const options = {
-            format: 'A4',
-            orientation: 'portrait',
-            border: {
-                top: '1cm',
-                right: '1cm',
-                bottom: '1cm',
-                left: '1cm'
-            }
-        };
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        await page.setContent(html, { waitUntil: 'networkidle0' });
 
-        pdf.create(html, options).toStream((err, stream) => {
-            if (err) {
-                console.error("Error generating PDF:", err);
-                return res.redirect("/admin/pageError")
-            }
-            
-            res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', 'attachment; filename=sales-report.pdf');
-            stream.pipe(res);
+        const pdfBuffer = await page.pdf({
+            format: 'A4',
+            printBackground: true,
+            margin: { top: '1cm', right: '1cm', bottom: '1cm', left: '1cm' }
         });
+
+        await browser.close();
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename=sales-report.pdf');
+        res.send(pdfBuffer);
+
     } catch (error) {
-        console.log("Error generating PDF:", error);
+        console.error("Error generating PDF:", error);
         res.redirect("/admin/pageError")
     }
 };
