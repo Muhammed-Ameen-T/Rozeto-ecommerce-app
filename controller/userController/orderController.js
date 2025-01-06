@@ -2,7 +2,7 @@ import Product from '../../model/productSchema.js'
 import Order from '../../model/orderSchema.js'
 import Wallet from '../../model/walletSchema.js'
 import { successResponse, errorResponse } from '../../helper/responseHandler.js'
-import pdf from 'html-pdf'
+
 import path from 'path'
 import ejs from 'ejs'
 
@@ -99,6 +99,7 @@ export const returnRequest = async (req, res) => {
 
 
 
+import puppeteer from 'puppeteer';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -112,35 +113,29 @@ export const downloadInvoice = async (req, res) => {
             return res.redirect("/pagenotfound");
         }
 
-        // Adjust the path relative to current directory
         const filePath = path.join(__dirname, '../../views/user/order/orderInvoice.ejs');
         console.log('Resolved file path:', filePath);
 
         const html = await ejs.renderFile(filePath, { order });
 
-        const options = {
-            format: 'A4',
-            border: {
-                top: '1cm',
-                right: '1cm',
-                bottom: '1cm',
-                left: '1cm'
-            }
-        };
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        await page.setContent(html, { waitUntil: 'networkidle0' });
 
-        pdf.create(html, options).toStream((err, stream) => {
-            if (err) {
-                console.error('Error while generating PDF:', err);
-                return res.redirect("/pagenotfound");
-            }
-            res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', `attachment; filename=Invoice_${order._id}.pdf`);
-            stream.pipe(res);
+        const pdfBuffer = await page.pdf({
+            format: 'A4',
+            printBackground: true,
+            margin: { top: '1cm', right: '1cm', bottom: '1cm', left: '1cm' }
         });
+
+        await browser.close();
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename=Invoice_${order._id}.pdf`);
+        res.send(pdfBuffer);
 
     } catch (error) {
         console.error('Error while downloading invoice:', error);
         res.redirect("/pagenotfound");
     }
 };
-
