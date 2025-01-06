@@ -13,7 +13,7 @@ import nocache from 'nocache'
 import connectDB from './config/db.js'
 import { destroyCouponSession } from './middlewares/destroyCouponSession.js'; 
 import { nextTick } from 'process';
-import passport from './config/passport.js';
+import passport from './config/passport.js'; 
 import { handle404, handleErrors } from './middlewares/errorMiddleware.js';
 import { getWalletBalance } from './middlewares/getWalletBalance.js';
 

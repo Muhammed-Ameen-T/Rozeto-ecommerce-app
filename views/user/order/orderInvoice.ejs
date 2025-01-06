@@ -299,43 +299,6 @@
     <!-- Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        document.getElementById('downloadInvoice').addEventListener('click', function() {
-            // Show loading indicator
-            const loading = document.getElementById('loading');
-            loading.style.display = 'flex';
-
-            // Get the invoice content
-            const element = document.getElementById('invoice-content');
-
-            // PDF generation options
-            const opt = {
-                margin:       [0.2, 0.5], // Reduced top margin, standard side margins
-                filename:     'invoice.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { 
-                    scale: 2,
-                    useCORS: true,
-                    logging: false
-                },
-                jsPDF:        { 
-                    unit: 'in', 
-                    format: 'letter', 
-                    orientation: 'portrait' 
-                }
-            };
-
-            // Generate PDF
-            html2pdf().set(opt).from(element).save().then(() => {
-                // Hide loading indicator
-                loading.style.display = 'none';
-            }).catch(err => {
-                // Handle any errors
-                console.error('PDF generation error:', err);
-                loading.style.display = 'none';
-                alert('Failed to generate PDF. Please try again.');
-            });
-        });
-    </script>
+    
 </body>
 </html>
