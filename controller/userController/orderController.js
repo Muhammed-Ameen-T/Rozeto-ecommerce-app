@@ -99,14 +99,25 @@ export const returnRequest = async (req, res) => {
 
 
 
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 export const downloadInvoice = async (req, res) => {
     try {
         const orderId = req.query.orderId;
         const order = await Order.findById(orderId).populate('orderedItems.product');
         if (!order) {
-            return res.redirect("/pagenotFound");
+            return res.redirect("/pagenotfound");
         }
-        const html = await ejs.renderFile(path.join( '../../Desktop/Rozeto/views/user/order/orderInvoice.ejs'), { order });
+
+        // Adjust the path relative to current directory
+        const filePath = path.join(__dirname, '../../views/user/order/orderInvoice.ejs');
+        console.log('Resolved file path:', filePath);
+
+        const html = await ejs.renderFile(filePath, { order });
+
         const options = {
             format: 'A4',
             border: {
@@ -120,17 +131,16 @@ export const downloadInvoice = async (req, res) => {
         pdf.create(html, options).toStream((err, stream) => {
             if (err) {
                 console.error('Error while generating PDF:', err);
-                res.redirect("/pagenotfound")
+                return res.redirect("/pagenotfound");
             }
             res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', `attachment; filename=Invoice_${order.orderId}.pdf`);
+            res.setHeader('Content-Disposition', `attachment; filename=Invoice_${order._id}.pdf`);
             stream.pipe(res);
         });
 
     } catch (error) {
         console.error('Error while downloading invoice:', error);
-        res.redirect("/pagenotfound")
+        res.redirect("/pagenotfound");
     }
 };
-
 
