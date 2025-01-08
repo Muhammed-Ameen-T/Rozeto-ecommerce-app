@@ -311,7 +311,6 @@ export const login = async (req, res) => {
         if (!passwordMatch) {
             return res.status(400).json({ message: "Incorrect password" });
         }
-
         req.session.user = findUser._id;
         res.status(200).json({ message: "Login successful" });
 
