@@ -383,7 +383,7 @@ export const createRazorpayOrder = async (req, res) => {
         res.status(200).json({
             success: true,
             order: razorpayOrder,
-            key_id: process.env.RAZORPAY_KEY_ID,
+            key_id: process.env.RAZORPAY_ID_KEY,
             user: req.session.userName,
         });
     } catch (error) {
@@ -501,7 +501,7 @@ export const retryPayment = async (req, res) => {
         res.status(200).json({
             success: true,
             order: razorpayOrder,
-            key_id: process.env.RAZORPAY_KEY_ID,
+            key_id: process.env.RAZORPAY_ID_KEY,
             user: req.session.userName,
         });
     } catch (error) {
