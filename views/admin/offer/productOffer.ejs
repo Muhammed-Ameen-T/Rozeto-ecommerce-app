@@ -198,6 +198,11 @@ function handleForm(event) {
 		document.getElementById('discount-error').innerText = 'Offer Percentage must be a positive number';
 		isValid = false;
 	}
+	
+	if (parseFloat(offerPrice) > 100) {
+		document.getElementById('discount-error').innerText = 'Offer Percentage must be lessthan 100%';
+		isValid = false;
+	}
 
 	if (productId === '') {
 		document.getElementById('expiry-error').innerText = 'Please select a product';
