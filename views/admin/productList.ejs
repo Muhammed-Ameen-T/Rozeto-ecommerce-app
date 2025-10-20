@@ -1,0 +1,183 @@
+<%- include("../../views/partials/admin/header.ejs") %>				
+<!-- Content wrapper scroll start -->
+				<div class="content-wrapper-scroll">
+
+					<!-- Content wrapper start -->
+					<div class="content-wrapper">
+
+						<!-- Row start -->
+						<div class="row gutters">
+							<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+								<div class="card">
+									<div class="card-body">
+										<div class="d-flex" style="justify-content: space-between;">
+											<h3>Product Management</h3>
+											<!-- Search Form Start -->
+											<form method="GET" action="/admin/products/" >
+											  <div class="input-group mb-3" style="width: 25rem;">
+												<input
+												  type="text"
+												  class="form-control"
+												  placeholder="Search by name"
+												  name="search"
+												  value=""
+												/>
+												<div class="input-group-append">
+												  <button class="btn btn-primary" type="submit">Search</button>
+												</div>
+											  </div>
+											</form>
+										  </div>
+										<div class="table-responsive">
+											<table id="copy-print-csv" class="table v-middle table-striped" style="font-size: 14px;">
+												<thead class="table-danger">
+													<tr>
+														<th>#</th>
+													  	<th>Image</th>
+													  	<th><a
+															href="?sort=productName&order=<%= order === 'asc' && sort === 'productName' ? 'desc' : 'asc' %>">
+															Product Name <%= order==='asc' && sort==='productName' ? '▲' : (sort==='productName'
+																? '▼' : '' ) %>
+														</a></th>
+														<th>
+															<a
+																href="?sort=salePrice&order=<%= order === 'asc' && sort === 'salePrice' ? 'desc' : 'asc' %>">
+																Sale Price <%= order==='asc' && sort==='salePrice' ? '▲' :
+																	(sort==='salePrice' ? '▼' : '' ) %>
+															</a>
+														</th>
+
+														<th>
+															<a
+																href="?sort=category.name&order=<%= order === 'asc' && sort === 'category.name' ? 'desc' : 'asc' %>">
+																Category <%= order==='asc' && sort==='category.name' ? '▲' :
+																	(sort==='category.name' ? '▼' : '' ) %>
+															</a>
+														</th>
+														  
+													  	<th>
+															<a
+																href="?sort=createdAt&order=<%= order === 'asc' && sort === 'createdAt' ? 'desc' : 'asc' %>">
+																Created At <%= order === 'asc' && sort === 'createdAt' ? '▲' : 
+																(sort === 'createdAt' ? '▼' : '') %>
+														    </a>
+														</th>													  
+													  	<th>Stock</th>
+													  	<th><a
+															href="?sort=status&order=<%= order === 'asc' && sort === 'status' ? 'desc' : 'asc' %>">
+															Status <%= order==='asc' && sort==='status' ? '▲' : (sort==='status' ? '▼' : '' ) %>
+														</a></th>
+													  	<th>Actions</th>
+													</tr>
+												</thead>
+												<tbody>
+													<% for(let i=0;i<data.length;i++) {%>
+													<tr>
+													  <td><%= (limit*(currentPage-1)+1+i) %></td>
+													  <td>													  		
+														<img src="/<%= data[i].productImages[0] %>" style="width: 3rem;" class="media-avatar" alt="Product">
+													  </td>
+													 
+														<td>
+															<div class="media-box">
+																<div class="media-box-body">
+																	<a href="#" class="text-truncate"><%= data[i].productName %></a>
+																	<% if(data[i].isBlocked===true) {%>
+																		<span class="badge bg-danger " style="height: 20px; width: 60px; font-size: 11px;">
+																			Unlisted
+																		</span>
+																	<% } %>
+																</div>
+															</div>
+														</td>									
+														<td><span>₹</span>&nbsp;<%= data[i].salePrice %></td>
+														<td><%= data[i].category.name %></td>
+														<td><%= new Date(data[i].createdAt).toLocaleDateString() %></td>
+														<td><%= data[i].quantity %></td>
+
+
+													  <% if (data[i].status == "Out of Stock" || data[i].quantity===0) { %>
+														<td>
+														  <span class="badge bg-warning" style="height: 20px; width: 90px; font-size: 11px;">
+															<%= data[i].status %>
+														  </span>
+														</td>
+													  <% } else if (data[i].status == "Discontinued") { %>
+														<td>
+														  <span class="badge bg-danger" style="height: 20px; width: 90px; font-size: 11px;">
+															<%= data[i].status %>
+														  </span>
+														</td>
+													  <% } else { %>
+														<td>
+														  <span class="badge bg-success" style="height: 20px; width: 90px; font-size: 11px;">
+															<%= data[i].status %>
+														  </span>
+														</td>
+													  <% } %>
+													  
+													  <td>
+													  	<div class="actions">
+													  		<a href="/admin/editProduct/<%= data[i]._id %>" data-toggle="tooltip" data-placement="top" title="Edit Product" data-original-title="Edit">
+													  			<i class="icon-edit1 text-info me-4" style="font-size: 20px;"></i>
+													  		</a>
+															
+
+															<% if(data[i].isBlocked===false) {%>
+																<a  href="/admin/blockProduct?id=<%= data[i]._id %>"
+																	data-toggle="tooltip"
+																	data-placement="top"
+																	title="Unlist the Product"
+																	data-original-title="Block">
+																	<i class="icon-slash text-danger" style="font-size: large"></i>
+																</a>
+															<% }else{ %>
+																<a  href="/admin/unblockProduct?id=<%= data[i]._id %>"
+																	data-toggle="tooltip"
+																	data-placement="top"
+																	title="List the Product"
+																	data-original-title="Block">
+																	<i class="icon-unlock text-sucess" style="font-size: 17px; color: green" aria-hidden="true"></i>
+																</a>
+															<% } %>
+													  	</div>
+													  </td>
+													</tr>
+													<% } %>
+												</tbody>
+								    		</table>
+											<button id="add-kk" type="submit" class="btn btn-info"><a href="/admin/addProduct"  style="color: white;">+&nbsp;Add New Product</a></button>
+											<nav aria-label="Page navigation example" style="float: right;">
+												<ul class="pagination">
+												  <% if (currentPage> 1) { %>
+													<li class="page-item">
+														<a class="page-link" href="?page=<%= currentPage - 1 %>"
+														>Previous</a
+														>
+													</li>
+													<% } %> <% for (let i=1; i <=totalPages; i++) { %>
+													<li
+														class="page-item <%= (i === currentPage) ? 'active' : '' %>"
+													>
+														<a class="page-link" href="?page=<%= i %>"> <%= i %> </a>
+													</li>
+													<% } %> <% if (currentPage < totalPages) { %>
+													<li class="page-item">
+														<a class="page-link" href="?page=<%= currentPage + 1 %>"
+														>Next</a
+														>
+													</li>
+												  <% } %>
+												</ul>
+											</nav>
+										</div>
+										</div>
+									</div>
+								</div>
+						<!-- Row end -->
+					</div>
+				</div>
+
+				</div>
+				<!-- Content wrapper scroll end -->
+				<%- include("../../views/partials/admin/footer.ejs") %>

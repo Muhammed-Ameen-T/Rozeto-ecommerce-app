@@ -1,0 +1,362 @@
+<%- include("../../views/partials/admin/header.ejs") %>				
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js for Visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #4a4a4a;
+            --secondary-color: #6c757d;
+            --accent-color: red;
+            --background-light: #f8f9fa;
+            --background-dark: #e9ecef;
+        }
+
+        body {
+            background-color: var(--background-light);
+        }
+
+        .dashboard-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .sales-metric-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .sales-metric-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .metric-icon {
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .filter-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M1 4l5 5 5-5z' fill='%23999999'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 30px;
+        }
+
+        .table-responsive {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .table > thead {
+            position: sticky;
+            top: 0;
+            background-color: var(--background-dark);
+            z-index: 10;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            display: none;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .btn-custom {
+            transition: all 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .pagination {
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Content wrapper scroll start -->
+<div class="content-wrapper-scroll">
+    <!-- Content wrapper start -->
+    <div class="content-wrapper">
+    <div class="container-fluid">
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="spinner"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="dashboard-container">
+                    <div class="row mb-4">
+                        <div class="col-12 d-flex justify-content-between align-items-center">
+                            <h1 class="text-dark">Sales Report</h1>
+                            <div>
+                                <button class="btn btn-primary btn-custom me-2" 
+                                        onclick="window.location.href='/admin/salesReport/excel?filterType=<%= filterType %>&startDate=<%= startDate %>&endDate=<%= endDate %>'">
+                                    <i class="fas fa-file-excel"></i> Export Excel
+                                </button>
+                                <button class="btn btn-danger btn-custom" 
+                                        onclick="window.location.href='/admin/salesReport/pdf?filterType=<%= filterType %>&startDate=<%= startDate %>&endDate=<%= endDate %>'">
+                                    <i class="fas fa-file-pdf"></i> Export PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>  
+
+                    <!-- Filter Section -->
+                    <div class="filter-section">
+                        <form action="/admin/salesReport" method="GET" class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label">Report Type</label>
+                                <select name="filterType" class="form-select custom-select" id="reportType">
+                                    <option value="daily" <%=filterType==='daily' ? 'selected' : '' %> >Daily</option>
+                                    <option value="weekly" <%=filterType==='weekly' ? 'selected' : '' %> >Weekly</option>
+                                    <option value="yearly" <%=filterType==='yearly' ? 'selected' : '' %> >Yearly</option>
+                                    <option value="custom" <%=filterType==='custom' ? 'selected' : '' %> >Custom Range</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3" id="customDateRange" style="display: none;">
+                                <label for="startDate" class="form-label">Start Date</label>
+                                <input type="date" name="startDate" value="<%=startDate ? new Date(startDate).toLocaleDateString('en-CA') :'' %>" class="form-control">
+                            </div>
+                            <div class="col-md-3" id="customDateRangeEnd" style="display: none;">
+                                <label for="endDate" class="form-label">End Date</label>
+                                <input type="date" name="endDate" value="<%=endDate ? new Date(endDate).toLocaleDateString('en-CA') : '' %>" class="form-control">
+                            </div>
+                            <div class="col-md-3 align-self-end">
+                                <button type="submit" class="btn btn-success btn-custom">
+                                    <i class="fas fa-filter"></i> Apply Filter
+                                </button>
+                                <a href="/admin/salesReport" class="btn btn-outline-secondary">
+                                    <i class="fas fa-sync-alt"></i>
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Sales Metrics -->
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="sales-metric-card">
+                                <div>
+                                    <h5 class="text-muted">Total Orders</h5>
+                                    <h3 class="text-dark"><%= salesCount %></h3>
+                                </div>
+                                <div class="metric-icon">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="sales-metric-card">
+                                <div>
+                                    <h5 class="text-muted">Total Sales</h5>
+                                    <h3 class="text-dark">₹<%= totalAmount.toFixed(2) %></h3>
+                                </div>
+                                <div class="metric-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="sales-metric-card">
+                                <div>
+                                    <h5 class="text-muted">Total Discount</h5>
+                                    <h3 class="text-dark">₹<%= totalDiscount.toFixed(2) %></h3>
+                                </div>
+                                <div class="metric-icon">
+                                    <i class="fas fa-tags"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+
+                    <!-- Sales Report Table -->
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5>Detailed Sales Report</h5>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped" style="font-size: 0.9em;">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Order ID</th>
+                                        <th>Customer</th>
+                                        <th>Products</th>
+                                        <th>Total Amount</th>
+                                        <th>Discount</th>
+                                        <th>Coupon Discount</th>
+                                        <th>Payment Method</th>
+                                        <th>Order Status</th>
+                                    </tr>
+                                </thead>
+                                <% if (salesReport.length> 0) { %>
+                                <tbody>
+                                    <!-- Dynamic rows would be populated here -->
+                                    <% salesReport.forEach(order=> { %>
+                                    <tr>
+                                        <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
+                                        <td><%= order.orderId %></td>
+                                        <td><%= order.userId ? order.userId.name : 'Guest' %></td>
+                                        <td>
+                                            <ul class="list-unstyled">
+                                                <% order.orderedItems.forEach(item=> { %>
+                                                    <li>
+                                                        <%= item.product.productName %> (Qty: <%= item.quantity %>)
+                                                    </li>
+                                                <% }); %>
+                                            </ul>
+                                        </td>
+                                        <td>₹<%= order.finalAmount.toFixed(2) %></td>
+                                        <td>₹<%= (order.discount + order.offerDiscount).toFixed(2) %></td>
+                                        <td>₹<%= order.couponApplied ? order.couponDiscount : '0.00' %></td>
+                                        <td><%= order.paymentMethod %></td>
+                                        <%if(order.orderStatus==='Delivered'){%>
+                                            <td><span class="badge bg-success"><%= order.orderStatus %></span></td>
+                                        <%}else if(order.orderStatus==='Processing'){%>
+                                            <td><span class="badge bg-warning text-dark"><%= order.orderStatus %></span></td>
+                                        <%}else{%>
+                                        <td><span class="badge bg-danger"><%= order.orderStatus %></span></td>
+                                        <%}%>
+                                    </tr>
+                                    <% }); %>
+                                </tbody>
+                                <% } else { %>
+                                    <h1 class="d-flex justify-content-center py-5">No sales report found.</h1>
+                                <% } %>
+                            </table>
+                        </div>
+                        <nav aria-label="Page navigation example" style="float: right;">
+                            <ul class="pagination">
+                                <% if (currentPage > 1) { %>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=<%= currentPage - 1 %>&filterType=<%= filterType %>&startDate=<%= startDate %>&endDate=<%= endDate %>">Previous</a>
+                                </li>
+                                <% } %> 
+                                <% for (let i = 1; i <= totalPages; i++) { %>
+                                <li class="page-item <%= (i === currentPage) ? 'active' : '' %>">
+                                    <a class="page-link" href="?page=<%= i %>&filterType=<%= filterType %>&startDate=<%= startDate %>&endDate=<%= endDate %>"><%= i %></a>
+                                </li>
+                                <% } %> 
+                                <% if (currentPage < totalPages) { %>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=<%= currentPage + 1 %>&filterType=<%= filterType %>&startDate=<%= startDate %>&endDate=<%= endDate %>">Next</a>
+                                </li>
+                                <% } %>
+                            </ul>
+                        </nav>                        
+                    </div>
+
+                    <!-- Pagination -->
+                </div>
+            </div>
+        </div>
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Custom Date Range Toggle
+            const reportTypeSelect = document.getElementById('reportType');
+            const customDateRange = document.getElementById('customDateRange');
+            const customDateRangeEnd = document.getElementById('customDateRangeEnd');
+
+            reportTypeSelect.addEventListener('change', function() {
+                if (this.value === 'custom') {  
+                    customDateRange.style.display = 'block';
+                    customDateRangeEnd.style.display = 'block';
+                } else {
+                    customDateRange.style.display = 'none';
+                    customDateRangeEnd.style.display = 'none';
+                }
+            });
+
+            // Loading Overlay for Export Buttons
+            const exportButtons = document.querySelectorAll('.btn-custom');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+
+            exportButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    loadingOverlay.style.display = 'flex';
+                    setTimeout(() => {
+                        loadingOverlay.style.display = 'none';
+                    }, 1500);
+                });
+            }); 
+        });
+    </script>
+<%- include("../../views/partials/admin/footer.ejs") %>				

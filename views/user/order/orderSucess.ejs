@@ -1,0 +1,216 @@
+<%- include("../../views/partials/user/header.ejs") %>
+
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Container */
+        /* .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        } */
+
+        /* Success Section */
+        .success-section {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .success-icon {
+            color: #28a745;
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+
+        .success-title {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .success-subtitle {
+            color: #6c757d;
+            margin-bottom: 25px;
+        }
+
+        /* Order Details */
+        .order-details {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .order-details-header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px 5px 0 0;
+            margin-bottom: 15px;
+        }
+
+        .order-details-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .order-details-row:last-child {
+            border-bottom: none;
+        }
+
+        .order-details-label {
+            font-weight: bold;
+        }
+
+        .order-details-value {
+            color: #6c757d;
+        }
+
+        .total-amount {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        /* Shipping Information */
+        .shipping-info {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .shipping-info-header {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px 5px 0 0;
+            margin-bottom: 15px;
+        }
+
+        .shipping-details {
+            text-align: left;
+        }
+
+        /* Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            border: 1px solid #007bff;
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: #6c757d;
+            border: 1px solid #6c757d;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+            transform: translateY(-3px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+
+            .success-section {
+                padding: 20px;
+            }
+
+            .success-title {
+                font-size: 2rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-section">
+            <div class="success-icon">✓</div>
+            <h3 class="success-title">Order Successful!</h3>
+            <h4>Item Should be Delivered In an Hour.</h4>
+            <p class="success-subtitle">Thank you for your purchase. Your order has been confirmed.</p>
+
+            <div class="order-details">
+                <div class="order-details-header">
+                    <h3>Order Details</h3>
+                </div>
+                <div class="order-details-row">
+                    <span class="order-details-label">Order Number</span>
+                    <span class="order-details-value"><%=order.orderId%></span>
+                </div>
+                <div class="order-details-row">
+                    <span class="order-details-label">Date</span>
+                    <span class="order-details-value"><%= new Date(order.createdAt).toDateString() %></span>
+                </div>
+                <div class="order-details-row">
+                    <span class="order-details-label">Total Amount</span>
+                    <span class="order-details-value total-amount">₹&nbsp;<%=order.finalAmount%></span>
+                </div>
+            </div>
+
+            <div class="shipping-info">
+                <div class="shipping-info-header">
+                    <h3>Shipping Information</h3>
+                </div>
+                <div class="shipping-details">
+                    <p><strong><%=order.address.name%></strong></p>
+                    <p><%=order.address.landMark%>, <%=order.address.locality%></p>
+                    <p><%=order.address.city%>, <%=order.address.pincode%></p>
+                    <p><%=order.address.state%></p>   
+                    <p><%=order.address.phone%>, <%=order.address.altPhone%></p>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <a href="/orderDetails?orderId=<%= orderId %>" class="btn btn-primary">View Order</a>
+                <a href="/" class="btn btn-secondary">Back to Home</a>
+            </div>
+        </div>
+    </div>
+    <%- include("../../views/partials/user/footer.ejs") %>

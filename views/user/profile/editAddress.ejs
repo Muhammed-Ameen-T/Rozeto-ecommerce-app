@@ -1,0 +1,314 @@
+<%- include("../../views/partials/user/header.ejs") %>
+
+    <style>
+      
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            line-height: 1.6;
+        }
+
+       
+
+        .form-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, 
+        .form-group select:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .error {
+            color: red;
+            font-size: 0.8em;
+            display: none;
+            margin-top: 5px;
+        }
+
+        .form-group.invalid input, 
+        .form-group.invalid select {
+            border-color: red;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row > .form-group {
+            flex: 1;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 10px;
+            width: auto;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3 class="form-title fw-bold mt-5">Edit Address</h3>
+        <form id="addressForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" value="<%=address.name%>">
+                    <div id="nameError" class="error">Please enter your full name</div>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" value="<%=address.phone%>">
+                    <div id="phoneError" class="error">Please enter a valid 10-digit phone number</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="alternativePhone">Alternative Phone (Optional)</label>
+                    <input type="tel" id="alternativePhone" name="altphone" value="<%=address.altPhone%>">
+                    <div id="alternativePhoneError" class="error">Please enter a valid 10-digit phone number</div>
+                </div>
+                <div class="form-group">
+                    <label for="addressType">Address Type</label>
+                    <select id="addressType" name="addressType" >
+                        <option value="<%=address.addressType%>"><%=address.addressType%></option>
+                        <option value="home">Home</option>
+                        <option value="work">Work</option>
+                    </select>
+                    <div id="addressTypeError" class="error">Please select an address type</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <input type="text" id="city" name="city" value="<%=address.city%>" >
+                    <div id="cityError" class="error">Please enter your city</div>
+                </div>
+                <div class="form-group">
+                    <label for="state">State</label>
+                    <input type="text" id="state" name="state" value="<%=address.state%>">
+                    <div id="stateError" class="error">Please enter your state</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="locality">Locality</label>
+                    <input type="text" id="locality" name="locality" value="<%=address.locality%>">
+                    <div id="localityError" class="error">Please enter your locality</div>
+                </div>
+                <div class="form-group">
+                    <label for="landmark">Landmark (Optional)</label>
+                    <input type="text" id="landmark" name="landmark" value="<%=address.landMark%>">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="pincode">Pincode</label>
+                    <input type="text" id="pincode" name="pincode" value="<%=address.pincode%>" >
+                    <div id="pincodeError" class="error">Please enter a valid 6-digit pincode</div>
+                </div>
+            </div>
+
+            <%if(address.isActive===true){%>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="isPrimaryAddress" name="isActive" checked>
+                    <label for="isPrimaryAddress">Set as Primary Address</label>
+                </div>
+            <%}else{%>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="isPrimaryAddress" name="isActive"    >
+                    <label for="isPrimaryAddress">Set as Primary Address</label>
+                </div>
+            <%}%>
+            <div class="d-flex">
+                <button type="submit" class="submit-btn mb-5">Save Address</button>
+                <a href="/userAddresses" class="ml-1"><button type="button" style="background-color: red;width: 10rem;" class="btn-danger mb-1 submit-btn">Cancel</button></a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('addressForm');
+            const fields = {
+                name: document.getElementById('name'),
+                phone: document.getElementById('phone'),
+                alternativePhone: document.getElementById('alternativePhone'),
+                city: document.getElementById('city'),
+                state: document.getElementById('state'),
+                locality: document.getElementById('locality'),
+                pincode: document.getElementById('pincode')
+            };
+
+            const errorElements = {
+                name: document.getElementById('nameError'),
+                phone: document.getElementById('phoneError'),
+                alternativePhone: document.getElementById('alternativePhoneError'),
+                city: document.getElementById('cityError'),
+                state: document.getElementById('stateError'),
+                locality: document.getElementById('localityError'),
+                pincode: document.getElementById('pincodeError')
+            };
+
+            // Validation functions
+            const validators = {
+                name: (value) => value.trim().length >= 2,
+                phone: (value) => /^[0-9]{10}$/.test(value),
+                alternativePhone: (value) => value === '' || /^[0-9]{10}$/.test(value),
+                city: (value) => value.trim().length > 0,
+                state: (value) => value.trim().length > 0,
+                locality: (value) => value.trim().length > 0,
+                pincode: (value) => /^[0-9]{6}$/.test(value)
+            };
+
+            // Validate individual field
+            function validateField(fieldName) {
+                const field = fields[fieldName];
+                const errorElement = errorElements[fieldName];
+                const parentGroup = field.closest('.form-group');
+                
+                // Special handling for optional alternative phone
+                if (fieldName === 'alternativePhone' && field.value === '') {
+                    parentGroup.classList.remove('invalid');
+                    errorElement.style.display = 'none';
+                    return true;
+                }
+
+                const isValid = validators[fieldName](field.value);
+
+                if (!isValid) {
+                    parentGroup.classList.add('invalid');
+                    errorElement.style.display = 'block';
+                } else {
+                    parentGroup.classList.remove('invalid');
+                    errorElement.style.display = 'none';
+                }
+
+                return isValid;
+            }
+
+            // Add real-time validation
+            Object.keys(fields).forEach(fieldName => {
+                fields[fieldName].addEventListener('input', () => validateField(fieldName));
+            });
+
+            // Form submission handler
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                
+                // Validate all required fields and alternative phone
+                const requiredFields = ['name', 'phone', 'city', 'state', 'locality', 'pincode', 'alternativePhone'];
+                const isFormValid = requiredFields.every(validateField);
+
+                if (isFormValid) {
+                    // Collect form data
+                    const formData = {
+                        name: fields.name.value,
+                        phone: fields.phone.value,
+                        altPhone: fields.alternativePhone.value,
+                        addressType: document.getElementById('addressType').value,
+                        city: fields.city.value,
+                        state: fields.state.value,
+                        locality: fields.locality.value,
+                        landMark: document.getElementById('landmark').value,
+                        pincode: fields.pincode.value,
+                        isActive: document.getElementById('isPrimaryAddress').checked
+                    };
+
+                    
+                    try {
+                        const response = await axios.post(`/editAddress/<%= address._id%>`, formData)
+
+                        if (response.data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: response.data.message,
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = '/userAddresses';
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: response.data.message,
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    } catch (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'There was an error updating the address. Please try again later.',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                    console.log('Form is valid. Submitting data:', formData);
+                } 
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+<%- include("../../views/partials/user/footer.ejs") %>

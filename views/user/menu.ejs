@@ -1,0 +1,797 @@
+<%- include("../../views/partials/user/header.ejs") %>
+<style>
+  :root {
+      --primary-color: #3a6ea5;
+      --secondary-color: #2ecc71;
+      --background-light: #f4f7f6;
+      --text-color: #2c3e50;
+      --card-shadow: 0 8px 15px rgba(0,0,0,0.1);
+  }
+
+  body {
+      background-color: var(--background-light);
+      font-family: 'Inter', sans-serif;
+      color: var(--text-color);
+      line-height: 1.6;
+  }
+
+  .filter-container {
+      background-color: white;
+      border-radius: 15px;
+      box-shadow: var(--card-shadow);
+      padding: 20px;
+      margin-bottom: 20px;
+  }
+
+  .filter-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+  }
+
+  .filter-group {
+      display: flex;
+      align-items: center;
+      background-color: #f8f9fa;
+      border-radius: 10px;
+      padding: 10px 15px;
+      margin: 5px;
+      transition: all 0.3s ease;
+  }
+
+  .filter-group:hover {
+      background-color: #e9ecef;
+  }
+
+  .filter-group label {
+      margin-right: 10px;
+      font-weight: 500;
+      white-space: nowrap;
+  }
+
+  .product-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+  }
+
+  .product-card {
+      display: flex;
+      background-color: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      transition: transform 0.3s ease;
+      width: 100%;
+      max-width: 600px;
+  }
+
+  .product-card:hover {
+      transform: translateY(-10px);
+  }
+
+  .product-image {
+      width: 250px;
+      height: 250px;
+      object-fit: cover;
+  }
+
+  .product-details {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-grow: 1;
+  }
+
+  .product-title {
+      font-weight: 600;
+      color: var(--primary-color);
+  }
+
+  .product-price {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--secondary-color);
+  }
+
+  .rating {
+      color: #ffc107;
+  }
+
+  .btn-custom {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      transition: all 0.3s ease;
+  }
+
+  .btn-custom:hover {
+      background-color: #2c3e50;
+      transform: translateY(-3px);
+  }
+
+  .badge-new {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: var(--secondary-color);
+  }
+
+
+
+        .filter-section {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 50px 12px 20px;
+            border: 2px solid var(--primary-color);
+            border-radius: 50px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.2);
+        }
+
+        .search-button {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .search-button:hover {
+            background-color: #2980b9;
+        }
+
+        .filter-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .filter-badge {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+        }
+
+        .filter-badge .bi-x-circle {
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        .dropdown-menu {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+       
+         .shop-filter-container {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            padding: 15px 0;
+        }
+        .filter-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .search-wrapper {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            min-width: 250px;
+        }
+        .search-wrapper input {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+        .product-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            background-color: #f1f3f5;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .sort-select {
+            min-width: 200px;
+        }
+        @media (max-width: 992px) {
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .search-wrapper {
+                width: 100%;
+            }
+            .product-info {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+        }
+        /* Main Container */
+.product-sort {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+/* Dropdown Style */
+.sort-select {
+    width: 200px;
+    padding: 10px;
+    font-size: 16px;
+    color: #333;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    position: relative;
+    cursor: pointer;
+}
+
+.sort-select:hover {
+    border-color: #888;
+    background-color: #fff;
+}
+
+.sort-select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.sort-select option {
+    padding: 10px;
+    background: #fff;
+    color: #333;
+}
+
+.offer-badge {
+            position: absolute !important;
+            top: 0 !important;
+            right: 0 !important;
+            margin: 10px !important;
+            padding: 8px 15px !important;
+            background: linear-gradient(135deg, #28a745, #20c997) !important;
+            color: white !important;
+            font-weight: bold !important;
+            border-radius: 25px !important;
+            box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3) !important;
+            transform: translateZ(0) !important;
+            transition: all 0.3s ease !important;
+            z-index: 10 !important;
+            animation: badgePulse 2s infinite !important;
+        }
+
+        .offer-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            z-index: -1;
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .offer-badge:hover {
+            transform: translateZ(0) scale(1.05) !important;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4) !important;
+        }
+
+        .offer-badge:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes badgePulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+            }
+        }
+
+        /* Optional: Add shimmer effect */
+        .offer-badge::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(100%) rotate(45deg);
+            }
+        }
+
+</style>
+<!-- food section -->
+<section class="food_section layout_padding">
+  <!-- Breadcrumb Section Begin -->
+  <div class="container">
+    <nav aria-label="breadcrumb" class="bredaa">
+      <ol class="breadcrumb breadcrumb-custom">
+        <li class="breadcrumb-item">
+          <a href="/"><i class="fas fa-home me-2"></i>Home</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Menu</li>
+      </ol>
+    </nav>
+      <!-----START FILTER -->
+      <div class="container-fluid shop-filter-container">
+        <div class="container">
+            <div class="filter-row">
+                <!-- Search Section -->
+                <div class="search-wrapper">
+                    <form action="/menu" method="GET" class="d-flex w-100">
+                        <input 
+                            type="text" 
+                            class="form-control me-2" 
+                            name="search" 
+                            placeholder="Search..." 
+                            value="<%= searchQuery %>" autofocus
+                        >
+                        <!-- Hidden inputs to maintain all existing filters -->
+                        <input type="hidden" name="category" value="<%= categoryFilter %>">
+                        <input type="hidden" name="stock" value="<%= stockFilter %>">
+                        <input type="hidden" name="sort" value="<%= sort %>">
+                        <input type="hidden" name="order" value="<%= order %>">
+                        
+                        <button type="submit" class="btn btn-primary me-2">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <a href="/menu" class="btn btn-outline-secondary">
+                            <i class="fas fa-sync-alt"></i>
+                        </a>
+                    </form>
+                </div>
+
+                <!-- Categories Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Categories
+                    </button>
+                    <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
+                        <li>
+                            <a class="dropdown-item" id="dropdown-itemsa" href="/menu?search=<%= searchQuery %>&category=&stock=<%= stockFilter %>&sort=<%= sort %>&order=<%= order %>">
+                                All Categories
+                            </a>
+                        </li>
+                        <% categories.forEach(category => { %>
+                            <li>
+                                <a class="dropdown-item" id="dropdown-items" href="/menu?search=<%= searchQuery %>&category=<%= category._id %>&stock=<%= stockFilter %>&sort=<%= sort %>&order=<%= order %>">
+                                    <%= category.name %>
+                                </a>
+                            </li>
+                        <% }); %>
+                    </ul>
+                </div>
+
+                <!-- Stock Status Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Stock Status
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item <%= !stockFilter ? 'active' : '' %>" 
+                               href="/menu?search=<%= searchQuery %>&category=<%= categoryFilter %>&stock=&sort=<%= sort %>&order=<%= order %>">
+                                All Products
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item <%= stockFilter === 'Available' ? 'active' : '' %>" 
+                               href="/menu?search=<%= searchQuery %>&category=<%= categoryFilter %>&stock=Available&sort=<%= sort %>&order=<%= order %>">
+                                Available
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item <%= stockFilter === 'Out of Stock' ? 'active' : '' %>" 
+                               href="/menu?search=<%= searchQuery %>&category=<%= categoryFilter %>&stock=Out%20of%20Stock&sort=<%= sort %>&order=<%= order %>">
+                                Out of Stock
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item <%= stockFilter === 'Discontinued' ? 'active' : '' %>" 
+                               href="/menu?search=<%= searchQuery %>&category=<%= categoryFilter %>&stock=Discontinued&sort=<%= sort %>&order=<%= order %>">
+                                Discontinued
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+            </div>
+
+            <!-- Product Info and Sorting Section -->
+            <div class="product-info">
+                <div class="product-count">
+                    <p class="mb-0">
+                        Showing <%= startProduct %>–<%= endProduct %> of <%= totalProductsCount %> results
+                    </p>
+                </div>
+                <div class="product-sort" style="z-index: 100;">
+                  <select class="form-select sort-select" onchange="location = this.value;">
+                    <option value="/menu" active>Sort By</option>
+                      <option
+                          value="/menu?search=<%= searchQuery %>&sort=createdAt&order=desc&category=<%= categoryFilter %>&stock=<%= stockFilter %>"
+                          <%= sort === 'createdAt' && order === 'desc' ? 'selected' : '' %>
+                      >
+                          New Arrivals
+                      </option>
+                      <option value="/menu?search=<%= searchQuery %>&sort=orderCount&order=desc&category=<%= categoryFilter %>&stock=<%= stockFilter %>" 
+                        <%= sort === 'orderCount' && order === 'desc' ? 'selected' : '' %> 
+                        > Popularity
+                      </option> 
+                      <option value="/menu?search=<%= searchQuery %>&sort=rating&order=desc&category=<%= categoryFilter %>&stock=<%= stockFilter %>" 
+                        <%= sort === 'rating' && order === 'desc' ? 'selected' : '' %> > Average Rating 
+                      </option>
+                      <option
+                          value="/menu?search=<%= searchQuery %>&sort=salePrice&order=asc&category=<%= categoryFilter %>&stock=<%= stockFilter %>"
+                          <%= sort === 'salePrice' && order === 'asc' ? 'selected' : '' %>
+                      >
+                          Price: Low to High
+                      </option>
+                      <option
+                          value="/menu?search=<%= searchQuery %>&sort=salePrice&order=desc&category=<%= categoryFilter %>&stock=<%= stockFilter %>"
+                          <%= sort === 'salePrice' && order === 'desc' ? 'selected' : '' %>
+                      >
+                          Price: High to Low
+                      </option>
+                      <option
+                          value="/menu?search=<%= searchQuery %>&sort=productName&order=asc&category=<%= categoryFilter %>&stock=<%= stockFilter %>"
+                          <%= sort === 'productName' && order === 'asc' ? 'selected' : '' %>
+                      >
+                          Name: A to Z
+                      </option>
+                      <option
+                          value="/menu?search=<%= searchQuery %>&sort=productName&order=desc&category=<%= categoryFilter %>&stock=<%= stockFilter %>"
+                          <%= sort === 'productName' && order === 'desc' ? 'selected' : '' %>
+                      >
+                          Name: Z to A
+                      </option>
+                                       
+                  </select>
+                </div>
+              
+            </div>
+        </div>
+    </div>
+  <!-----END FILTER -->
+    <div class="heading_container heading_center my-3">
+      <h2>Our Menu</h2>
+    </div>
+    
+
+    <div class="filters-content">
+      <div class="row grid">
+        <% if (noDataFound) { %> 
+            <h4 style="text-align: center;" class="mt-5">No Product found</h4  > 
+        <% } else { %>
+        <% products.forEach(product=> { %>
+        <!-- --PRODUCT SECTION START-- -->
+        <div class="col-sm-6 col-lg-4 all pizza">
+          <div class="box">
+            <div>
+              <div class="img-box" onclick="window.location.href='/productinfo?id=<%= product._id %>';">
+                <img src="<%= product.productImages[0].replace(/\\/g, '/') %>" alt="<%= product.productName %>" />
+              </div>
+              <div class="detail-box">
+                <% const oneWeekAgo = new Date(new Date().setDate(new Date().getDate() - 7)); %>
+                <% const isNewArrival = new Date(product.createdAt) > oneWeekAgo; %>
+                <% if (isNewArrival && product.status !== 'Out of Stock' && product.status !== 'Discontinue') { %> 
+                    <div class="badge bg-success text-white position-absolute top-0 start-0 m-2 rounded-pill">
+                        New Arrivals
+                    </div> 
+                <% } %>
+                <% if (product.offerPercentage > 0 && product.status === 'Available') { %>
+                    <div class="badge offer-badge bg-success text-white position-absolute top-0 end-0 m-2 rounded-pill">
+                        <%= product.offerPercentage %>% Off
+                    </div>
+                <% } %>
+                <h5><%= product.productName %></h5>
+                <p>
+                  <%= product.description %>
+                </p>
+                <div class="options">
+                  <h6 style="text-decoration: line-through;">₹&nbsp;<%= product.regularPrice %></h6>
+                  <h6 style="margin-right: 12rem;">₹&nbsp;<%= product.salePrice %></h6>
+                  <% if (product.quantity!==0 && product.status!=='Discontinued' && product.status!=='Out of Stock') { %>
+                    <% if(cartProductIds.includes(product._id.toString())){ %>
+                      <div onclick="window.location.href='/loadCart';" class="wishlist-icon" style="border-radius: 20px; width: 2.5rem;padding-left: 9px;background-color: #ffbe33;padding-top: 1px;">
+                        <i class="fa-solid fa-cart-shopping me-2 mt-2" style="color: white;"></i> 
+                      </div>
+                    <%}else { %>
+                        <div onclick="addToCart(event,'<%= product._id %>')" class="wishlist-icon" style="border-radius: 20px; width: 2.5rem;padding-left: 9px;background-color: #ffbe33;padding-top: 1px;">
+                          <i class="fa-solid fa-cart-shopping me-2 mt-2" style="color: white;"></i> 
+                        </div>
+                    <% } %>
+                    
+                    <% if (wishlistProductIds.includes(product._id.toString())) { %>
+                        <div onclick="window.location.href='/wishlist'" class="wishlist-icon" style="border-radius: 20px; width: 2.5rem;padding-left: 9px;background-color: #ffbe33;padding-top: 1px;">
+                          <i class="fa fa-heart me-1 mt-2" style="color: red;"></i> 
+                        </div>
+                    <% } else { %>
+                        <div onclick="toggleWishlist(event,'<%= product._id %>')" class="wishlist-icon" style="border-radius: 20px; width: 2.5rem;padding-left: 9px;background-color: #ffbe33;padding-top: 1px;">
+                            <i class="fa fa-heart me-1 mt-2"></i> 
+                        </div>
+                    <% } %>
+                    <%if(product.quantity<10){%>
+                      <div onclick="" class="badge bg-danger text-white position-absolute top-0 start-0 m-2 rounded-pill">
+                        Only <%=product.quantity%> stock Left
+                      </div>  
+                    <%}%>
+                  <%}else{%>
+                    <% if (wishlistProductIds.includes(product._id.toString())) { %>
+                        <div onclick="window.location.href='/wishlist'" class="wishlist-icon" style="border-radius: 20px; width: 2.5rem;padding-left: 9px;background-color: #ffbe33;padding-top: 1px;">
+                          <i class="fa fa-heart me-1 mt-2" style="color: red;"></i> 
+                        </div>
+                    <% } else { %>
+                        <div onclick="toggleWishlist(event,'<%= product._id %>')" class="wishlist-icon" style="border-radius: 20px; width: 2.5rem;padding-left: 9px;background-color: #ffbe33;padding-top: 1px;">
+                            <i class="fa fa-heart me-1 mt-2"></i> 
+                        </div>
+                    <% } %>
+                    <% if (product.quantity===0 || product.status==='Out of Stock') { %>
+                      <div onclick="outOfStock()" class="badge bg-danger text-white position-absolute top-0 start-0 m-2 rounded-pill">
+                        Out of Stock
+                      </div>     
+                    <%}else{%>             
+                      <div onclick="" class="badge bg-danger text-white position-absolute top-0 start-0 m-2 rounded-pill">
+                        Discontinued
+                      </div>  
+                    <%}%>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+        <% } %>
+        <!-- --PRODUCT SECTION END-- -->
+      </div>
+    </div>
+
+    <div class="pagination-container d-flex justify-content-center m-5 ">
+      <% if (currentPage> 1) { %>
+          <a href="?page=<%= currentPage - 1 %>" class="btn btn-outline-dark rounded-pill my-2 px-3 mx-1" style="background-color: #ffbe33;">&laquo; Previous</a>
+      <% } %>
+      <% for (let i=1; i <=totalPages; i++) { %>
+        <% if (i===currentPage) { %>
+            <span class="btn btn-dark rounded-pill my-2 px-3 mx-1" style="background-color: #ffbe33;"><%= i %></span>
+        <% } else { %>
+          <a href="/menu?page=<%= i %>&sort=<%= sort %>&order=<%= order %>&category=<%= categoryFilter %>&stock=<%= stockFilter %> <%= i === currentPage ? ' class=" active"' : '' %>" class="btn btn-outline-dark rounded-pill my-2 px-3 mx-1"><%= i %></a>
+        <% } %>
+      <% } %>
+      <% if (currentPage < totalPages) { %>
+        <a href="?page=<%= currentPage + 1 %>"class="btn btn-outline-dark rounded-pill my-2 px-3 mx-1" style="background-color: #ffbe33;">Next&raquo;</a>
+      <% } %>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  function addToCart(event,productId) {
+      event.preventDefault()
+      axios.post('/addProductToCart', { productId })
+          .then(response => {
+              if (response.data.success) {
+                  Swal.fire({
+                      toast: true,
+                      timer: 800,
+                      timerProgressBar: true,
+                      title: response.data.message,
+                      // text: response.data.message,
+                      icon: 'success',
+                      position: 'top-end',
+                      showConfirmButton: false,
+                      customClass: {
+                          popup: 'custom-toast'
+                      }
+                  })
+                  // Reload the current page
+                  setTimeout(() => {                    
+                      location.reload();
+                  }, 900);
+
+                  const cartButton = document.querySelector(`a[onclick="addToCart('${productId}')"]`);
+                  if (cartButton) {
+                      cartButton.href = '/loadCartPage';
+                      const img = cartButton.querySelector('img');
+                      img.src = 'img/icon/inCart.png';
+                      img.alt = 'Go to Cart';
+                      img.title = 'Go to Cart';
+                      cartButton.setAttribute('onclick', '');
+                  }
+              } else {
+                  Swal.fire({
+                      toast: true,
+                      timer: 800,
+                      timerProgressBar: true,
+                      title: 'Please Login first!',
+                      icon: 'error',
+                      position: 'top-end',
+                      showConfirmButton: false,
+                      customClass: {
+                          popup: 'custom-toast'
+                      }
+                  })
+              }
+          })
+          .catch(error => {
+                Swal.fire({
+                    toast: true,
+                    timer: 800,
+                    timerProgressBar: true,
+                    title: 'Please Login first!',
+                    icon: 'error',
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    customClass: {
+                        popup: 'custom-toast'
+                    }
+                })
+              console.error('There was an error adding the product to the cart:', error);
+          });
+  }
+
+  function outOfStock() {
+      Swal.fire({
+          toast: true,
+          timer: 1100,
+          timerProgressBar: true,
+          title: 'Out Of Stock',
+          // text: 'Failed to add product to cart',
+          icon: 'warning',
+          position: 'top-end',
+          showConfirmButton: false,
+          customClass: {
+              popup: 'custom-toast'
+          }
+      })
+  }
+  
+  function toggleWishlist(event, productId) {
+    event.preventDefault();
+    
+    axios.post('/toggleWishlist', { productId })
+        .then(response => {
+            if (response.data.success) {
+                Swal.fire({
+                    toast: true,
+                    timer: 800,
+                    timerProgressBar: true,
+                    title: response.data.message,
+                    icon: 'success',
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    customClass: {
+                        popup: 'custom-toast'
+                    }
+                });
+                
+                setTimeout(() => {
+                    window.location.reload();
+                }, 900);
+            } else {
+                Swal.fire({
+                    toast: true,
+                    timer: 800,
+                    timerProgressBar: true,
+                    title: response.data.message,
+                    icon: 'error',
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    customClass: {
+                        popup: 'custom-toast'
+                    }
+                });
+            }
+        })
+        .catch(error => {
+            console.error('There was an error adding the product to the wishlist:', error);
+            let errorMessage = 'An error occurred. Please try again.';
+            if (error.response && error.response.status === 401) {
+                errorMessage = 'Please login first!';
+            }
+            Swal.fire({
+                toast: true,
+                timer: 800,
+                timerProgressBar: true,
+                title: errorMessage,
+                icon: 'error',
+                position: 'top-end',
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'custom-toast'
+                }
+            });
+        });
+}
+
+document.addEventListener('DOMContentLoaded', function () { 
+    const params = new URLSearchParams(window.location.search); 
+    const selectedCategory = params.get('category'); 
+    const menuItems = document.querySelectorAll('#dropdown-items'); 
+    let isActiveSet = false; 
+    menuItems.forEach(item => { 
+        const url = new URL(item.href); 
+        const category = url.searchParams.get('category'); 
+        if (category === selectedCategory) { 
+            item.classList.add('active'); 
+            isActiveSet = true;
+        } 
+    }); 
+    if (!isActiveSet) { 
+        document.getElementById('dropdown-itemsa').classList.add('active'); 
+    } 
+});
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+<!-- end food section -->
+
+<%-include("../../views/partials/user/footer.ejs")%>

@@ -1,0 +1,225 @@
+<%- include("../../views/partials/admin/header.ejs") %>
+<div class="content-wrapper-scroll">
+    <div class="content-wrapper">
+        <div class="row gutters">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="card" id="add_card">
+                    <div class="card-header">
+                        <div class="card-title">Update Category</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row gutters">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <form
+                                    id="updateCategoryForm"
+                                    method="post"
+                                    enctype="multipart/form-data"
+                                    onsubmit="handleForm(event)"
+                                >
+                                    <div class="d-flex">
+                                        <div style="width: 25rem;" class="field-wrapper me-5">
+                                            <input class="form-control" value="<%= category.name %>" name="name" id="cat-name" type="text" />
+                                            <div class="field-placeholder">
+                                                Category Name <span class="text-danger">*</span>
+                                            </div>
+                                            <span id="name-error" class="error-message text-danger"></span>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                            <div class="field-wrapper" style="width: 45rem">
+                                                <input class="form-control" value="<%= category.description %>" id="cat-des" name="description" type="text" />
+                                                <div class="field-placeholder">
+                                                    Description<span class="text-danger">*</span>
+                                                </div>
+                                                <div id="description-error" class="error-message text-danger"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="image">Choose an image<span class="text-danger">*</span></label>
+                                        <input
+                                            type="file"
+                                            class="form-control-file"
+                                            id="image"
+                                            name="image"
+                                            accept="image/*"
+                                            onchange="previewImage(event)" required
+                                        />
+                                        <img
+                                            id="img-preview"
+                                            class="img-preview mt-3"
+                                            src="/uploads/<%= category.image %>"
+                                            alt="Image Preview"
+                                        />
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 my-4">
+                                        <a href="/admin/cat-table">
+                                            <button class="btn btn-light me-3" type="button">Cancel</button>
+                                        </a>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function previewImage(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function() {
+            const output = document.getElementById('img-preview');
+            output.src = reader.result;
+        };
+
+        if (file) {
+            const fileType = file.type;
+            const fileSize = file.size;
+
+            const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+            if (!validTypes.includes(fileType)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Image Format',
+                    text: 'Only JPG / PNG Format Allowed.'
+                });
+                event.target.value = ''; // Clear the file input
+                return;
+            }
+
+            if (fileSize > 5 * 1024 * 1024) { // 5MB limit
+                Swal.fire({
+                    icon: 'error',
+                    title: 'File is too Large',
+                    text: 'Maximum size is 5MB.'
+                });
+                event.target.value = ''; // Clear the file input
+                return;
+            }
+
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function handleForm(event) {
+        event.preventDefault();
+
+        if (!validateForm()) {
+            return;
+        }
+
+        const name = document.getElementById('cat-name').value.trim();
+        const description = document.getElementById('cat-des').value.trim();
+        const image = document.getElementById('image').files[0]; // Get the image file
+        const categoryId = "<%= category._id %>"; // Get the category ID
+
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('description', description);
+        if (image) {
+            formData.append('image', image); // Append the image file if it is uploaded
+        }
+
+        axios.put(`/admin/editcat/${categoryId}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        .then(response => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Category updated successfully'
+            }).then(() => location.reload());
+        })
+        .catch(error => {
+            if (error.response) {
+                displayErrorMessages(error.response.data.error);
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.message
+                });
+            }
+        });
+    }
+
+    function displayErrorMessages(errorMessage) {
+        const errorMapping = {
+            'Category Already Exists': 'name-error',
+            'name': 'name-error',
+            'description': 'description-error'
+        };
+
+        clearErrorMessages();
+
+        if (errorMessage.includes('name')) {
+            displayErrorMessage(errorMapping['name'], errorMessage);
+        } else if (errorMessage.includes('description')) {
+            displayErrorMessage(errorMapping['description'], errorMessage);
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: errorMessage
+            });
+        }
+    }
+
+    function validateForm() {
+        clearErrorMessages();
+        const name = document.getElementById('cat-name').value.trim();
+        const description = document.getElementById('cat-des').value.trim();
+        const image = document.getElementById('image').files[0];
+        let isValid = true;
+
+        if (name === "") {
+            displayErrorMessage('name-error', 'Category name is required');
+            isValid = false;
+        } else if (name.length < 2) {
+            displayErrorMessage('name-error', 'Category name must be at least 2 characters');
+            isValid = false;
+        } else if (!/^[a-zA-Z\s]+$/.test(name)) {
+            displayErrorMessage('name-error', 'Category name should only contain letters');
+            isValid = false;
+        }
+
+        if (description === "") {
+            displayErrorMessage('description-error', 'Category description is required');
+            isValid = false;
+        } else if (description.length < 10) {
+            displayErrorMessage('description-error', 'Description must be at least 10 characters');
+            isValid = false;
+        } else if (!/^[a-zA-Z\s]+$/.test(description)) {
+            displayErrorMessage('description-error', 'Description should only contain letters');
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    function displayErrorMessage(elementId, message) {
+        const errorElement = document.getElementById(elementId);
+        if (errorElement) {
+            errorElement.innerText = message;
+            errorElement.style.display = 'block';
+        }
+    }
+
+    function clearErrorMessages() {
+        const errorElements = document.querySelectorAll('.error-message');
+        errorElements.forEach(element => {
+            element.innerText = "";
+            element.style.display = 'none';
+        });
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<%- include("../../views/partials/admin/footer.ejs") %>

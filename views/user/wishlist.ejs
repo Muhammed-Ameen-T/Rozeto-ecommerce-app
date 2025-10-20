@@ -1,0 +1,287 @@
+<%-include("../../views/partials/user/header.ejs")%>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #6c757d;
+            --accent-color: #ff6b6b;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        .wishlist-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .wishlist-card {
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .wishlist-card:hover {
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-10px);
+        }
+
+        .wishlist-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .wishlist-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .wishlist-item img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            margin-right: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .wishlist-item img:hover {
+            transform: scale(1.05);
+        }
+
+        .product-details {
+            flex-grow: 1;
+        }
+
+        .product-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-description {
+            color: #7f8c8d;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .wishlist-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-add-to-cart {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 10px 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            border-radius: 50px;
+        }
+
+        .btn-add-to-cart:hover {
+            background-color: #357abd;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+        }
+
+        .btn-remove {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn-remove:hover {
+            background-color: #ff4757;
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        .btn-remove i {
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .wishlist-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .wishlist-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn-add-to-cart, .btn-remove {
+                width: 100%;
+            }
+        }
+        .empty-wishlist {
+            text-align: center;
+            padding: 50px 20px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container wishlist-container">
+        <nav aria-label="breadcrumb" class="bredaa">
+            <ol class="breadcrumb breadcrumb-custom">
+              <li class="breadcrumb-item">
+                <a href="/"><i class="fas fa-home me-2"></i>Home</a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">Wishlist</li>
+            </ol>
+          </nav>
+        <h1 class="mb-4 text-center" style="color: #2c3e50;">My Wishlist</h1>
+
+        <div id="wishlistContainer">
+            <div class="card wishlist-card">
+                <div class="card-body p-0">
+                    <%if(products.length===0){%>
+                        <div class="empty-wishlist">
+                            <i class="bi bi-heart text-muted" style="font-size: 3rem;"></i>
+                            <h4 class="mt-3">Your wishlist is empty</h4>
+                            <p class="text-muted">Explore our products and add some items you love!</p>
+                            <a href="/menu" class="btn btn-outline-primary mt-3">Shop Now</a>
+                        </div>
+                    <%}else{%>
+                        <% products.forEach(product=> { %>
+                            <div class="wishlist-item">
+                                <img src="<%= product.productImages[0].replace(/\\/g, '/') %>" alt="Wireless Headphones" class="product-image">
+                                <div class="product-details">
+                                    <div class="d-flex" style="justify-content: space-between;">
+                                        <div>
+
+                                            <h3 class="product-title"><%=product.productName%></h3>
+                                            <p class="product-description"><%=product.description%></p>
+                                            <span class="product-description">Status: <%= product.status %></span><br>
+                                            <span class="product-description">Category: <%= product.category.name %></span>
+                                            <span class="product-price">₹ <%=product.salePrice%></span>
+                                        </div>
+
+                                        <div class="wishlist-actions">
+                                            <button  onclick="window.location.href='/productinfo?id=<%= product._id %>';" class="btn btn-add-to-cart">
+                                                <i class="fa-solid fa-caret-right"></i> Get
+                                            </button>
+                                            <button onclick="removeFromWishlist('<%= product._id %>')" class="btn btn-remove">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <%})%>    
+                        
+                        <div class="pagination-container d-flex justify-content-center m-2 ">
+                            <% if (currentPage> 1) { %>
+                                <a href="?page=<%= currentPage - 1 %>"
+                                    class="btn btn-outline-dark rounded-pill my-2 px-3 mx-1">&laquo; Previous</a>
+                            <% } %>
+                            <% for (let i=1; i <=totalPages; i++) { %>
+                                <% if (i===currentPage) { %>
+                                    <span class="btn btn-dark rounded-pill my-2 px-3 mx-1">
+                                        <%= i %>
+                                    </span>
+                                <% } else { %>
+                                    <a href="?page=<%= i %>"
+                                        class="btn btn-outline-dark rounded-pill my-2 px-3 mx-1">
+                                        <%= i %>
+                                    </a>
+                                <% } %>
+                            <% } %>
+                            <% if (currentPage < totalPages) { %>
+                                <a href="?page=<%= currentPage + 1 %>"
+                                    class="btn btn-outline-dark rounded-pill my-2 px-3 mx-1">Next
+                                    &raquo;</a>
+                            <% } %>
+                        </div>
+                    <%}%>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function removeFromWishlist(productId) {
+            setTimeout(() => {
+                window.location.reload()    
+            }, 1000);
+            event.preventDefault()
+            axios.post('/removeFromWishlist', { productId })
+                .then(response => {
+                    if (response) {
+                        const wishlistItem = document.getElementById(`wishlist-item-${productId}`);
+                        if (wishlistItem) {
+                            wishlistItem.remove();
+                        }
+                        Swal.fire({
+                            toast: true,
+                            timer: 1000,
+                            timerProgressBar: true,
+                            // title: 'Removed!',
+                            text: response.data.message,
+                            icon: 'success',
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            customClass: {
+                                popup: 'custom-toast'
+                            }
+                        })
+                        window.location.href='/wishlist'
+                    }
+                })
+                .catch(error => {
+                    Swal.fire({
+                        toast: true,
+                        timer: 1000,
+                        timerProgressBar: true,
+                        title: 'Error!',
+                        text: 'Failed to remove product from wishlist.',
+                        icon: 'error',
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        customClass: {
+                            popup: 'custom-toast'
+                        }
+                    });
+                    console.error(error);
+                });
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <%-include("../../views/partials/user/footer.ejs")%>

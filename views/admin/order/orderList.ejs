@@ -1,0 +1,228 @@
+<%- include("../../views/partials/admin/header.ejs") %>				
+<!-- Content wrapper scroll start -->
+				<div class="content-wrapper-scroll">
+
+					<!-- Content wrapper start -->
+					<div class="content-wrapper">
+
+						<!-- Row start -->
+						<div class="row gutters">
+							<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+								<div class="card">
+									<div class="card-body">
+										<div class="d-flex" style="justify-content: space-between;">
+											<h3>Order Management</h3>
+											<!-- Search Form Start -->
+											<!-- <form method="GET" action="/admin/order">
+											  <div class="input-group mb-3" style="width: 25rem;">
+												<input
+												  type="text"
+												  class="form-control"
+												  placeholder="Search by name or email"
+												  name="search"
+												  value=""
+												/>
+												<div class="input-group-append">
+												  <button class="btn btn-primary" type="submit">Search</button>
+												</div>
+											  </div>
+											</form> -->
+										  </div>
+										<div class="table-responsive">
+											<table id="copy-print-csv" class="table v-middle table-striped" style="font-size: 14px;">
+												<% if(orders.length==0){ %>
+													<h1 class="text-center">No orders found</h1>
+												<% } else{%>
+												<thead class="table-danger">
+													<tr>
+														<th>#</th>
+													  	<th>Product</th>
+													  	<th>Ordered On</th>													  
+													  	<th>Customer</th>
+														<th>Amount</th>
+														<th>Payment Method</th>
+													  	<th>Order Status</th>
+													  	<th>Actions</th>
+													</tr>
+												</thead>
+												<tbody>
+													<% orders.forEach((order,index)=> { %>
+													<tr>
+													  <td><%= (limit*(currentPage-1)+1+index) %></td>
+													 
+													  
+													  <td>
+														<div>
+															<p style="font-weight: 600;color: rgb(0, 0, 0);"><%= order.orderedItems.length> 1 ?
+																`${order.orderedItems[0].product.productName} ... +
+																${order.orderedItems.length-1} more item` :
+																order.orderedItems[0].product.productName %></p>
+														</div>
+														<small><%= order.orderId.slice(0,18) %></small>
+													  </td>													  
+													  <td><%= new Date(order.createdAt).toLocaleString() %></td>
+													  <td><%= order.userId.name %></td>
+													  <%if(order.paymentStatus==='Paid'){%>
+													  	<td><%= order.finalAmount %>&nbsp;<i class="icon-check-circle" style="color: green;"></i></td>
+													  <%}else{%>
+														<td><%= order.finalAmount %></td>
+													  <%}%>
+													  <td><%= order.paymentMethod %></td>
+													  <td>
+														<select class="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm transition-colors duration-200 ease-in-out" 
+																onchange="handleStatusChange(this, '<%= order._id %>')">
+															<option value="Processing" <%= order.orderStatus === 'Processing' ? 'selected' : (order.orderStatus !== 'Processing' ? 'disabled' : '') %>>Processing</option>
+															<option value="Collected" <%= order.orderStatus === 'Collected' ? 'selected' : (order.orderStatus === 'Processing' ? '' : 'disabled') %>>Collected</option>
+															<option value="Cancelled" <%= order.orderStatus === 'Cancelled' ? 'selected' : (['Processing', 'Collected'].includes(order.orderStatus) ? '' : 'disabled') %>>Cancelled</option>
+															<option value="Delivered" <%= order.orderStatus === 'Delivered' ? 'selected' : (['Processing', 'Collected'].includes(order.orderStatus) ? '' : 'disabled') %>>Delivered</option>
+															<option value="Return Request" <%= order.orderStatus === 'Return Request' ? 'selected' : (['Processing', 'Collected', 'Delivered'].includes(order.orderStatus) ? '' : 'disabled') %>>Return Request</option>
+															<option value="Returned" <%= order.orderStatus === 'Returned' ? 'selected' : (['Processing', 'Collected', 'Delivered', 'Return Request'].includes(order.orderStatus) ? '' : 'disabled') %>>Returned</option>
+														</select>													  
+													  </td>
+													  <td>
+													  	<div class="actions">
+													  		<a href="/admin/orderDetails?orderId=<%= order._id %>" data-toggle="tooltip" data-placement="top" title="Order Details" data-original-title="Edit">
+													  			<i class="icon-eye1 text-info" style="font-size: 20px;"></i>
+													  		</a>
+													  		
+													  	</div>
+													  </td>
+													</tr>
+												   <% }); %>
+                                				<% } %>
+												</tbody>
+								    		</table>
+											<nav aria-label="Page navigation example" style="float: right;">
+												<ul class="pagination">
+													<% if (currentPage > 1) { %>
+														<li class="page-item">
+															<a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
+														</li>
+													<% } %>
+											
+													<% if (totalPages <= 4) { %>
+														<% for (let i = 1; i <= totalPages; i++) { %>
+															<li class="page-item <%= (i === currentPage) ? 'active' : '' %>">
+																<a class="page-link" href="?page=<%= i %>"><%= i %></a>
+															</li>
+														<% } %>
+													<% } else { %>
+														<li class="page-item <%= (1 === currentPage) ? 'active' : '' %>">
+															<a class="page-link" href="?page=1">1</a>
+														</li>
+														<li class="page-item <%= (2 === currentPage) ? 'active' : '' %>">
+															<a class="page-link" href="?page=2">2</a>
+														</li>
+											
+														<% if (currentPage > 3) { %>
+															<li class="page-item">
+																<span class="page-link">...</span>
+															</li>
+														<% } %>
+											
+														<% if (currentPage > 2 && currentPage < totalPages - 1) { %>
+															<li class="page-item active">
+																<a class="page-link" href="?page=<%= currentPage %>"><%= currentPage %></a>
+															</li>
+														<% } %>
+											
+														<% if (currentPage < totalPages - 2) { %>
+															<li class="page-item">
+																<span class="page-link">...</span>
+															</li>
+														<% } %>
+											
+														<li class="page-item <%= (totalPages - 1 === currentPage) ? 'active' : '' %>">
+															<a class="page-link" href="?page=<%= totalPages - 1 %>"><%= totalPages - 1 %></a>
+														</li>
+														<li class="page-item <%= (totalPages === currentPage) ? 'active' : '' %>">
+															<a class="page-link" href="?page=<%= totalPages %>"><%= totalPages %></a>
+														</li>
+													<% } %>
+											
+													<% if (currentPage < totalPages) { %>
+														<li class="page-item">
+															<a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+														</li>
+													<% } %>
+												</ul>
+											</nav>											
+										</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Row end -->
+					</div>
+					<!-- Content wrapper end -->
+
+					<!-- App footer start -->
+					<!-- App footer end -->
+
+
+					<script>
+						
+					</script>
+					
+
+				<script>
+					function handleStatusChange(selectElement, orderId) {
+                    const newStatus = selectElement.value;
+                    const options = selectElement.options;
+
+                    let disableAbove = false;
+                    for (let i = 0; i < options.length; i++) {
+                        if (options[i].value === newStatus) {
+                            disableAbove = true; 
+                        }
+
+                        if (disableAbove) {
+                            options[i].disabled = false; 
+                        } else {
+                            options[i].disabled = true; 
+                        }
+                    }
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: 'You want to change the status of this order?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, change it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            axios.post('/admin/updateOrderStatus', { orderId, newStatus })
+                                .then(response => {
+                                    if (response.data.success) {
+                                        Swal.fire(
+                                            'Success',
+                                            'Order status updated successfully',
+                                            'success'
+                                        );
+                                    } else {
+                                        Swal.fire(
+                                            'Error',
+                                            response.data.message,
+                                            'error'
+                                        );
+                                    }
+                                })
+                                .catch(error => {
+                                    Swal.fire(
+                                        'Error',
+                                        'Failed to update order status',
+                                        'error'
+                                    );
+                                    console.error('Error updating order status:', error);
+                                });
+                        }
+                    });
+                }
+				</script>
+				 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+				 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	 
+				<!-- Content wrapper scroll end -->
+				<%- include("../../views/partials/admin/footer.ejs") %>

@@ -1,0 +1,161 @@
+<%- include("../../views/partials/user/header.ejs") %>
+    <style>
+        .otp-input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            margin: 0 5px;
+            font-size: 20px;
+        }
+    </style>
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.min.css" rel="stylesheet">
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h3>OTP Verification</h3>
+                    </div>
+                    <div class="w-50 ">
+                        <form id="otpForm" action="/loadNewPassword" method="post" onsubmit="return validateOTPForm()">
+                            <label for="" class="float-start fw-semibold pt-3">Enter OTP</label>
+                            <div class="form-group">
+                                <input type="text" class="form-control mb-3" id="otp" name="otp" maxlength="6"
+                                    pattern="\d*">
+                            </div>
+
+                            <button type="submit" class="btn btn-dark rounded-pill w-100">Verify otp</button>
+                            <div class="form-group text-center mt-2">
+                                <div class="mt-3" id="otpTimer">
+                                    <span id="timerValue">Resend OTP After 30 seconds</span>
+                                </div>
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <button type="button" class="btn btn-secondary my-3 me-2" id="resendOtpBtn"
+                                        onclick="resendOTP()" disabled>Resend OTP</button>
+                                </div>
+
+                            </div>
+
+                            <% if(locals.message && message.length>0 ) {%>
+                                <div class="alert alert-danger text-center">
+                                    <%= message %>
+                                </div>
+                                <% } %>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.getElementById("otp").focus();
+
+        let timer = 30;
+        let resendTimer = 30;
+        let timerInterval;//expire otp 60--  to 0
+        let resendOtpInterval;// resend 30-- to 0
+
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timer--;
+                document.getElementById('timerValue').textContent = `Resend OTP After ${timer} seconds`;
+                if (timer <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timerValue').classList.add("expired");
+                    document.getElementById('timerValue').textContent = "";
+                    document.getElementById("resendOtpBtn").classList.replace("btn-secondary", "btn-dark");
+                }
+            }, 1000)
+        }
+
+        function startresendTimer() {// resend 30-- to 0
+            document.getElementById("resendOtpBtn").disabled = true;
+            resendOtpInterval = setTimeout(() => {
+                document.getElementById("resendOtpBtn").disabled = false;
+            }, resendTimer * 1000);
+        }
+
+
+        function validateOTPForm() {
+            const otpInput = document.getElementById("otp").value;
+
+
+            $.ajax({
+                type: "POST",
+                url: "verifyOtpForgotPassword",
+                data: { otp: otpInput },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "OTP Verified Successfully",
+                            showConfirmButton: false,
+                            timer: 1500,
+                        }).then(() => {
+                            window.location.href = response.redirectUrl;
+                        })
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: response.message,
+
+                        })
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Invalid OTP",
+                        text: "Please try again"
+                    })
+                }
+            })
+            return false;
+        }
+
+        function resendOTP() {
+            clearInterval(timerInterval);
+
+            timer = 30;
+            document.getElementById("otp").disabled = false;
+            document.getElementById("timerValue").classList.remove("expired");
+            startTimer();
+            startresendTimer();
+            $.ajax({
+                type: "POST",
+                url: "/resendOtpForgotPassword",
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                             timer: 1200,
+                            timerProgressBar: true,
+                            icon: "info",
+                            title: "OTP Resend Successfully",
+                            showConfirmButton:false,
+                        })
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: "An error occured while resending OTP . Please try again",
+                        })
+                    }
+                }
+            })
+            return false;
+        }
+        startTimer();
+        startresendTimer();
+
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.all.min.js"></script>
+<%- include("../../views/partials/user/footer.ejs") %>

@@ -1,0 +1,17 @@
+export const SuccessMsg = {
+  SERVER_RUNNING: 'Server running on port',
+  PARSING_SUCCESS: 'Parsing Success',
+  DATABASE_CONNECTED: 'Database connection successfull',
+  OTP_SENT: 'OTP sent successfully',
+  OTP_VERIFIED: 'OTP verified successfully',
+  USER_REGISTERED: 'User registered successfully',
+  USER_LOGGED_IN: 'User logged in successfully',
+  USER_LOGGED_OUT: 'User logged out successfully',
+  REDIS_CONNECTED: 'Connected to Redis successfully',
+  IMAGES_UPLOADED: 'Images uploaded successfully',
+  IMAGE_DELETED: 'Image deleted successfully',
+  IMAGES_FETCHED: 'Images fetched successfully',
+  IMAGE_UPDATED: 'Image updated successfully',
+  PASSWORD_CHANGED: 'Password changed successfully',
+  IMAGE_REORDERED: 'Image reordered successfully',
+};

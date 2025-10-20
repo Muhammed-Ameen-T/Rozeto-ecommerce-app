@@ -1,0 +1,141 @@
+<%- include("../../views/partials/admin/header") %>
+
+    <head>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css" />
+        <link rel="stylesheet" href="/admin-assets/css/productsCategory.css">
+    </head>
+
+    <div class="content-wrapper-scroll">
+
+        <div class="row gutters">
+            <section class="content-main">
+                <div class="card shadow mx-3">
+                    <div class="card-body">
+                        <h3 class="content-title">Edit Product</h3>
+                        <form method="post" action="/admin/editProduct/<%= product._id %>" enctype="multipart/form-data"
+                            onsubmit="return handleFormSubmit(event)">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="product_name" class="form-label">Name<span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" name="productName" placeholder="Type here"
+                                            class="shadow form-control" id="product_name"
+                                            value="<%= product.productName %>" />
+                                        <div id="name-error" class="error-message" style="color: red;"></div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Description<span class="text-danger">*</span></label>
+                                        <textarea placeholder="Type here" name="description" class="shadow form-control"
+                                            id="descriptionId" rows="3"><%= product.description %></textarea>
+                                        <div id="description-error" class="error-message" style="color: red;"></div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label">Category<span class="text-danger">*</span></label>
+                                        <select name="category" class="form-select shadow form-control">
+                                            <option value="" disabled>Choose the category</option>
+                                            <% categories.forEach(category=> { %>
+                                                <option value="<%= category._id %>"
+                                                    <%=category._id.equals(product.category) ? 'selected' : '' %>>
+                                                    <%= category.name %>
+                                                </option>
+                                                <% }); %>
+                                        </select>
+                                        <div id="category-error" class="error-message" style="color: red;"></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label class="form-label">Product Images<span class="text-danger">*</span></label>
+                                        <input type="file" name="productImages" class="form-control shadow"
+                                            id="productImages" />
+                                        <div id="images-error" class="error-message" style="color: red;"></div>
+                                        <div id="imagePreview" class="d-flex flex-wrap mt-3">
+
+                                        </div>
+
+                                        <div id="CroppieContainer" style="display: none;"></div>
+                                        <br>
+                                        <button id="btnCrop" type="button" class="btn btn-primary mt-2"
+                                            style="display: none;">Crop Image</button>
+
+                                        <input type="hidden" name="existingImages" id="existingImages"
+                                            value="<%= JSON.stringify(product.productImages) %>" />
+                                    </div>
+                                    <input type="hidden" name="removedImages" id="removedImages" value="[]">
+
+
+                                    <div class="mb-4 ">
+                                        <label class="form-label">Status<span class="text-danger">*</span></label>
+                                        <select name="status" class="form-select shadow form-control">
+                                            <option value="" disabled>Choose the status</option>
+                                            <option value="Available"
+                                                <%=product.status==='Available' ? 'selected' : '' %>>
+                                                Available</option>
+                                            <option value="Out of Stock"
+                                                <%=product.status==='Out of Stock' ? 'selected' : '' %>>Out of Stock
+                                            </option>
+                                            <option value="Discontinued"
+                                                <%=product.status==='Discontinued' ? 'selected' : '' %>>Discontinued
+                                            </option>
+                                        </select>
+                                        <div id="status-error" class="error-message" style="color: red;"></div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-md-2">
+                                        <label class="form-label">Quantity<span class="text-danger">*</span></label>
+                                        <input type="number" name="quantity"
+                                            id="variation-0-quantity"
+                                            value="<%= product.quantity %>" placeholder="Type here"
+                                            class="form-control shadow" />
+                                        <div id="quantity-error" class="error-message" style="color: red;"></div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">Regular Price<span class="text-danger">*</span></label>
+                                        <input type="number" name="regularPrice"
+                                            id="variation-0-regularPrice"
+                                            value="<%= product.regularPrice %>" placeholder="Type here"
+                                            class="form-control shadow" step="0.01" />
+                                        <div id="regularPrice-error" class="error-message" style="color: red;"></div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">Sale Price<span class="text-danger">*</span></label>
+                                        <input type="number" name="salePrice"
+                                            id="variation-0-salePrice"
+                                            value="<%= product.salePrice %>" placeholder="Type here"
+                                            class="form-control shadow"  step="0.01" />
+                                        <div id="salePrice-error" class="error-message" style="color: red;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="d-grid mt-4 d-flex">
+                                <a href="/admin/products">
+                                    <button class="btn btn-light btn-lg me-3" type="button">Cancel</button>
+                                </a>
+                                <button class="btn btn-primary " type="submit">Update Product</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+
+    <script>
+        const productId = "<%= product._id %>"
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
+    <script src="/adminAssets/js/editProduct.js"></script>
+
+    <%- include("../../views/partials/admin/footer") %>

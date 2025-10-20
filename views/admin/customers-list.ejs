@@ -1,0 +1,134 @@
+<%- include("../../views/partials/admin/header.ejs") %>
+
+<!-- Content wrapper scroll start -->
+<div class="content-wrapper-scroll">
+  <!-- Content wrapper start -->
+  <div class="content-wrapper">
+    <!-- Row start -->
+    <div class="row gutters">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex" style="justify-content: space-between;">
+              <h3>User Management</h3>
+              <!-- Search Form Start -->
+              <form method="GET" action="/admin/user-table">
+                <div class="input-group mb-3" style="width: 25rem;">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Search by name or email"
+                    name="search"
+                    value="<%= search %>"
+                  />
+                  <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!-- Search Form End -->
+            <div class="table-responsive">
+              <table id="copy-print-csv" class="table v-middle table-striped " style="font-size: 14px;">
+                <thead class="table-danger">
+                  <tr>
+                    <th>#</th>
+                    <!-- <th>Avatar</th> -->
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th>E-mail</th>
+                    <th>Join Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (data && data.length) { %> <% data.forEach((user,
+                  index)=> { %>
+                  <tr>
+                    <td><%= (currentPage - 1) * limit + index + 1 %></td>
+                    <!-- <td>
+                      <img
+                        src="/img/user7.png"
+                        class="img-flag"
+                        style="width: 3rem"
+                        alt="Country"
+                      />
+                    </td> -->
+                    <td>
+                      <div class="media-box d-flex">
+                        <div class="media-box-body">
+                          <a href=""> <%= user.name %> </a>
+                        </div>
+                      </div>
+                    </td>
+                    <td><%= user.phone || 'null' %></td>
+                    <td>
+                      <% if (user.isBlocked) { %>
+                      <span class="badge bg-danger"  style="height: 20px; width: 70px; font-size: 11px;">Blocked</span>
+                      <% } else { %>
+                      <span class="badge bg-success"  style="height: 20px; width: 70px; font-size: 11px;">Active</span>
+                      <% } %>
+                    </td>
+                    <td><%= user.email %></td>
+                    <td>
+                      <%= new Date(user.createdAt).toLocaleDateString() %>
+                    </td>
+                    <td>
+                      <div class="actions">
+                          <a
+                          href="/admin/toggleUser?id=<%= user._id %>"
+                          class="mx-2"
+                          data-toggle="tooltip"
+                          data-placement="top"
+                          title="<%= user.isBlocked ? 'Unblock the User' : 'Block the User' %>"
+                        >
+                          <i
+                            class="<%= user.isBlocked ? 'icon-unlock text-success' : 'icon-slash text-danger' %>"
+                            style="font-size: large"
+                          ></i>
+                        </a>  
+                      </div>
+                    </td>
+                  </tr>
+                  <% }) %> <% } else { %>
+                  <tr>
+                    <td colspan="8">No data available</td>
+                  </tr>
+                  <% } %>
+                </tbody>
+              </table>
+              <nav aria-label="Page navigation example" style="float: right;">
+                <ul class="pagination">
+                  <% if (currentPage> 1) { %>
+                  <li class="page-item">
+                    <a class="page-link" href="?page=<%= currentPage - 1 %>"
+                      >Previous</a
+                    >
+                  </li>
+                  <% } %> <% for (let i=1; i <=totalPages; i++) { %>
+                  <li
+                    class="page-item <%= (i === currentPage) ? 'active' : '' %>"
+                  >
+                    <a class="page-link" href="?page=<%= i %>"> <%= i %> </a>
+                  </li>
+                  <% } %> <% if (currentPage < totalPages) { %>
+                  <li class="page-item">
+                    <a class="page-link" href="?page=<%= currentPage + 1 %>"
+                      >Next</a
+                    >
+                  </li>
+                  <% } %>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Row end -->
+  </div>
+  <!-- Content wrapper end -->
+</div>
+<!-- Content wrapper scroll end -->
+<%- include("../../views/partials/admin/footer.ejs") %>

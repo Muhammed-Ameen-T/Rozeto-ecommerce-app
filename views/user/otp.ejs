@@ -1,0 +1,173 @@
+<%- include("../../views/partials/user/header.ejs") %>
+
+
+  <style>
+    body {
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f8f9fa;
+    }
+
+    .otp-input {
+      width: 150px;
+      height: 50px;
+      text-align: center;
+      font-size: 18px;
+      margin: 0 5px;
+    }
+
+    .resend-link {
+      cursor: pointer;
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .resend-link.disabled {
+      pointer-events: none;
+      color: #6c757d;
+    }
+  </style>
+</head>
+<body>
+  <div class="container my-5" style="width: 40rem;">
+    <div class="card shadow-sm p-4" style="align-items: center;">
+      <h3 class="text-center mb-4">OTP Verification</h3>
+      <p class="text-muted text-center mb-4">Enter the 6-digit OTP sent to your E-Mail</p>
+      <form id="otpForm" class="d-flex justify-content-center" action="/verify-otp" method="post" onsubmit="return validateOTPForm()">
+        <input type="text" maxlength="6" class="form-control otp-input" id="otp-input" required />
+      </form>
+      <button id="verifyBtn" class="btn btn-primary mt-4" style="width: 8rem;">Verify</button>
+      <p class="text-center mt-3">
+        Resend OTP in <span id="timer">30</span> seconds
+        <a id="resendOtpLink" class="resend-link enabled">Resend OTP</a>
+      </p>
+    </div>
+  </div>
+
+
+  <script>
+    const otpInput = document.getElementById('otp-input');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const resendOtpLink = document.getElementById('resendOtpLink');
+    const timerSpan = document.getElementById('timer');
+    let countdown;
+    let timer = 60;
+
+    // Function to start the timer
+    function startTimer() {
+        resendOtpLink.classList.add('disabled');
+        timer = 60;
+        timerSpan.textContent = timer;
+
+        countdown = setInterval(() => {
+            timer--;
+            timerSpan.textContent = timer;
+            if (timer === 0) {
+                clearInterval(countdown);
+                resendOtpLink.classList.remove('disabled');
+                resendOtpLink.style.color='Blue'
+            }
+        }, 1000);
+    }
+
+    // Initial Timer Start
+    startTimer();
+
+    // Resend OTP Click
+    resendOtpLink.addEventListener('click', () => {
+        resendOtpLink.style.color='Black'
+        if (!resendOtpLink.classList.contains('disabled')) {
+            otpInput.value = "";
+            otpInput.focus();
+            startTimer();
+        }
+        axios.post('/resend-otp')
+        .then(response => {
+            if (response.data.success) {  
+                Swal.fire({
+                    icon: 'success', 
+                    title: 'OTP Resent Successfully',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Resend OTP Failed',
+                    text: 'An error occurred while resending OTP',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to resend OTP. Please try again.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        });  
+      return false
+    });
+
+    // Verify OTP
+    verifyBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    console.log('otp submitted');
+    const otp = otpInput.value.trim();
+    console.log('otp',otp)
+    if (otp.length === 6) {
+        axios.post('/verify-otp', { otp: otp })
+            .then(response => {
+                if (response.data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'OTP Verified Successfully',
+                        showConfirmButton: false,
+                        timer: 1500,
+                    }).then(() => {
+                        window.location.href = response.data.redirectUrl;
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.data.message
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error verifying OTP:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid OTP',
+                    text: 'Please Try Again',
+                    timer: 1500
+                });
+            });
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Enter a Six Digit OTP',
+            timer: 1500,
+        });
+    }
+});
+
+
+    
+  </script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<%-include("../../views/partials/user/footer.ejs")%>
+
+
+
+
+
+
+
+
