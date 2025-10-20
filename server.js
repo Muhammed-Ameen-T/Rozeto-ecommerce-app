@@ -94,7 +94,7 @@ app.use(handleErrors);
 connectDB()
 
 // Getting PORT Number From env
-let PORT = process.env.PORT_NUMBER
+let PORT = process.env.PORT_NUMBER || 3000
 // Listening PORT Number 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
