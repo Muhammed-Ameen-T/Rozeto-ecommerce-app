@@ -191,6 +191,17 @@ croppieContainer.appendChild(croppieInstance.element);
 
 upload.addEventListener('change', function (e) {
     currentFile = e.target.files[0];
+
+    // --- INTEGRATE VALIDATION HERE ---
+    if (!currentFile || !validateNewFile(currentFile)) {
+        // Clear the input and hide Croppie if validation fails
+        upload.value = '';
+        cropButton.style.display = 'none';
+        CroppieContainer.style.display = 'none';
+        return;
+    }
+    // --- END INTEGRATE VALIDATION ---
+    
     const reader = new FileReader();
     reader.onload = function (event) {
         croppieInstance.bind({
@@ -243,3 +254,18 @@ cropButton.addEventListener('click', function () {
 
     });
 });
+
+function validateNewFile(file) {
+    const validTypes = ['image/jpeg', 'image/png'];
+    const maxFileSize = 10 * 1024 * 1024; // 10MB limit (Adjust if necessary)
+
+    if (!validTypes.includes(file.type)) {
+        displayErrorMessage('images-error', 'Only JPG and PNG file formats are allowed.');
+        return false;
+    }
+    if (file.size > maxFileSize) {
+        displayErrorMessage('images-error', 'Maximum file size is 10MB.');
+        return false;
+    }
+    return true;
+}

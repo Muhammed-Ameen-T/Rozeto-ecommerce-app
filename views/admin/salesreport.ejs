@@ -298,25 +298,80 @@
                                 <% } %>
                             </table>
                         </div>
-                        <nav aria-label="Page navigation example" style="float: right;">
+                       <nav aria-label="Page navigation example" style="float: right;">
                             <ul class="pagination">
+                                <% 
+                                // --- PAGINATION CONTROL LOGIC ---
+                                const maxPagesToShow = 7;
+                                let startPage, endPage;
+
+                                if (totalPages <= maxPagesToShow) {
+                                    // Case 1: Total pages fit in the window
+                                    startPage = 1;
+                                    endPage = totalPages;
+                                } else {
+                                    // Case 2: Sliding window logic
+                                    const pagesBefore = Math.floor(maxPagesToShow / 2);
+                                    const pagesAfter = maxPagesToShow - pagesBefore - 1;
+
+                                    if (currentPage <= pagesBefore) {
+                                        // If close to the start
+                                        startPage = 1;
+                                        endPage = maxPagesToShow;
+                                    } else if (currentPage + pagesAfter >= totalPages) {
+                                        // If close to the end
+                                        startPage = totalPages - maxPagesToShow + 1;
+                                        endPage = totalPages;
+                                    } else {
+                                        // Somewhere in the middle
+                                        startPage = currentPage - pagesBefore;
+                                        endPage = currentPage + pagesAfter;
+                                    }
+                                }
+                                // --- END PAGINATION CONTROL LOGIC ---
+                                %>
+
                                 <% if (currentPage > 1) { %>
                                 <li class="page-item">
                                     <a class="page-link" href="?page=<%= currentPage - 1 %>&filterType=<%= filterType %>&startDate=<%= startDate %>&endDate=<%= endDate %>">Previous</a>
                                 </li>
                                 <% } %> 
-                                <% for (let i = 1; i <= totalPages; i++) { %>
+
+                                <% if (startPage > 1) { %>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=1&filterType=<%= filterType %>&startDate=<%= startDate %>&endDate=<%= endDate %>">1</a>
+                                    </li>
+                                    <% if (startPage > 2) { %>
+                                        <li class="page-item disabled">
+                                            <span class="page-link">...</span>
+                                        </li>
+                                    <% } %>
+                                <% } %>
+
+                                <% for (let i = startPage; i <= endPage; i++) { %>
                                 <li class="page-item <%= (i === currentPage) ? 'active' : '' %>">
                                     <a class="page-link" href="?page=<%= i %>&filterType=<%= filterType %>&startDate=<%= startDate %>&endDate=<%= endDate %>"><%= i %></a>
                                 </li>
                                 <% } %> 
+
+                                <% if (endPage < totalPages) { %>
+                                    <% if (endPage < totalPages - 1) { %>
+                                        <li class="page-item disabled">
+                                            <span class="page-link">...</span>
+                                        </li>
+                                    <% } %>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=<%= totalPages %>&filterType=<%= filterType %>&startDate=<%= startDate %>&endDate=<%= endDate %>"><%= totalPages %></a>
+                                    </li>
+                                <% } %>
+
                                 <% if (currentPage < totalPages) { %>
                                 <li class="page-item">
                                     <a class="page-link" href="?page=<%= currentPage + 1 %>&filterType=<%= filterType %>&startDate=<%= startDate %>&endDate=<%= endDate %>">Next</a>
                                 </li>
                                 <% } %>
                             </ul>
-                        </nav>                        
+                        </nav>                      
                     </div>
 
                     <!-- Pagination -->

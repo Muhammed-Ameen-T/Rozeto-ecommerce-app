@@ -8,6 +8,9 @@ import multer from 'multer'
 import upload from '../../middlewares/multer.js'
 import {HttpResCode} from '../../utils/constants/httpResponseCode.utils.js';
 
+// --- IMPORTING CLOUDINARY HELPERS ---
+import { uploadImage, deleteImage } from '../../utils/helper/cloudinaryHelper.js';
+
 
 export const productInfo = async (req, res) => {
     try {
@@ -68,8 +71,8 @@ export const toggleProductListing = async (req, res) => {
         const newStatus = !product.isBlocked;
         await Product.updateOne({ _id: productId }, { $set: { isBlocked: newStatus } });
         // await Cart.updateMany(
-        //     {}, 
-        //     { $pull: { products: { productId } } } 
+        //      {}, 
+        //      { $pull: { products: { productId } } } 
         // );
         res.redirect("/admin/products");
     } catch (error) {
@@ -99,18 +102,25 @@ export const addProduct = async (req, res) => {
             if (!req.files || req.files.length === 0) {
                 return res.status(HttpResCode.BAD_REQUEST).json({ error: "No files uploaded." });
             }
-            const imagePaths = req.files.map(file => file.path);
-            const imageURL = imagePaths.map(path => path.replace('public\\', ''));
+
             const existingProduct = await Product.findOne({ productName:{ $regex: new RegExp(`^${req.body.productName}$`, 'i') }  });
             if (existingProduct) {
+                // Cleanup temporary files created by multer before returning error
+                req.files.forEach(file => fs.unlink(file.path, (err) => { if(err) console.error('Cleanup Error:', err) }));
                 return res.status(HttpResCode.BAD_REQUEST).json({ error: 'product Already Exists' });
             }
+            
+            // --- UPDATED LOGIC: Upload to Cloudinary ---
+            const uploadPromises = req.files.map(file => uploadImage(file.path));
+            const imageURL = await Promise.all(uploadPromises);
+            // Cleanup is handled inside uploadImage
+            // ------------------------------------------
             
             const newProduct = new Product({
                 productName: req.body.productName,
                 description: req.body.description,
                 category: req.body.category,
-                productImages: imageURL,
+                productImages: imageURL, // Stores Cloudinary URLs
                 status: req.body.status,
                 regularPrice: req.body.regularPrice,
                 salePrice: req.body.salePrice,
@@ -149,39 +159,62 @@ export const editProduct = async (req, res) => {
             }
             const existingProduct = await Product.findById(productId);
             if (!existingProduct) {
+                // Cleanup temporary files created by multer
+                req.files.forEach(file => fs.unlink(file.path, (err) => { if(err) console.error('Cleanup Error:', err) }));
                 return res.status(HttpResCode.NOT_FOUND).json({ error: "Product not found" });
             }
             const AlreadyTakenName = await Product.findOne({ productName:{ $regex: new RegExp(`^${req.body.productName}$`, 'i') },_id: { $ne: productId }  });
             if (AlreadyTakenName) {
+                // Cleanup temporary files created by multer
+                req.files.forEach(file => fs.unlink(file.path, (err) => { if(err) console.error('Cleanup Error:', err) }));
                 return res.status(HttpResCode.BAD_REQUEST).json({ error: 'product Already Exists' });
             }
+            
             let imageURL = [...existingProduct.productImages];
+            let imagesToRemove = [];
 
+            // 1. Handle REMOVED images
             if (req.body.removedImages && req.body.removedImages.length > 0) {
                 const removedImages = Array.isArray(req.body.removedImages)
                     ? req.body.removedImages
                     : [req.body.removedImages];
 
+                // Identify images to remove from Cloudinary
+                imagesToRemove = imageURL.filter(img => removedImages.includes(img));
+                
+                // Update the product's image list
                 imageURL = imageURL.filter(img => !removedImages.includes(img));
             }
+
+            // 2. Handle NEWLY uploaded images
             if (req.files && req.files.length > 0) {
-                const imagePaths = req.files.map(file => file.path);
-                const newImageURLs = imagePaths.map(path => path.replace('public\\', ''));
+                // --- UPDATED LOGIC: Upload to Cloudinary ---
+                const uploadPromises = req.files.map(file => uploadImage(file.path));
+                const newImageURLs = await Promise.all(uploadPromises);
                 imageURL = imageURL.concat(newImageURLs);
+                // Cleanup is handled inside uploadImage
+                // ------------------------------------------
             }
+
             imageURL = Array.isArray(imageURL) ? imageURL.flat() : [imageURL];
-           
+            
             const updateProduct = await Product.findByIdAndUpdate(productId, {
                 productName: req.body.productName,
                 description: req.body.description,
                 category: req.body.category,
-                productImages: imageURL,
+                productImages: imageURL, // Stores the final list of Cloudinary URLs
                 status: req.body.status,
                 regularPrice: req.body.regularPrice,
                 salePrice: req.body.salePrice,
                 quantity: req.body.quantity,
             }, { new: true });
-            // console.log('new updated data', updateProduct)
+            
+            // 3. Delete the removed images from Cloudinary after successful database update
+            if (imagesToRemove.length > 0) {
+                const deletePromises = imagesToRemove.map(url => deleteImage(url));
+                await Promise.all(deletePromises);
+            }
+
             if (updateProduct) {
                 res.json({ message: "Product updated successfully" });
             } else {

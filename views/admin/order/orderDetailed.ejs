@@ -133,9 +133,11 @@
         
         <div class="header">
             <h1>Order <%=order.orderId%></h1>
-            <div class="action-buttons">
-                <button class="btn btn-secondary" onclick="window.location.href='/downloadInvoice?orderId=<%= order._id %>'" >Print Invoice</button>
-            </div>
+            <%if(order.orderStatus==='Delivered'){%>
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="window.location.href='/downloadInvoice?orderId=<%= order._id %>'" >Print Invoice</button>
+                </div>
+            <%}%>   
         </div>
 
         <div class="order-details">

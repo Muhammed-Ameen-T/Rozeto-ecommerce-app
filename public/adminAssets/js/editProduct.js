@@ -33,24 +33,19 @@ async function handleFormSubmit(event) {
     formData.append('salePrice', formElements['salePrice'].value);
     formData.append('quantity', formElements['quantity'].value);
 
-    // 1. Existing Images: Get current list from hidden input
-    const existingImagesData = JSON.parse(document.getElementById('existingImages').value);
-    existingImagesData.forEach((image, index) => {
-        // Append the path of the images that are still present
-        formData.append('existingImages', image);
-    });
-
-    // 2. Removed Images
+    // 1. Removed Images (paths to be deleted from Cloudinary)
     removedImages.forEach((image) => {
         formData.append('removedImages', image);
     });
 
-    // 3. New Images (Cropped)
-    // Send cropped images as blobs
+    // 2. New Images (Cropped Blobs)
     croppedImagesArray.forEach((image, index) => {
         const blob = dataURItoBlob(image);
         formData.append('productImages', blob, `croppedImage${index}.png`);
     });
+
+    // 3. Existing Images (Still present in the hidden input after removals)
+    // The hidden input value is read by the server-side Multer/body parser.
 
     fetch(`/admin/editProduct/${productId}`, {
         method: 'POST',
@@ -63,7 +58,7 @@ async function handleFormSubmit(event) {
                 Swal.fire({
                     icon: 'success',
                     title: "Success",
-                    text: "product Updated successfully",
+                    text: "Product Updated successfully",
                     timer: 2000
                 }).then(() => {
                     window.location.href = "/admin/products";
@@ -99,13 +94,14 @@ function validateForm() {
     const parsedRegularPrice = parseFloat(regularPriceInput);
     const parsedSalePrice = parseFloat(salePriceInput);
 
-    // Get current total image count
-    const existingImages = JSON.parse(document.getElementById('existingImages').value);
+    // Get current total image count (existing + new cropped)
+    const existingImagesHiddenInput = document.getElementById('existingImagesHidden');
+    const existingImages = existingImagesHiddenInput ? JSON.parse(existingImagesHiddenInput.value) : [];
     const totalImages = existingImages.length + croppedImagesArray.length;
 
     let isValid = true;
 
-    // --- Product Name Validation ---
+    // --- Product Name Validation (No Change) ---
     if (name == "") {
         displayErrorMessage("name-error", "Please enter a name")
         isValid = false
@@ -114,26 +110,25 @@ function validateForm() {
         isValid = false
     }
 
-    // --- Description Validation ---
+    // --- Description Validation (No Change) ---
     if (description == "") {
         displayErrorMessage("description-error", "Please enter a description")
         isValid = false
     }
 
-    // --- Category Validation ---
+    // --- Category Validation (No Change) ---
     if (category === "") {
         displayErrorMessage("category-error", "Please select a category");
         isValid = false;
     }
 
-    // --- Status Validation ---
+    // --- Status Validation (No Change) ---
     if (status === "") {
         displayErrorMessage("status-error", "Please select a status");
         isValid = false;
     }
 
-
-    // --- Price/Quantity Validation (NEW LOGIC) ---
+    // --- Price/Quantity Validation (No Change) ---
     if (quantityInput == "" || parsedQuantity < 0 || isNaN(parsedQuantity)) {
         displayErrorMessage("quantity-error", "Please enter a valid Quantity (0 or greater)")
         isValid = false
@@ -152,7 +147,7 @@ function validateForm() {
         isValid = false
     }
     
-    // --- Image Count Validation ---
+    // --- Image Count Validation (No Change) ---
     if (totalImages < 4) {
         displayErrorMessage("images-error", `Please ensure at least 4 images. Current: ${totalImages}`);
         isValid = false;
@@ -192,8 +187,10 @@ const croppieContainer = document.querySelector('#CroppieContainer');
 const imagePreview = document.querySelector('#imagePreview');
 let currentFile = null;
 let croppieInstance = null;
+const existingImagesHiddenInput = document.getElementById('existingImagesHidden');
 
-// Initialize Croppie instance
+
+// Initialize Croppie instance (No Change)
 function initCroppie() {
     if (croppieInstance) {
         croppieInstance.destroy();
@@ -209,47 +206,88 @@ function initCroppie() {
     });
 }
 
+// New validation function for new files (No Change)
+function validateNewFile(file) {
+    const validTypes = ['image/jpeg', 'image/png'];
+    const maxFileSize = 10 * 1024 * 1024; // Assuming 10MB limit based on product controller
+
+    if (!validTypes.includes(file.type)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid File Type',
+            text: 'Only JPG and PNG files are allowed.'
+        });
+        return false;
+    }
+    if (file.size > maxFileSize) {
+        Swal.fire({
+            icon: 'error',
+            title: 'File Too Large',
+            text: 'Maximum file size is 10MB.'
+        });
+        return false;
+    }
+    return true;
+}
+
+// --- Image removal logic for existing images (No Change) ---
+function markExistingImageForRemoval(imageURL, container) {
+    // 1. Add to the removedImages array
+    removedImages.push(imageURL);
+
+    // 2. Remove from the client-side list of existing images (stored in the hidden input)
+    let currentExisting = JSON.parse(existingImagesHiddenInput.value);
+    const pathIndex = currentExisting.indexOf(imageURL);
+    if (pathIndex > -1) {
+        currentExisting.splice(pathIndex, 1);
+        existingImagesHiddenInput.value = JSON.stringify(currentExisting);
+    }
+    
+    // 3. Remove from DOM
+    container.remove();
+    
+    // Optional: Log state for debugging
+    console.log('Removed Images Array:', removedImages);
+    console.log('Updated Existing Images Input:', existingImagesHiddenInput.value);
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
     initCroppie(); // Initialize croppie on load
 
-    // --- Display existing images on load ---
-    const existingImages = JSON.parse(document.getElementById('existingImages').value);
+    // --- Display existing images on load (FIXED DISPLAY LOGIC) ---
+    const existingImages = JSON.parse(existingImagesHiddenInput.value);
 
-    existingImages.forEach((imagePath, index) => {
+    existingImages.forEach((imageURL, index) => {
         const imgContainer = document.createElement('div');
         imgContainer.classList.add('image-container', 'existing-image-container');
         imgContainer.style.position = 'relative';
         imgContainer.style.display = 'inline-block';
         imgContainer.style.marginRight = '10px';
+        imgContainer.setAttribute('data-image-url', imageURL); 
+        imgContainer.style.width = '100px'; 
+        imgContainer.style.height = '100px'; 
 
         const img = document.createElement('img');
-        img.src = `/${imagePath.replace(/\\/g, '/')}`; // Ensure correct path format
+        img.src = imageURL;
         img.classList.add('img-thumbnail');
-        img.style.maxWidth = '100px';
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
 
         const deleteBtn = document.createElement('button');
-        deleteBtn.innerText = 'Remove';
+        deleteBtn.innerText = 'X';
         deleteBtn.classList.add('btn', 'btn-danger', 'btn-sm');
         deleteBtn.style.position = 'absolute';
-        deleteBtn.style.top = '5px';
-        deleteBtn.style.right = '5px';
+        deleteBtn.style.top = '0';
+        deleteBtn.style.right = '0';
+        deleteBtn.style.width = '20px';
+        deleteBtn.style.height = '20px';
+        deleteBtn.style.lineHeight = '0';
 
         deleteBtn.addEventListener('click', () => {
-            // Remove image from DOM
-            imgContainer.remove();
-
-            // Add path to removedImages array
-            removedImages.push(imagePath);
-
-            // Update the hidden existingImages input (important for validation)
-            const existingImagesInput = document.getElementById('existingImages');
-            let currentExisting = JSON.parse(existingImagesInput.value);
-            const pathIndex = currentExisting.indexOf(imagePath);
-            if (pathIndex > -1) {
-                currentExisting.splice(pathIndex, 1);
-                existingImagesInput.value = JSON.stringify(currentExisting);
-            }
+             markExistingImageForRemoval(imageURL, imgContainer);
+             validateForm(); 
         });
 
         imgContainer.appendChild(img);
@@ -259,30 +297,36 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// --- Handle new image selection and binding to Croppie ---
+// --- Handle new image selection and binding to Croppie (No Change) ---
 upload.addEventListener('change', function (e) {
     if (e.target.files.length === 0) return;
     
     currentFile = e.target.files[0];
+    
+    if (!validateNewFile(currentFile)) {
+        upload.value = '';
+        return;
+    }
+    
     const reader = new FileReader();
     reader.onload = function (event) {
-        initCroppie(); // Re-initialize croppie for new file
+        initCroppie();
         croppieInstance.bind({
             url: event.target.result
         });
+        cropButton.style.display = 'block';
+        croppieContainer.style.display = 'block';
     };
     reader.readAsDataURL(currentFile);
 
-    cropButton.style.display = 'block';
-    croppieContainer.style.display = 'block';
 });
 
-// --- Handle image cropping and previewing ---
+// --- Handle image cropping and previewing (No Change) ---
 cropButton.addEventListener('click', function () {
     if (!croppieInstance) return;
 
     croppieInstance.result('canvas').then(function (croppedImage) {
-        croppedImagesArray.push(croppedImage); // Add cropped image to array
+        croppedImagesArray.push(croppedImage);
 
         const imgContainer = document.createElement('div');
         imgContainer.classList.add('image-container', 'new-cropped-image');
@@ -294,21 +338,25 @@ cropButton.addEventListener('click', function () {
         img.src = croppedImage;
         img.classList.add('img-thumbnail');
         img.style.maxWidth = '100px';
-
+        img.style.maxHeight = '100px';
+        
         const deleteBtn = document.createElement('button');
-        deleteBtn.innerText = 'Remove';
+        deleteBtn.innerText = 'X';
         deleteBtn.classList.add('btn', 'btn-danger', 'btn-sm');
         deleteBtn.style.position = 'absolute';
-        deleteBtn.style.top = '5px';
-        deleteBtn.style.right = '5px';
+        deleteBtn.style.top = '0';
+        deleteBtn.style.right = '0';
+        deleteBtn.style.width = '20px';
+        deleteBtn.style.height = '20px';
+        deleteBtn.style.lineHeight = '0';
 
         deleteBtn.addEventListener('click', () => {
-            // Remove image from cropped array
             const index = croppedImagesArray.indexOf(croppedImage);
             if (index > -1) {
                 croppedImagesArray.splice(index, 1);
             }
             imgContainer.remove();
+            validateForm(); 
         });
 
         imgContainer.appendChild(img);
@@ -322,5 +370,6 @@ cropButton.addEventListener('click', function () {
         
         // Destroy and re-initialize Croppie
         initCroppie();
+        validateForm(); 
     });
 });

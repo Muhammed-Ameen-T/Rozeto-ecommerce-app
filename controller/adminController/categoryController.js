@@ -4,8 +4,11 @@ import { login } from './adminController.js';
 import Joi from 'joi'
 import multer from 'multer';
 import path from 'path';
+import fs from 'fs'; // Required for directory creation and file cleanup
 import {HttpResCode} from '../../utils/constants/httpResponseCode.utils.js';
 
+// --- IMPORTING CLOUDINARY HELPERS ---
+import { uploadImage, deleteImage } from '../../utils/helper/cloudinaryHelper.js';
 
 
 export const catTable = async (req, res) => {
@@ -56,14 +59,25 @@ export const addCat = async (req, res) => {
 // Set storage engine
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path.join('.', 'public', 'uploads','categories')); // Corrected the path
+        // Define the target temporary directory
+        const tempDir = path.join('.', 'public', 'temp_uploads','categories'); 
+
+        // FIX FOR ENOENT ERROR: Create the directory recursively if it doesn't exist
+        fs.mkdir(tempDir, { recursive: true }, (err) => {
+            if (err) {
+                console.error('Error creating temporary upload directory:', err);
+                return cb(err); // Pass the error to Multer
+            }
+            // If successful (or already exists), proceed with storage
+            cb(null, tempDir);
+        });
     },
     filename: function (req, file, cb) {
         cb(null, Date.now() + '-' + file.originalname); // Rename the file with the current timestamp
     }
 });
 
-// Initialize upload
+// Initialize upload middleware
 export const upload = multer({ storage: storage });
 
 
@@ -77,28 +91,41 @@ export const addcategory = async (req, res) => {
 
     const { error } = schema.validate(req.body);
     if (error) {
+        // Cleanup temporary file if validation fails
+        if (req.file) {
+            fs.unlink(req.file.path, (err) => { if(err) console.error('Cleanup Error:', err) });
+        }
         return res.status(HttpResCode.BAD_REQUEST).json({ error: error.details[0].message });
     }
 
     const { name, description } = req.body;
+    let imageUrl = null;
 
     try {
-        const existingCategory = await Category.findOne({ name });
+        const existingCategory = await Category.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
         if (existingCategory) {
+            // If category exists, clean up the temp uploaded file.
+            if (req.file) { 
+                fs.unlink(req.file.path, (err) => { if(err) console.error('Cleanup Error:', err) });
+            }
             return res.status(HttpResCode.BAD_REQUEST).json({ error: 'Category Already Exists' });
         }
 
         if (!req.file) {
-            console.log('File not uploaded');
+            // Handle case where image is required
             return res.status(HttpResCode.BAD_REQUEST).json({ error: 'Image file is required.' });
         }
 
-        console.log('Uploaded File:', req.file); // Debugging log
-        const image = req.file 
-            ? req.file.filename 
-            : 'default-category.png';
+        // --- CLOUDINARY UPLOAD ---
+        // Upload the temporary file to Cloudinary. uploadImage handles local cleanup.
+        imageUrl = await uploadImage(req.file.path);
+        // -------------------------
 
-        const newCategory = new Category({ name, description, image });
+        const newCategory = new Category({ 
+            name, 
+            description, 
+            image: imageUrl // Store the Cloudinary URL
+        });
         await newCategory.save();
 
         return res.json({ message: 'New Category Added Successfully' });
@@ -111,7 +138,7 @@ export const addcategory = async (req, res) => {
 export const blockCat = async (req,res) => {
     try {
         const categoryId = req.query.id;
-        await Category.findByIdAndUpdate(categoryId,{isListed:false});   
+        await Category.findByIdAndUpdate(categoryId,{isListed:false}); 
         res.redirect('/admin/cat-table')
     } catch (error) {
         console.log('Error while Unlisting',error);
@@ -122,7 +149,7 @@ export const blockCat = async (req,res) => {
 export const unblockCat = async (req,res) => {
     try {
         const categoryId = req.query.id;
-        await Category.findByIdAndUpdate(categoryId,{isListed:true});   
+        await Category.findByIdAndUpdate(categoryId,{isListed:true}); 
         res.redirect('/admin/cat-table')
     } catch (error) {
         console.log('Error while Unlisting',error);
@@ -150,22 +177,43 @@ export const EditCategory = async (req, res) => {
 
         const existingCategory = await Category.findOne({ name:{ $regex: new RegExp(`^${name}$`, 'i') }  })
         if (existingCategory && existingCategory._id.toString() !== categoryId) {
+            // If name is taken, clean up the temp uploaded file.
+            if (req.file) {
+                 fs.unlink(req.file.path, (err) => { if(err) console.error('Cleanup Error:', err) });
+            }
             return res.status(HttpResCode.BAD_REQUEST).json({ error: 'Category Already Exists' })
         }
 
-        const image = req.file 
-        ? req.file.filename 
-        : 'default-category.png';
+        const categoryToUpdate = await Category.findById(categoryId);
+        if (!categoryToUpdate) {
+             if (req.file) {
+                 fs.unlink(req.file.path, (err) => { if(err) console.error('Cleanup Error:', err) });
+            }
+            return res.status(HttpResCode.NOT_FOUND).json({ error: "Category not found" });
+        }
+        
+        let newImageUrl = categoryToUpdate.image; // Start with the existing image URL
+
+        // --- CLOUDINARY UPDATE ---
+        if (req.file) {
+            // 1. Upload the new image. uploadImage handles temporary local file cleanup.
+            newImageUrl = await uploadImage(req.file.path);
+            
+            // 2. Delete the old image from Cloudinary
+            if (categoryToUpdate.image) {
+                await deleteImage(categoryToUpdate.image);
+            }
+        }
+        // -------------------------
 
         const updateCategory = await Category.findByIdAndUpdate(categoryId, {
             name: name,
             description: description,
-            image:image
+            image: newImageUrl // Store the new Cloudinary URL (or the old one)
         }, { new: true })
 
         if (updateCategory) {
             res.json({ message: "Category updated successfully" })
-            // res.redirect('/admin/cat-table')
         } else {
             res.status(HttpResCode.NOT_FOUND).json({ error: "Category not found" })
         }
@@ -174,6 +222,3 @@ export const EditCategory = async (req, res) => {
         res.redirect("/admin/pageError")
     }
 }
-
-
-

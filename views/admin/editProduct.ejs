@@ -51,18 +51,19 @@
                                     <div class="mb-4">
                                         <label class="form-label">Product Images<span class="text-danger">*</span></label>
                                         <input type="file" name="productImages" class="form-control shadow"
-                                            id="productImages" />
+                                            id="productImages" multiple
+                                            accept="image/jpeg, image/png" />
                                         <div id="images-error" class="error-message" style="color: red;"></div>
-                                        <div id="imagePreview" class="d-flex flex-wrap mt-3">
-
-                                        </div>
+                                        
+                                        <div id="imagePreview" class="d-flex flex-wrap mt-3 mb-3">
+                                            </div>
 
                                         <div id="CroppieContainer" style="display: none;"></div>
                                         <br>
                                         <button id="btnCrop" type="button" class="btn btn-primary mt-2"
                                             style="display: none;">Crop Image</button>
 
-                                        <input type="hidden" name="existingImages" id="existingImages"
+                                        <input type="hidden" name="existingImages" id="existingImagesHidden"
                                             value="<%= JSON.stringify(product.productImages) %>" />
                                     </div>
                                     <input type="hidden" name="removedImages" id="removedImages" value="[]">

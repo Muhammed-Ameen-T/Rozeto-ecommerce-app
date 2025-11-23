@@ -8,7 +8,10 @@ import Wallet from '../../model/walletSchema.js'
 import { successResponse, errorResponse } from '../../utils/helper/responseHandler.js'
 import {HttpResCode} from '../../utils/constants/httpResponseCode.utils.js'
 
+import env from 'dotenv';
 import Razorpay from 'razorpay'
+import shortid from 'shortid';
+env.config();
 const razorpay =  new Razorpay({
     key_id: process.env.RAZORPAY_ID_KEY,
     key_secret: process.env.RAZORPAY_SECRET_KEY 

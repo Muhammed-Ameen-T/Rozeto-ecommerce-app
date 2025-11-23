@@ -75,7 +75,7 @@
 													<tr>
 													  <td><%= (limit*(currentPage-1)+1+i) %></td>
 													  <td>													  		
-														<img src="/<%= data[i].productImages[0] %>" style="width: 3rem;" class="media-avatar" alt="Product">
+														<img src="<%= data[i].productImages[0] %>" style="width: 3rem;" class="media-avatar" alt="Product">
 													  </td>
 													 
 														<td>
@@ -90,7 +90,12 @@
 																</div>
 															</div>
 														</td>									
-														<td><span>₹</span>&nbsp;<%= data[i].salePrice %></td>
+														<td>
+															<span>₹</span>&nbsp;<%= data[i].salePrice %>
+															<span style="text-decoration: line-through; color: #888; margin-left: 10px;">
+																<%= data[i].regularPrice %>
+															</span>
+														</td>		
 														<td><%= data[i].category.name %></td>
 														<td><%= new Date(data[i].createdAt).toLocaleDateString() %></td>
 														<td><%= data[i].quantity %></td>
